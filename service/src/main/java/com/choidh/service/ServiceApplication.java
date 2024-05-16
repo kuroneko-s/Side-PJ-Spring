@@ -6,10 +6,15 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Optional;
 
 @SpringBootApplication
 @EnableJpaAuditing
@@ -19,6 +24,23 @@ public class ServiceApplication {
         SpringApplication app = new SpringApplication(ServiceApplication.class);
         app.setWebApplicationType(WebApplicationType.NONE);
         app.run(args);
+    }
+
+    @Bean
+    public AuditorAware<String> auditorProvider() {
+        // EnableJpaAuditing 을 사용해서 사용자 정보를 자동으로 저장해주는 기능을 제공해줄 때의 유저의 정보를 가져오는 방법을 정의
+        return new AuditorAware<String>() {
+            @Override
+            public Optional<String> getCurrentAuditor() {
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+                if (authentication == null || !authentication.isAuthenticated()) {
+                    return Optional.of("DEFAULT");
+                }
+
+                return Optional.of(authentication.getName());
+            }
+        };
     }
 
     @Bean

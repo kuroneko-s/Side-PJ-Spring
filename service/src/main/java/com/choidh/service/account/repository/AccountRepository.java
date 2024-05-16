@@ -31,19 +31,19 @@ public interface AccountRepository extends JpaRepository<Account, Long>, Queryds
     /**
      * 유저 단건 조회 with learning
      */
-    @Query("select a from Account a left join fetch a.learnings")
+    @Query("select a from Account a left join fetch a.learnings where a.id = :id")
     Account findAccountWithLearnings(Long id);
 
     /**
      * 유저 단건 조회 with question
      */
-    @Query("select a from Account a left join fetch a.questions")
+    @Query("select a from Account a left join fetch a.questions where a.id = :id")
     Account findAccountWithQuestion(Long id);
 
     /**
      * 유저 단건 조회 with tag
      */
-    @Query("select a from Account a left join fetch a.tags")
+    @Query("select a from Account a left join fetch a.tags where a.id = :id")
     Account findAccountWithTags(Long id);
 
     /**
@@ -52,6 +52,7 @@ public interface AccountRepository extends JpaRepository<Account, Long>, Queryds
     @Query("select a from Account a " +
             "left join fetch a.learnings " +
             "left join fetch a.questions " +
-            "left join fetch a.listenLearning")
+            "left join fetch a.listenLearning " +
+            "where a.id = :id")
     Account findAccountWithAll(Long id);
 }

@@ -5,7 +5,6 @@ import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.repository.AccountRepository;
 import com.choidh.service.security.AccountDetailsService;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,9 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class WithAccountSecurityContextFactory implements WithSecurityContextFactory<WithAccount> {
-
     private final AccountRepository accountRepository;
-    private final ModelMapper modelMapper;
     private final AccountDetailsService accountDetailsService;
     private final PasswordEncoder passwordEncoder;
 
