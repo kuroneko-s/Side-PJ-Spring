@@ -20,7 +20,6 @@ web/src/main/resources/static/node_modules/**
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 
-HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
