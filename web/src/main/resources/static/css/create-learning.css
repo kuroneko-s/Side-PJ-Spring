@@ -1,0 +1,27 @@
+.fileUpload{
+    width: 744px;
+}
+
+.message-content{
+    height: 51px;
+}
+.list-body{
+    background: #FFFFFF;
+}
+.tooltip.bs-tooltip-auto[x-placement^=top] .arrow::before, .tooltip.bs-tooltip-top .arrow::before {
+    margin-left: -3px;
+    content: "";
+    border-width: 5px 5px 0;
+    border-top-color: #000;
+}
+
+.custom-a-ling{
+    font-size: 0.9rem;
+}
+.video-p{
+    margin-bottom: 6px;
+}
+
+.video-btn{
+    font-size: 0.85rem;
+}

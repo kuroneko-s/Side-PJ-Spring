@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <div th:replace="fragment.html :: links"></div>
+    <link rel="stylesheet" href="/css/profile-bar.css"/>
+    <link rel="stylesheet" href="/css/profile-settings.css"/>
+    <link rel="stylesheet" href="/css/create-learning.css"/>
+    <link rel="stylesheet" href="/css/learning.css"/>
+    <link rel="stylesheet" href="/node_modules/@yaireo/tagify/dist/tagify.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+</head>
+
+<body class="container">
+<div th:replace="fragment.html :: navbar"></div>
+
+<div class="d-flex">
+    <div th:replace="fragment.html :: profile-bar"></div>
+
+    <div class="col-md-10 mt-md-5">
+        <div class="col alert alert-info alert-dismissible fade show mt-3 alert-custom message-content" role="alert" th:if="${message}">
+            <p id="message" th:text="${message}">flush message</p>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+        <div class="col-md-12 mb-2">
+            <div style="opacity: 0.7; font-size: 13px">업로더/강의 영상 업로드</div>
+            <span style="font-size: 17px; font-weight: bold" th:text="${learning.title}">default Title</span>
+        </div>
+
+        <div class="col d-flex justify-content-start">
+            <div class="tab-content d-flex justify-content-start">
+                <div class="profile-body tab-pane active profile-content-body" id="profile" role="tabpanel">
+                    <div class="align-items-center profile-content ">
+                        <div class="card-body form-group mt-md-2 tagify-custom-uploader input-tagify-lengh mt-lg-4">
+                            <div th:text="${whiteList}" id="whitelist" hidden></div>
+                            <label for="tags" class="label-title ml-1">분야(Tag)</label>
+                            <input class="tagify--outside input-tagify" id="skills" type="tags" th:value="${#strings.listJoin(tags, ',')}"
+                                   aria-describedby="tagHelp" placeholder="강의의 분야를 입력해주세요. 예) Java, Spring etc..."/>
+                            <small id="tagHelp" style="margin-left: 6px;">
+                                태그는 저장하기 버튼을 누르지 않아도 자동으로 저장됩니다.
+                            </small>
+                        </div>
+
+                        <hr class="mt-5" style="max-width: 100%"/>
+
+                        <form class="justify-content-start profile-content-input" action="#" id="bannerForm" enctype="multipart/form-data">
+                            <div class="d-flex justify-content-center mb-md-2 mt-lg-4">
+                                <div class="mt-3">
+                                    <label for="banner" class="label-title mb-md-3">배너 이미지 업로드</label>
+                                    <input type="file" id="banner" class="fileUpload" name="banner" accept="image/*,.jpg,.png,.jpeg">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-success mt-md-3 mb-md-3">업로드</button>
+                        </form>
+
+                        <hr class="mt-5" style="max-width: 100%"/>
+
+                        <form class="justify-content-start profile-content-input" action="#" id="videoForm" enctype="multipart/form-data">
+                            <div class="d-flex justify-content-center">
+                                <div class="mt-3 input-video">
+                                    <label for="videoFile" class="label-title mb-md-3">영상 업로드</label>
+                                    <input type="file" id="videoFile" class="fileUpload" name="videofile" accept="video/*,.mkv,.mp3" aria-describedby="videoHelp" multiple>
+                                    <small id="videoHelp">
+                                        영상의 제목이 목차가 됩니다. 제목은 숫자_목차타이틀로 부탁드립니다!<br>
+                                        영상의 제목에 빈공간이 들어가면 문제가 발생할 수 있으므로 (_)를 사용해주시기 바랍니다!<br>
+                                        예)01-01_스프링_소개영상, 02-11_스프링 시큐리티 등...
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="mb-md-2 mt-md-2">
+                                <div class="progress-label"></div>
+                                <div id="progressbar"></div>
+                                <button id="uploadBtn" type="submit" class="btn btn-success mt-md-3 mb-md-3">업로드</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!--profile main data - body-->
+        </div>
+        <!--profile main data-->
+    </div>
+    <!--profile body-->
+</div>
+<!--page body-->
+
+    <div th:replace="fragment.html :: footer"></div>
+    <script th:replace="fragment.html :: csrf-code"></script>
+    <!--video script-->
+    <script type="application/javascript">
+        $(function () {
+            const progressBar = $('#progressbar');
+            const progressLabel = $('.progress-label');
+            progressBar.progressbar({
+                value: true,
+                change: function() {
+                    progressLabel.text("Current Progress: " + progressBar.progressbar("value") + "%");
+                },
+                complete: function () {
+                    progressLabel.text("Complate!");
+                }
+            });
+            $('#videoForm').ajaxForm({
+                url: window.location.pathname + '/video',
+                type: "POST",
+                enctype: "multipart/form-data",
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                beforeSubmit: function(arr, $form, options){
+                    progressBar.progressbar("value", 0);
+                },
+                uploadProgress: function(event, position, total, percentComplete){
+                    progressBar.progressbar("value", percentComplete);
+                },
+                success: function(text, status, xhr, element){
+                    progressBar.progressbar("value", 100);
+                },
+                complete: function () {
+                    alert("저장되었습니다.");
+                }
+            });
+        });
+    </script>
+    <!--banner script-->
+    <script type="application/javascript">
+        $(function () {
+            $('#bannerForm').ajaxForm({
+                url: window.location.pathname + '/banner',
+                type: "POST",
+                enctype: "multipart/form-data",
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                complete: function () {
+                    alert("저장되었습니다.");
+                }
+            });
+        });
+    </script>
+    <script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
+    <!--tag script-->
+    <script type="application/javascript">
+    $(function(){
+        var learningURL = window.location.pathname;
+        function tagRequest(url, learningURL, tagTitle) {
+            $.ajax({
+                dataType: "json",
+                autocomplete: {
+                    enabled: true,
+                    rightKey: true,
+                },
+                contentType: "application/json; charset=utf-8",
+                method: "POST",
+                url: learningURL + url,
+                data: JSON.stringify({'title': tagTitle})
+            });
+        }
+        function onAdd(e) {
+            tagRequest("/add", learningURL, e.detail.data.value);
+        }
+
+        function onRemove(e) {
+            tagRequest("/remove", learningURL, e.detail.data.value);
+        }
+
+        var input = document.querySelector('.input-tagify')
+        var tagify = new Tagify(input, {
+            whitelist: JSON.parse(document.querySelector("#whitelist").textContent),
+            dropdown : {
+                position: "input",
+                enabled: 1 // suggest tags after a single character input
+            } // map tags
+        });
+        tagify.on("add", onAdd);
+        tagify.on("remove", onRemove);
+
+        // add a class to Tagify's input element
+        tagify.DOM.input.classList.add('form-control');
+        // re-place Tagify's input element outside of the  element (tagify.DOM.scope), just before it
+        tagify.DOM.scope.parentNode.insertBefore(tagify.DOM.input, tagify.DOM.scope);
+    });
+</script>
+
+</body>
+
+</html>
