@@ -12,6 +12,7 @@ buildNumber.properties
 
 **/src/main/resources/application-dev.properties
 **/src/main/resources/application-local.properties
+web/src/main/resources/static/node_modules/**
 
 # Eclipse m2e generated files
 # Eclipse Core
