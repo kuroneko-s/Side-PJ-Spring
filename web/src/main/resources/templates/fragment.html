@@ -3,20 +3,21 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<div th:fragment="links">
+<div th:fragment="imports">
     <script src="/node_modules/jquery/dist/jquery.min.js"></script>
     <script src="/node_modules/jquery-form/dist/jquery.form.min.js"></script>
+    <script src="/node_modules/tooltipster/dist/js/tooltipster.bundle.min.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/node_modules/jdenticon/dist/jdenticon.min.js"></script>
+
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&display=swap"/>
     <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/node_modules/@fortawesome/fontawesome-free/css/all.min.css"/>
-    <link rel="stylesheet" href="/css/index.css"/>
+    <link rel="stylesheet" href="/css/common.css"/>
     <link rel="stylesheet" href="/node_modules/tooltipster/dist/css/tooltipster.bundle.min.css"/>
-    <script src="/node_modules/tooltipster/dist/js/tooltipster.bundle.min.js"></script>
-    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </div>
 
 <div th:fragment="navbar">
-    <script src="/node_modules/jdenticon/dist/jdenticon.min.js"></script>
     <link rel="stylesheet" href="/css/style.css"/>
     <nav class="navbar navbar navbar-expand-lg navbar-light bg-light box-style-shadow">
         <a class="navbar-brand" href="#" th:href="@{/}">
@@ -52,12 +53,15 @@
                     <a class="nav-link" href="#">로드맵 <span class="sr-only">(current)</span></a>
                 </li>
             </ul>
+
             <form class="form-inline my-2 my-lg-0" action="#" th:action="@{/search/learning}" method="get">
                 <input class="form-control mr-sm-2" type="search" placeholder="강의 검색하기" aria-label="Search" width="180" name="keyword">
             </form>
+
             <form class="form-inline ml-3 mr-1" action="#" sec:authorize="isAuthenticated()" th:action="@{'/profile/' + ${account.id}}">
                 <button class="btn btn-sm btn-outline-secondary" type="submit">대시보드</button>
             </form>
+
             <ul class="navbar-nav">
                 <li class="nav-item" sec:authorize="!isAuthenticated()">
                     <a class="nav-link" href="#" th:href="@{/account/create}">회원가입</a>
@@ -172,9 +176,11 @@
 </div>
 
 <script type="application/javascript" th:inline="javascript" th:fragment="csrf-code">
-    $(function() {
-        var csrfToken = /*[[${_csrf.token}]]*/ null;
-        var csrfHeader = /*[[${_csrf.headerName}]]*/ null;
+    window.addEventListener("DOMContentLoaded", () => {
+        // 일반적인 Form 으로 요청을 보낼 때 csrf 에러가 날 경우 토큰값을 같이 실어서 보내줌.
+        // 상식적으로 동작 시킬때 중간에 가져와서 token 값을 헤더에 실어서 보내줘야할거 같은데 지금 개같이 보내는중임
+        const csrfToken = /*[[${_csrf.token}]]*/ null;
+        const csrfHeader = /*[[${_csrf.headerName}]]*/ null;
         $(document).ajaxSend(function (e, xhr, options) {
             xhr.setRequestHeader(csrfHeader, csrfToken);
         });

@@ -4,10 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <div th:replace="fragment.html :: links"></div>
+    <div th:replace="fragment.html :: imports"></div>
     <link rel="stylesheet" href="/css/review.css"/>
     <link rel="stylesheet" href="/node_modules/summernote/dist/summernote-bs4.min.css"/>
 </head>
+
 <body class="pl-4 pt-3">
     <form name="popupForm" class="needs-validation form-group" th:action="@{'/review/' + ${learning.id}}"
           th:object="${reviewVO}" method="post">
