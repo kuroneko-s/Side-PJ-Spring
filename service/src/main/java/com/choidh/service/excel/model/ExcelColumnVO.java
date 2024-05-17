@@ -24,10 +24,10 @@ public class ExcelColumnVO {
     @Column(unique = true)
     private String columnOrder;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createAt;
-    @Temporal(TemporalType.DATE)
-    private Date createDateAt;
-    @Temporal(TemporalType.TIME)
-    private Date createTimeAt;
+//    @Temporal(TemporalType.TIMESTAMP)
+//    private Date createAt;
+//    @Temporal(TemporalType.DATE)
+//    private Date createDateAt;
+//    @Temporal(TemporalType.TIME)
+//    private Date createTimeAt;
 }

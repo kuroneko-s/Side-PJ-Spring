@@ -6,7 +6,6 @@ import com.choidh.service.excel.repository.ExcelColumnRepository;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 @Profile("local")
@@ -30,9 +29,6 @@ public class ExcelDummyDataLocalServiceImpl implements ExcelDummyDataService {
                     )
                     .columnNameMk("이름")
                     .columnOrder("1")
-                    .createAt(new Date())
-                    .createDateAt(new Date())
-                    .createTimeAt(new Date())
                     .build();
             this.excelColumnRepository.save(one);
 
@@ -45,9 +41,6 @@ public class ExcelDummyDataLocalServiceImpl implements ExcelDummyDataService {
                     )
                     .columnNameMk("이메일")
                     .columnOrder("2")
-                    .createAt(new Date())
-                    .createDateAt(new Date())
-                    .createTimeAt(new Date())
                     .build();
             this.excelColumnRepository.save(two);
 

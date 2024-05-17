@@ -52,24 +52,11 @@ DB
 postgreSQL (dev)<br>
 embeded (local)
 
-
 Video 영상 데이터들은 프로젝트 내 /static/video에 위치하게 작성하였습니다.
 
 **_참고한 사이트_**<br>
 https://www.inflearn.com/ 인프런
 
 
-**실행방법**<br>
-코드를 IDEA에 import 시켜서 실행시켜도 상관없습니다.<br>
-maven에서 pacake를 이용해 jar로 만든 후 실행시켜도 동작합니다.<br>
-<<<<<<< HEAD
-SMTP 동작을 원하지 않을 경우
-<pre><code>java -jar choi-0.0.1-SNAPSHOT.jar</code></pre>
-SMTP 서버의 동작을 원할 경우
-<pre><code>java -jar choi-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev</code></pre>
-
-**기존 local과 dev 환경에 따라 DB를 구분하였지만 배포시 DB를 내장시킬 수 있는 방법이 없는 것 같아 현재 환경을 embeded DB를 사용하는 것으로 통일 시킴**
-
-
-#### 2024-03-26
-Lombook 에러나고있음. 일단 푸쉬.
+#### 24-05-17
+local 에서 h2 db로 실행은 되는 상태로 업로드.
