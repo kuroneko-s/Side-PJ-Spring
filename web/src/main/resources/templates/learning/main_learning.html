@@ -8,12 +8,11 @@
     <div th:replace="fragment.html :: imports"></div>
     <link rel="stylesheet" href="/css/main-learning.css">
     <script src="/node_modules/moment/min/moment-with-locales.min.js"></script>
-    <link rel="stylesheet" href="/node_modules/@fortawesome/fontawesome-free/css/all.min.css"/>
     <script src="/node_modules/jdenticon/dist/jdenticon.min.js"></script>
 </head>
 
 <body class="container">
-<div th:replace="fragment.html :: navbar"></div>
+<div th:replace="fragment/navbar/navbar.html :: navbar"></div>
     <div class="jumbotron p-4 text-white rounded bg-dark mt-md-1 d-flex">
         <div class="px-0 d-flex pr-lg-4 pl-lg-4 col-md-9 inner-box">
             <img class="banner-image" th:src="|data:image/*;base64,${learning.bannerBytes}|" th:if="${learning.bannerBytes} != null"/>

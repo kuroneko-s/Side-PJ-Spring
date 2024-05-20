@@ -1,15 +1,10 @@
-.container{
-    max-width: 90%;
-}
+
 .tagify-outside{
     border: 0;
     padding: 0;
     margin: 0;
 }
-*{
-    font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
-    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-}
+
 .img-box img{
     top: 0;
     left: 0;
@@ -35,7 +30,4 @@
 .image_slider{
     border-bottom: none;
     margin-top: 5px;
-}
-.nav-bell{
-    font-size: 1.25rem;
 }

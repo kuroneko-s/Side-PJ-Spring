@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<!-- 상단 바 -->
+<nav class="navbar-container" th:fragment="navbar">
+    <div class="navbar-left-container">
+        <a class="navbar-logo" href="#" th:href="@{/}">
+            <img src="/images/rogo.png" class="navbar-logo-image" alt="">
+            <span class="navbar-logo-context">커뮤니티</span>
+        </a>
+
+        <div class="navbar-menu-items">
+            <ul class="navbar-menu-item-ul">
+                <li class="navbar-menu-item-dropdown navbar-mr pointer" id="learning-menu">
+                    <p class="navbar-menu-item-title">
+                        강의들
+                    </p>
+                    <div class="navbar-menu-item-dropdown-details hide">
+                        <a class="navbar-menu-item-dropdown-details-item" href="#" th:href="@{/all}">모든 강의</a>
+                        <a class="navbar-menu-item-dropdown-details-item" href="#" th:href="@{/web/all}">웹 개발</a>
+                        <a class="navbar-menu-item-dropdown-details-item" href="#" th:href="@{/algorithm/all}">알고리즘</a>
+                    </div>
+                </li>
+                <li class="navbar-menu-item-dropdown navbar-mr pointer" id="community-menu">
+                    <p class="navbar-menu-item-title">
+                        커뮤니티
+                    </p>
+                    <div class="navbar-menu-item-dropdown-details hide">
+                        <a class="navbar-menu-item-dropdown-details-item" href="#" th:href="@{/all}">커뮤니티 1</a>
+                        <a class="navbar-menu-item-dropdown-details-item" href="#" th:href="@{/web/all}">커뮤니티 2</a>
+                        <a class="navbar-menu-item-dropdown-details-item" href="#" th:href="@{/algorithm/all}">커뮤니티 3</a>
+                    </div>
+                </li>
+                <li class="navbar-mr">
+                    <a class="navbar-menu-item-title" href="#">로드맵</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="navbar-right-container">
+        <div class="navbar-menu-image">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+
+        <div class="navbar-menu-items">
+            <form class="form navbar-mr" action="#" th:action="@{/search/learning}" method="GET">
+                <input name="keyword" type="text" placeholder="강의 검색하기" />
+            </form>
+
+            <form class="form navbar-mr" action="#" sec:authorize="isAuthenticated()" th:action="@{'/profile/' + ${account.id}}">
+                <button class="button" type="submit">대시보드</button>
+            </form>
+
+            <ul class="navbar-menu-item-ul">
+                <li class="navbar-mr" sec:authorize="!isAuthenticated()">
+                    <a class="navbar-menu-item-title" href="#" th:href="@{/account/create}">회원가입</a>
+                </li>
+                <li class="navbar-mr" sec:authorize="!isAuthenticated()">
+                    <a class="navbar-menu-item-title" href="#" th:href="@{/login}" >로그인</a>
+                </li>
+                <li class="navbar-mr" sec:authorize="isAuthenticated()">
+                    <a class="navbar-menu-item-title" href="#" th:href="@{/cart/learning}">장바구니</a>
+                </li>
+
+                <li class="nav-bell-container" sec:authorize="isAuthenticated()">
+                    <a class="nav-bell" href="#" th:href="@{'/profile/notification'}">
+                        <i class="far fa-bell" th:if="${!hasNotification}"></i>
+                        <span class="text-info" th:if="${hasNotification}"><i class="fas fa-bell"></i></span>
+                    </a>
+                </li>
+
+                <li class="navbar-menu-item-dropdown arrow-rotate pointer" sec:authorize="isAuthenticated()" id="profile-menu">
+                    <a class="navbar-menu-item-title" href="#">
+                        <svg class="navbar-menu-item-profile" th:data-jdenticon-value="${#authentication.name}" width="48" height="48"></svg>
+                        <span class="navbar-menu-item-arrow"><i class="fa-solid fa-greater-than"></i></span>
+                    </a>
+
+                    <div class="navbar-menu-item-dropdown-details hide">
+                        <h6 class="navbar-menu-item-dropdown-details-title" sec:authentication="name">Anonymous</h6>
+                        <a class="navbar-menu-item-dropdown-details-item" href="#" th:href="@{'/profile/' + ${account.id}}">프로필</a>
+                        <a class="navbar-menu-item-dropdown-details-item" href="#" th:href="@{'/profile/' + ${account.id} + '/custom'}">설정</a>
+                        <form method="post" th:action="@{/logout}">
+                            <button type="submit" class="navbar-menu-item-dropdown-details-item">로그아웃</button>
+                        </form>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="navbar-menu-detail-container">
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        window.addEventListener("DOMContentLoaded", () => {
+            const enterEventHandler = (e) => {
+                let parentNode = e.target;
+                if (parentNode.classList.contains("navbar-menu-item-dropdown-details")) return false;
+
+                parentNode = e.target.classList.contains("navbar-menu-item-title") ? e.target.parentNode : parentNode;
+                parentNode.querySelector(".navbar-menu-item-dropdown-details").classList.remove("hide")
+            };
+            const leaveEventHandler = (e) => {
+                let parentNode = e.target;
+                if (parentNode.classList.contains("navbar-menu-item-dropdown-details")) return false;
+
+                parentNode = e.target.classList.contains("navbar-menu-item-title") ? e.target.parentNode : parentNode;
+                parentNode.querySelector(".navbar-menu-item-dropdown-details").classList.add("hide")
+            };
+
+            const learningMenu = document.getElementById("learning-menu");
+            learningMenu.addEventListener("mouseenter", enterEventHandler);
+            learningMenu.addEventListener("mouseleave", leaveEventHandler);
+
+            const communityMenu = document.getElementById("community-menu");
+            communityMenu.addEventListener("mouseenter", enterEventHandler);
+            communityMenu.addEventListener("mouseleave", leaveEventHandler);
+
+            const profileMenu = document.getElementById("profile-menu");
+            profileMenu.addEventListener("mouseenter", enterEventHandler);
+            profileMenu.addEventListener("mouseleave", leaveEventHandler);
+        })
+    </script>
+</nav>
+
+</html>

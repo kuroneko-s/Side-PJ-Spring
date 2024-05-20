@@ -1,0 +1,230 @@
+* {
+    font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+.navbar-container {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-flow: row nowrap;
+    padding: 0.75rem 1rem;
+
+    background: #f8f9fa;
+    box-shadow: 2px 4px 9px -5px rgba(102,92,102,0.79);
+}
+
+.navbar-left-container {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+}
+
+.navbar-container svg {
+    width: 20px;
+    height: 20px;
+}
+
+.navbar-logo {
+    display: flex;
+    align-items: center;
+    margin-right: 0.5rem;
+}
+
+.navbar-logo:hover .navbar-logo-context{
+    color: var(--hover-text-color);
+}
+
+.navbar-logo-image {
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+}
+
+.navbar-logo-context {
+    font-weight: 600;
+    font-size: 1.75rem;
+    margin-left: 0.75rem;
+    letter-spacing: 3px;
+    color: #1b1a1a;
+}
+
+.navbar-right-container {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+}
+
+.navbar-menu-image {
+    display: none;
+}
+
+.navbar-menu-image i {
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.navbar-menu-image i:hover {
+    color: var(--hover-text-color);
+}
+
+.navbar-menu-items {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-menu-item-ul {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.navbar-menu-item-dropdown {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+
+    padding: 0.75rem 1rem;
+}
+
+.navbar-menu-item-title {
+    cursor: pointer;
+}
+
+.navbar-menu-item-dropdown-details {
+    position: absolute;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+
+    top: 30px;
+    left: 0;
+
+    z-index: 99;
+
+    background: #f8f9fa;
+    border: gray 1px solid;
+    padding: 0.25rem;
+    border-radius: 4%;
+
+    text-wrap: nowrap;
+}
+
+.navbar-menu-item-dropdown-details-title {
+    color: gray;
+    padding: 0.5rem;
+    cursor: default;
+}
+
+.navbar-menu-item-dropdown-details-item {
+    width: 100%;
+
+    padding: 0.5rem 0.75rem 0.5rem 0.5rem;
+    border-radius: 3px;
+}
+
+.navbar-menu-item-dropdown-details-item:hover {
+    background: #dfdfdf;
+}
+
+.navbar-menu-item-dropdown-details-item:not(:last-child) {
+    margin-bottom: 0.5rem;
+}
+
+.navbar-menu-item-dropdown-details-item:active,
+.navbar-menu-item-dropdown-details-item:focus {
+    outline: none;
+}
+
+.navbar-menu-detail-container {
+    display: none;
+}
+
+.navbar-menu-item-arrow i {
+    font-weight: 900;
+    font-size: 0.75rem;
+}
+
+.arrow-rotate:hover .navbar-menu-item-arrow i {
+    transform: rotate(90deg);
+}
+
+.navbar-mr {
+    margin-right: 1rem;
+}
+
+.nav-bell-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-bell {
+    position: relative;
+    font-size: 2rem;
+    width: 18px;
+    height: 18px;
+}
+
+.nav-bell i {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+}
+
+@media (max-width: 1080px){
+    .navbar-menu-image {
+        display: block;
+    }
+
+    .navbar-menu-detail-container {
+        display: block;
+    }
+}
+
+
+/* ######  */
+
+.tagify-outside{
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.img-box img{
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 250px;
+}
+
+.box-style-shadow{
+    -webkit-box-shadow: 2px 4px 9px -5px rgba(102,92,102,0.79);
+    -moz-box-shadow: 2px 4px 9px -5px rgba(102,92,102,0.79);
+    box-shadow: 2px 4px 9px -5px rgba(102,92,102,0.79);
+}
+
+.col-centered{
+    margin: 0 auto;
+    float: none;
+    text-align:center;
+}
+
+.search_wrapper{
+    margin-top: 38px;
+}
+
+.search_wrapper_input{
+    padding: 20px 15px;
+}
+
+.image_slider{
+    border-bottom: none;
+    margin-top: 5px;
+}

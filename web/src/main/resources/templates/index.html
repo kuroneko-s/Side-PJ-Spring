@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="/css/index-learning.css"/>
 </head>
 <body class="container">
-    <div th:replace="fragment.html :: navbar"></div>
+    <div th:replace="fragment/navbar/navbar.html :: navbar"></div>
 
     <div class="alert alert-info alert-dismissible fade show mt-3 alert-custom" role="alert" th:if="${message}">
         <p th:text="${message}">flush message</p>
