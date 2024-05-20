@@ -120,8 +120,8 @@
             communityMenu.addEventListener("mouseleave", leaveEventHandler);
 
             const profileMenu = document.getElementById("profile-menu");
-            profileMenu.addEventListener("mouseenter", enterEventHandler);
-            profileMenu.addEventListener("mouseleave", leaveEventHandler);
+            profileMenu?.addEventListener("mouseenter", enterEventHandler);
+            profileMenu?.addEventListener("mouseleave", leaveEventHandler);
         })
     </script>
 </nav>
