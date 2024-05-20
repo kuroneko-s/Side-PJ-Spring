@@ -215,16 +215,3 @@
     float: none;
     text-align:center;
 }
-
-.search_wrapper{
-    margin-top: 38px;
-}
-
-.search_wrapper_input{
-    padding: 20px 15px;
-}
-
-.image_slider{
-    border-bottom: none;
-    margin-top: 5px;
-}

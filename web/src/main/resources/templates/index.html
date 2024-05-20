@@ -10,13 +10,13 @@
     <script src="/js/ImageSlider.js"></script>
 
     <link rel="stylesheet" href="/css/index.css"/>
-    <link rel="stylesheet" href="/css/index-learning.css"/>
 </head>
 <body class="container">
     <div th:replace="fragment/navbar/navbar.html :: navbar"></div>
 
     <div th:replace="fragment/flushAlter/flushAlter.html :: flushAlter"></div>
 
+    <!-- 이미지 슬라이더 start -->
     <div class="image-slider-container" id="image-slider">
         <ol class="image-slider-bar-container" id="image-slider-bar-container">
             <li class="image-slider-bar active"></li>
@@ -45,23 +45,16 @@
         <div class="image-slider-control-prev" id="image-slider-prev"><p></p></div>
         <div class="image-slider-control-next" id="image-slider-next"><p></p></div>
     </div>
+    <!-- 이미지 슬라이더 end -->
 
-    <!-- 검색란 -->
-    <div class="row search_wrapper">
-        <div class="col-lg-3"></div>
-        <div class="col-lg-6 col-lg-offset-4">
-            <div class="input-group col-centered">
-                <form class="d-flex justify-content-end input-group" action="#" th:action="@{/search/learning}" method="get">
-                    <input type="text" class="form-control search_wrapper_input" placeholder="무엇을 학습하고 싶으신가요?"
-                           aria-label="Recipient's username" aria-describedby="button-addon2" name="keyword">
-                    <span class="input-group-append">
-                        <button class="btn btn-outline-secondary search_wrapper_btn" type="submit" id="button-addon2">Button</button>
-                    </span>
-                </form>
-            </div>
-        </div>
-        <div class="col-lg-3"></div>
+    <!-- 검색 start -->
+    <div class="search-container">
+        <form class="form search-container-form" action="#" th:action="@{/search/learning}" method="get">
+            <input type="text" placeholder="무엇을 학습하고 싶으신가요?" name="keyword" />
+            <button class="button" type="submit">검색</button>
+        </form>
     </div>
+    <!-- 검색 end -->
 
     <div class="mt-lg-3 d-flex flex-column">
         <label for="tagsCards" class="ml-3 tagsCards-label" sec:authorize="!isAuthenticated()">추천 강의</label>
