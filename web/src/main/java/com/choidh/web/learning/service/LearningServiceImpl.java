@@ -61,7 +61,7 @@ public class LearningServiceImpl implements LearningService {
         learning.setLecturerDescription(learningFormVO.getLecturerDescription());
         learning.setPrice(learningFormVO.getPrice());
         learning.setKategorie(learningFormVO.getKategorie());
-        learning.setSimplesubscription(learningFormVO.getSimplesubscription());
+        learning.setSimpleSubscription(learningFormVO.getSimplesubscription());
         learning.setCreateLearning(LocalDateTime.now());
         Learning newLearning = learningRepository.save(learning);
         newLearning.setAccount(account);
@@ -179,7 +179,7 @@ public class LearningServiceImpl implements LearningService {
         learning.setLecturerDescription(learningFormVO.getLecturerDescription());
         learning.setPrice(learningFormVO.getPrice());
         learning.setKategorie(learningFormVO.getKategorie());
-        learning.setSimplesubscription(learningFormVO.getSimplesubscription());
+        learning.setSimpleSubscription(learningFormVO.getSimplesubscription());
         learning.setUpdateLearning(LocalDateTime.now());
         learning.setAccount(newAccount);
 

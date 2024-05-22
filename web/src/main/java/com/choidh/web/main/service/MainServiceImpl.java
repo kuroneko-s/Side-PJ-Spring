@@ -21,6 +21,6 @@ public class MainServiceImpl implements MainService {
 
     @Override
     public List<Learning> learningOrderByRating() {
-        return learningRepository.findTop4ByStartingLearningOrderByRatingDesc(true);
+        return learningRepository.findTop12ByStartingLearningOrderByRatingDesc(true);
     }
 }

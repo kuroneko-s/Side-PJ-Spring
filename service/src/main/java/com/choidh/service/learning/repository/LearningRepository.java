@@ -24,6 +24,9 @@ public interface LearningRepository extends JpaRepository<Learning, Long>, Query
     @EntityGraph(attributePaths = {"tags"}, type = EntityGraph.EntityGraphType.LOAD)
     List<Learning> findTop4ByStartingLearningOrderByRatingDesc(boolean b);
 
+    @EntityGraph(attributePaths = {"tags"}, type = EntityGraph.EntityGraphType.LOAD)
+    List<Learning> findTop12ByStartingLearningOrderByRatingDesc(boolean b);
+
     List<Learning> findAllByAccountOrderByCreateLearningDesc(Account account);
 
     Learning findByIdAndLecturerName(Long id, @NotNull String lecturerName);

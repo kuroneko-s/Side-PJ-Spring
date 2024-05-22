@@ -97,5 +97,32 @@ public class LearningRepositoryExtensionImpl extends QuerydslRepositorySupport i
         return distinct.fetch();
     }
 
+    @Override
+    public List<Learning> findTop12ByTagsOrderByRatingDesc(Set<Tag> tags) {
+        Predicate top4ByTags = LearningPredicates.findTop4ByTags(tags);
+        QLearning learning = QLearning.learning;
+        JPQLQuery<Learning> distinct;
 
+        if (top4ByTags == null) {
+            distinct = from(learning)
+                    .where(
+                            learning.startingLearning.isTrue()
+                                    .and(learning.closedLearning.isFalse())
+                    )
+                    .limit(12)
+                    .distinct();
+        }else {
+            distinct = from(learning)
+                    .where(
+                            learning.startingLearning.isTrue()
+                                    .and(learning.closedLearning.isFalse())
+                                    .and(LearningPredicates.findTop4ByTags(tags))
+                    )
+                    .leftJoin(learning.tags, QTag.tag).fetchJoin()
+                    .limit(12)
+                    .distinct();
+        }
+
+        return distinct.fetch();
+    }
 }

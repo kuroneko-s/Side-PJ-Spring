@@ -241,7 +241,7 @@ public class LearningController {
         learningFormVO.setLecturerDescription(learning.getLecturerDescription());
         learningFormVO.setPrice(learning.getPrice());
         learningFormVO.setKategorie(learning.getKategorie());
-        learningFormVO.setSimplesubscription(learning.getSimplesubscription());
+        learningFormVO.setSimplesubscription(learning.getSimpleSubscription());
 
         model.addAttribute(account);
         model.addAttribute("learning", learning);

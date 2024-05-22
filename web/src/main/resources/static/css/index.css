@@ -148,47 +148,130 @@
 }
 /* search start */
 
+/* 강의 start */
+.learning-container {
+    width: 1250px;
+    margin-top: 34px;
 
-/* 기존 css start */
-.card-view{
-    height: 330px;
-    background-color: whitesmoke;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
-.card-img{
+
+.learning-main-title {
+    font-size: 2rem;
+    font-weight: 500;
+
+    margin-bottom: 1.25rem;
+}
+
+.learning-main-title span {
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.learning-item-container {
     position: relative;
-    max-width: 100%;
+
+    width: 1250px;
+    height: 350px;
+
+    overflow: hidden;
+}
+
+.learning-item-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+
+    width: 400%;
+    height: 350px;
+}
+
+.learning-item {
+    width: 280px;
+    height: 350px;
+
+    margin-right: 8px;
+}
+
+.learning-item-card {
+    height: 100%;
+
+    border: rgba(115, 115, 115, 0.25) 1px solid;
+    border-radius: 3px;
+
+    background: whitesmoke;
+    box-shadow: 0 .25rem .25rem rgba(0,0,0,.075);
+}
+
+.learning-item-card-image {
+    width: 280px;
     height: 192px;
+
+    border: none;
+
+    user-select: none;
+    pointer-events: none;
 }
-.card-body{
-    padding: 10px;
+
+.learning-item-card-body {
+    padding: 1rem;
 }
-.card-text{
-    margin-bottom: 0;
-}
-.card-title{
-    font-size: 1.25rem;
-    font-weight: 600;
+
+.learning-item-card-body-title {
+    display: block;
     max-width: 100%;
+
+    font-size: 1.5rem;
+    font-weight: 600;
+
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    display: block;
+
+    margin-bottom: 0.25rem;
 }
-.card-tags{
+
+.learning-item-card-body-tags {
     display: inline-block;
     max-width: 90%;
+
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+
+    margin-bottom: 0.25rem;
 }
-.card-tag-box{
-    border-radius: 15%;
+
+.learning-item-card-body-rating {
+    margin-bottom: 0.25rem;
+    letter-spacing: -2px;
 }
-.tagsCards-label{
-    font-size: 2rem;
-    font-weight: 600;
-}
-.star{
+
+.learning-item-card-body-rating .star {
     color: #FDCC11;
 }
-/* 기존 css end*/
+
+.learning-item-card-body-rating-number {
+    letter-spacing: 0;
+    opacity: .5;
+    font-weight: 600;
+}
+
+.learning-item-card-body-price {
+    margin-bottom: 0.35rem;
+    margin-top: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.learning-item-card-body-opening {
+    font-size: 1.25rem;
+    opacity: 0.75;
+}
+/* 강의 end */

@@ -101,7 +101,7 @@ public class NotificationLearningEventListener {
         Notification notification = new Notification();
         notification.setTitle(newLearning.getTitle() + " " + message);
         notification.setLectureName(newLearning.getLecturerName());
-        notification.setDescription(newLearning.getSimplesubscription());
+        notification.setDescription(newLearning.getSimpleSubscription());
         notification.setAccount(account);
         notification.setChecked(false);
         notification.setCreateNotification(LocalDateTime.now());

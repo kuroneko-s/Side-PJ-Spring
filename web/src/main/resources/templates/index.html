@@ -7,7 +7,9 @@
     <title>Learning</title>
     <div th:replace="fragment.html :: imports"></div>
 
+    <script src="/node_modules/moment/min/moment-with-locales.min.js"></script>
     <script src="/js/ImageSlider.js"></script>
+    <script src="/js/CardSlider.js"></script>
 
     <link rel="stylesheet" href="/css/index.css"/>
 </head>
@@ -56,134 +58,136 @@
     </div>
     <!-- 검색 end -->
 
-    <div class="mt-lg-3 d-flex flex-column">
-        <label for="tagsCards" class="ml-3 tagsCards-label" sec:authorize="!isAuthenticated()">추천 강의</label>
-        <label for="tagsCards" class="ml-3 tagsCards-label" sec:authorize="isAuthenticated()">
-            <span class="tagsCards-label" th:text="${account.nickname}"></span>님 추천 강의!
-        </label>
-        <div class="d-flex justify-content-start" th:if="${learningList.size() > 0}">
-            <div class="col-md-3 roof-start" th:each="learning : ${learningList}" id="tagsCards">
-                <a href="#" th:href="@{'/learning/' + ${learning.id}}">
-                    <div class="card mb-4 shadow-sm card-view">
-                        <img class="bd-placeholder-img card-img-top card-img" role="img" aria-label="Placeholder: Thumbnail"
-                             th:src="|data:image/*;base64,${learning.bannerBytes}|" th:if="${learning.bannerBytes} != null"/>
-                        <img class="banner-image card-img" src="/images/rogo.png" th:if="${learning.bannerBytes} == null"/>
-                        <div class="card-body">
-                            <p class="card-text card-title" th:text="${learning.title}">Default Title</p>
-                            <p class="card-text card-tags">
-                                <i class="fas fa-tasks"></i>
-                                <span class="card-tag-box" th:each="tag : ${learning.tags}">
-                                    <span th:text="${tag.getTitle()}"></span>
-                                </span>
-                            </p>
-                            <span class="card-text card-learning-rating" th:text="${learning.rating}" hidden="hidden">Default Ratings hidden</span>
-                            <p class="mb-1">
-                                <span class="full-star star" th:each="num : ${#numbers.sequence(0, learning.getRating_int() - 1)}" th:if="${learning.getRating_int() > 0}"><i class="fas fa-star"></i></span><span class="half-star star" th:if="${learning.checkRating_boolean()}"><i class="fas fa-star-half-alt"></i></span><span class="empty-star star" th:each="num : ${#numbers.sequence(1, learning.emptyRating())}" th:if="${learning.emptyRating() > 0}"><i class="far fa-star"></i></span>
-                                (<span th:text="${learning.rating}"></span>)
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div th:if="${!learning.price_comma().equals('free')}"><span class="card-price" th:text="${learning.price_comma()}"></span>원</div>
-                                <div th:if="${learning.price_comma().equals('free')}"><span class="card-price"></span>무료 강의</div>
-                                <div class="date-time" th:text="${learning.openLearning}"></div>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
+    <!-- 추천 강의 start -->
+    <div class="learning-container">
+        <p class="learning-main-title" sec:authorize="!isAuthenticated()">추천 강의</p>
+        <p class="learning-main-title" sec:authorize="isAuthenticated()">
+            <span sec:authentication="name">Anonymous</span>의 추천 강의!
+        </p>
+
         <!--강의가 존재할 경우-->
-        <div class="d-flex justify-content-start" th:if="${learningList.size() <= 0}">
-            <div class="col-md-3 roof-start">
-                <div class="card mb-4 shadow-sm card-view">
-                    <img class="banner-image card-img" src="/images/rogo.png"/>
-                    <div class="card-body">
-                        <p class="card-text card-title">강의가 존재하지 않습니다.</p>
-                        <p class="card-text card-tags">
-                            <i class="fas fa-tasks"></i>
-                            <span class="card-tag-box">
-                                <span>태그가 존재하지 않습니다.</span>
-                            </span>
-                        </p>
-                        <span class="card-text card-learning-rating" hidden="hidden">Default Ratings hidden</span>
-                        <p class="mb-1">
-                        </p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div><span class="card-price"></span>강의가 존재하지 않습니다.</div>
-                            <div class="date-time"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--신규 강의가 존재하지 않을 경우-->
-    </div>
-
-    <div class="mt-lg-3 d-flex flex-column">
-        <label for="newCards" class="ml-3 tagsCards-label">신규 강의!</label>
-        <div class="d-flex justify-content-start" th:if="${learningOrderByDatetime.size() > 0}">
-            <div class="col-md-3 roof-start" th:each="learning : ${learningOrderByDatetime}" id="newCards">
-                <a href="#" th:href="@{'/learning/' + ${learning.id}}">
-                    <div class="card mb-4 shadow-sm card-view">
-                        <img class="bd-placeholder-img card-img-top card-img" role="img" aria-label="Placeholder: Thumbnail"
-                             th:src="|data:image/*;base64,${learning.bannerBytes}|" th:if="${learning.bannerBytes} != null"/>
-                        <img class="banner-image card-img" src="/images/rogo.png" th:if="${learning.bannerBytes} == null"/>
-                        <div class="card-body">
-                            <p class="card-text card-title" th:text="${learning.title}">Default Title</p>
-                            <p class="card-text card-tags">
+        <div class="learning-item-container" th:if="${!learningList.isEmpty()}" id="recommend-learning-item-container">
+            <div class="learning-item-wrapper" id="recommend-learning-item-wrapper">
+                <div class="learning-item" th:each="learning : ${learningList}">
+                    <div class="learning-item-card">
+                        <img class="learning-item-card-image" th:if="${learning.bannerBytes} != null" th:src="|data:image/*;base64,${learning.bannerBytes}|" th:alt="${learning.title}" />
+                        <img class="learning-item-card-image" th:if="${learning.bannerBytes} == null" src="/images/rogo.png" alt="기본 배너 이미지" />
+                        <div class="learning-item-card-body">
+                            <p class="learning-item-card-body-title" th:text="${learning.title}">Default Title</p>
+                            <p class="learning-item-card-body-tags">
                                 <i class="fas fa-tasks"></i>
-                                <span class="card-tag-box" th:each="tag : ${learning.tags}">
+                                <span th:each="tag : ${learning.tags}">
                                     <span th:text="${tag.getTitle()}"></span>
                                 </span>
                             </p>
-                            <span class="card-text card-learning-rating" th:text="${learning.rating}" hidden="hidden">Default Ratings hidden</span>
-                            <p class="mb-1">
-                                <span class="full-star star" th:each="num : ${#numbers.sequence(0, learning.getRating_int() - 1)}" th:if="${learning.getRating_int() > 0}"><i class="fas fa-star"></i></span><span class="half-star star" th:if="${learning.checkRating_boolean()}"><i class="fas fa-star-half-alt"></i></span><span class="empty-star star" th:each="num : ${#numbers.sequence(1, learning.emptyRating())}" th:if="${learning.emptyRating() > 0}"><i class="far fa-star"></i></span>
-                                (<span th:text="${learning.rating}"></span>)
+                            <p class="learning-item-card-body-rating">
+                                <span class="full-star star" th:each="num : ${#numbers.sequence(0, learning.getRating_int() - 1)}" th:if="${learning.getRating_int() > 0}">
+                                    <i class="fas fa-star"></i>
+                                </span>
+                                <span class="half-star star" th:if="${learning.checkRating_boolean()}">
+                                    <i class="fas fa-star-half-alt"></i>
+                                </span>
+                                <span class="empty-star star" th:each="num : ${#numbers.sequence(1, learning.emptyRating())}" th:if="${learning.emptyRating() > 0}">
+                                    <i class="far fa-star"></i>
+                                </span>
+                                <span class="learning-item-card-body-rating-number">(<span th:text="${learning.rating}"></span>)</span>
                             </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div th:if="${!learning.price_comma().equals('free')}"><span class="card-price" th:text="${learning.price_comma()}"></span>원</div>
-                                <div th:if="${learning.price_comma().equals('free')}"><span class="card-price"></span>무료 강의</div>
+                            <div class="learning-item-card-body-price">
+                                <div th:if="${!learning.price_comma().equals('free')}"><span th:text="${learning.price_comma()}"></span>원</div>
+                                <div th:if="${learning.price_comma().equals('free')}"><span></span>무료 강의</div>
+                            </div>
+                            <div class="learning-item-card-body-opening">
                                 <div class="date-time" th:text="${learning.openLearning}"></div>
                             </div>
                         </div>
                     </div>
-                </a>
+                </div>
             </div>
         </div>
 
-        <!--신규 강의가 존재할 경우-->
-        <div class="d-flex justify-content-start" th:if="${learningOrderByDatetime.size() <= 0}">
-            <div class="col-md-3 roof-start">
-                <div class="card mb-4 shadow-sm card-view">
-                    <img class="banner-image card-img" src="/images/rogo.png"/>
-                    <div class="card-body">
-                        <p class="card-text card-title">강의가 존재하지 않습니다.</p>
-                        <p class="card-text card-tags">
-                            <i class="fas fa-tasks"></i>
-                            <span class="card-tag-box">
-                                <span>태그가 존재하지 않습니다.</span>
-                            </span>
-                        </p>
-                        <span class="card-text card-learning-rating" hidden="hidden">Default Ratings hidden</span>
-                        <p class="mb-1">
-                        </p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div><span class="card-price"></span>강의가 존재하지 않습니다.</div>
-                            <div class="date-time"></div>
+        <!-- 강의가 존재하지 않을 경우 -->
+        <div class="learning-item" th:if="${learningList.isEmpty()}">
+            <div class="learning-item-card">
+                <img class="learning-item-card-image" src="/images/rogo.png" alt="anonymous"/>
+                <div class="learning-item-card-body">
+                    <p class="learning-item-card-body-title">강의가 존재하지 않습니다.</p>
+                    <p class="learning-item-card-body-tags">태그가 존재하지 않습니다.</p>
+                    <div class="learning-item-card-body-price">
+                        <span>강의가 존재하지 않습니다.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 추천 강의 end -->
+
+    <!-- 신규 강의 start -->
+    <div class="learning-container">
+        <p class="learning-main-title">신규 강의!</p>
+
+        <!--강의가 존재할 경우-->
+        <div class="learning-item-container" th:if="${!learningOrderByDatetime.isEmpty()}" id="new-learning-item-container">
+            <div class="learning-item-wrapper" id="new-learning-item-wrapper">
+                <div class="learning-item" th:each="learning : ${learningList}">
+                    <div class="learning-item-card">
+                        <img class="learning-item-card-image" th:if="${learning.bannerBytes} != null" th:src="|data:image/*;base64,${learning.bannerBytes}|" th:alt="${learning.title}" />
+                        <img class="learning-item-card-image" th:if="${learning.bannerBytes} == null" src="/images/rogo.png" alt="기본 배너 이미지" />
+                        <div class="learning-item-card-body">
+                            <p class="learning-item-card-body-title" th:text="${learning.title}">Default Title</p>
+                            <p class="learning-item-card-body-tags">
+                                <i class="fas fa-tasks"></i>
+                                <span th:each="tag : ${learning.tags}">
+                                    <span th:text="${tag.getTitle()}"></span>
+                                </span>
+                            </p>
+                            <p class="learning-item-card-body-rating">
+                                <span class="full-star star" th:each="num : ${#numbers.sequence(0, learning.getRating_int() - 1)}" th:if="${learning.getRating_int() > 0}">
+                                    <i class="fas fa-star"></i>
+                                </span>
+                                <span class="half-star star" th:if="${learning.checkRating_boolean()}">
+                                    <i class="fas fa-star-half-alt"></i>
+                                </span>
+                                <span class="empty-star star" th:each="num : ${#numbers.sequence(1, learning.emptyRating())}" th:if="${learning.emptyRating() > 0}">
+                                    <i class="far fa-star"></i>
+                                </span>
+                                <span class="learning-item-card-body-rating-number">(<span th:text="${learning.rating}"></span>)</span>
+                            </p>
+                            <div class="learning-item-card-body-price">
+                                <div th:if="${!learning.price_comma().equals('free')}"><span th:text="${learning.price_comma()}"></span>원</div>
+                                <div th:if="${learning.price_comma().equals('free')}"><span></span>무료 강의</div>
+                            </div>
+                            <div class="learning-item-card-body-opening">
+                                <div class="date-time" th:text="${learning.openLearning}"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!--신규 강의가 존재하지 않을 경우-->
-    </div>
 
+        <!-- 강의가 존재하지 않을 경우 -->
+        <div class="learning-item" th:if="${learningOrderByDatetime.isEmpty()}">
+            <div class="learning-item-card">
+                <img class="learning-item-card-image" src="/images/rogo.png" alt="anonymous"/>
+                <div class="learning-item-card-body">
+                    <p class="learning-item-card-body-title">강의가 존재하지 않습니다.</p>
+                    <p class="learning-item-card-body-tags">태그가 존재하지 않습니다.</p>
+                    <div class="learning-item-card-body-price">
+                        <span>강의가 존재하지 않습니다.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 신규 강의 end -->
 
     <div th:replace="fragment.html :: footer"></div>
-    <script src="/node_modules/moment/min/moment-with-locales.min.js"></script>
+
     <script type="application/javascript">
         window.addEventListener("DOMContentLoaded", () => {
             ImageSlider.init();
+            CardSlider('recommend-learning-item-container', 'recommend-learning-item-wrapper');
+            CardSlider('new-learning-item-container', 'new-learning-item-wrapper');
 
             moment.locale('ko');
             $(".date-time").text(function (index, dateTime) {

@@ -25,7 +25,7 @@ public class MainController {
         List<Learning> learningList;
 
         if (account != null) {
-            learningList = learningRepository.findTop4ByTagsOrderByRatingDesc(account.getTags());
+            learningList = learningRepository.findTop12ByTagsOrderByRatingDesc(account.getTags());
             model.addAttribute(account);
             model.addAttribute("learningList", learningList);
         } else {

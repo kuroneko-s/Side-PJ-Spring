@@ -21,4 +21,6 @@ public interface LearningRepositoryExtension {
     Page<Learning> findByKategorieAndKeywordWithPageable(boolean b, String keyword, String kategorie, Pageable pageable);
 
     List<Learning> findTop4ByTagsOrderByRatingDesc(Set<Tag> tags);
+
+    List<Learning> findTop12ByTagsOrderByRatingDesc(Set<Tag> tags);
 }

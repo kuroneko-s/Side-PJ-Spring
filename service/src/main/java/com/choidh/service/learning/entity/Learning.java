@@ -2,6 +2,7 @@ package com.choidh.service.learning.entity;
 
 
 import com.choidh.service.account.entity.Account;
+import com.choidh.service.annotation.Name;
 import com.choidh.service.question.entity.Question;
 import com.choidh.service.review.entity.Review;
 import com.choidh.service.tag.entity.Tag;
@@ -16,6 +17,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@Builder
 @EqualsAndHashCode(of = "id")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,60 +26,94 @@ public class Learning {
     @GeneratedValue
     private Long id;
 
+    @Name(name = "강의 제목")
     private String title;
 
+    @Name(name = "강사 이름")
     private String lecturerName;
 
+    @Name(name = "강사 설명")
     private String lecturerDescription;
 
-    private String simplesubscription;
+    @Name(name = "간단 소개 (강의?)")
+    private String simpleSubscription;
 
     @Lob
+    @Name(name = "강의 소개")
     private String subscription;
 
     @Lob
+    @Name(name = "배너 이미지 데이터 (base64)", description = "나중에 서버에 저장하고 경로 저장해서 들고오는거로 쓸 듯 이렇게 쓰면 안됨")
     private String bannerBytes;
+
+    @Name(name = "배너 이미지 경로")
     private String bannerServerPath;
+
+    @Name(name = "카테고리", description = "왜 구분값이나 그런게 없고 list 같은 형식이 아닐까 ?")
     private String kategorie;
 
+    @Name(name = "가격")
     private int price;
 
+    @Name(name = "강의 생성 일시")
     private LocalDateTime createLearning;
+
+    @Name(name = "강의 시작 일시")
     private LocalDateTime openLearning = null;
+
+    @Name(name = "강의 종료 일시")
     private LocalDateTime closeLearning = null;
+
+    @Name(name = "강의 영상 갱신 일시")
     private LocalDateTime uploadVideo = null;
+
+    @Name(name = "강의 갱신 일시")
     private LocalDateTime updateLearning = null;
 
+    @Name(name = "구매 일시", description = "???????? 판매된 일시가 아닐까 ?")
     private LocalDateTime buyLearning;
 
+    @Name(name = "강의 오픈 여부")
     private boolean startingLearning = false;
+
+    @Name(name = "강의 폐쇄 여부")
     private boolean closedLearning = true;
 
+    @Name(name = "강의 갯수")
     private int videoCount = 0;
 
-    private String comment; // 후기
+    @Name(name = "강의 후기")
+    private String comment;
+
+    @Name(name = "강의 평점")
     private float rating = 0;
+
+    @Name(name = "총 가격 ?")
     private Integer totalPrice;
 
-    //듣고 있는 account들
     @ManyToMany(fetch = FetchType.LAZY)
+    @Name(name = "수강중인 사람들 목록")
     private Set<Account> accounts = new HashSet<>();
 
-    //업로더 (게시자)
     @ManyToOne
     @JoinColumn(name = "account_id")
+    @Name(name = "업로더 (게시자)")
     private Account account;
 
     @OneToMany(mappedBy = "learning", fetch = FetchType.LAZY)
+    @Name(name = "비디오 목록들")
     private Set<Video> videos = new HashSet<>();
 
     @ManyToMany
+    @Name(name = "강의 관련 태그들")
     private Set<Tag> tags = new HashSet<>();
 
     @OneToMany(mappedBy = "learning")
+    @Name(name = "강의 관련 질문글들")
     private Set<Question> questions = new HashSet<>();
 
     @OneToMany(mappedBy = "learning")
+    @Name(name = "강의 관련 리뷰들")
     private Set<Review> reviews = new HashSet<>();
 
     public void setVideos(Video video) {

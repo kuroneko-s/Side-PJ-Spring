@@ -2,7 +2,6 @@ package com.choidh.web.learning;
 
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.repository.AccountRepository;
-import com.choidh.service.common.AppConstant;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.repository.LearningRepository;
 import com.choidh.service.tag.entity.Tag;
@@ -510,7 +509,7 @@ class LearningControllerTest {
 
         mockMvc.perform(post("/profile/learning/update/" + learning.getId() + "/script")
                 .param("title", learning.getTitle())
-                .param("simplesubscription", learning.getSimplesubscription())
+                .param("simplesubscription", learning.getSimpleSubscription())
                 .param("subscription", "테스트_1 수정 설명입니다.")
                 .param("lecturerName", "mark.2_흑우냥이")
                 .param("lecturerDescription", "테스트_게시자_수정_입니다.")

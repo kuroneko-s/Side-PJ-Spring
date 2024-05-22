@@ -70,7 +70,7 @@
 
                                 <div class="mt-lg-4 form-group">
                                     <label for="summernote_simplesubscription">강의 간략 소개</label>
-                                    <div th:text="${learning.simplesubscription}" id="simplesubscription" hidden="hidden"></div>
+                                    <div th:text="${learning.getSimpleSubscription}" id="simplesubscription" hidden="hidden"></div>
                                     <textarea id="summernote_simplesubscription" class="summernote" type="textarea" required th:field="*{simplesubscription}"> </textarea>
                                 </div>
 
