@@ -1,28 +1,20 @@
-const CardSlider = (() => {
-    let that = {};
-
+function CardSlider(sliderId, sliderTrackId) {
     let isDragging = false;
     let startPos = 0;
     let currentTranslate = 0;
     let prevTranslate = 0;
     let animationID = 0;
 
-    let slider;
-    let sliderTrack;
+    let slider= document.getElementById(sliderId);
+    let sliderTrack= document.getElementById(sliderTrackId);
+    slider.addEventListener('mousedown', dragStart);
+    slider.addEventListener('mouseup', dragEnd);
+    slider.addEventListener('mouseleave', dragEnd);
+    slider.addEventListener('mousemove', drag);
 
-    that.init = () => {
-        slider = document.getElementById('recommend-learning-item-container');
-        sliderTrack = document.getElementById('recommend-learning-item-wrapper');
-
-        slider.addEventListener('mousedown', dragStart);
-        slider.addEventListener('mouseup', dragEnd);
-        slider.addEventListener('mouseleave', dragEnd);
-        slider.addEventListener('mousemove', drag);
-
-        slider.addEventListener('touchstart', dragStart);
-        slider.addEventListener('touchend', dragEnd);
-        slider.addEventListener('touchmove', drag);
-    }
+    slider.addEventListener('touchstart', dragStart);
+    slider.addEventListener('touchend', dragEnd);
+    slider.addEventListener('touchmove', drag);
 
     function dragStart(event) {
         isDragging = true;
@@ -63,6 +55,4 @@ const CardSlider = (() => {
     function setSliderPosition() {
         sliderTrack.style.transform = `translateX(${currentTranslate}px)`;
     }
-
-    return that;
-})()
+}
