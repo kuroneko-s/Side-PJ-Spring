@@ -17,6 +17,8 @@
 }
 
 .register-form {
+    width: 40rem;
+
     justify-content: flex-start!important;
     align-items: normal!important;
     flex-direction: column;

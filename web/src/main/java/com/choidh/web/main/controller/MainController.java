@@ -73,6 +73,11 @@ public class MainController {
         return "redirect:/login";
     }
 
+    @GetMapping("/find-account")
+    public String findAccount(Model model) {
+        return "findAccount";
+    }
+
     /**
      * Get 회원가입 화면
      */
