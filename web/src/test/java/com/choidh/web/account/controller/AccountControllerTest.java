@@ -48,7 +48,7 @@ class AccountControllerTest {
     @Test
     @DisplayName("GET 로그인 화면 요청 - 성공")
     public void postCreateAccountForm() throws Exception{
-        mockMvc.perform(get("/account/create"))
+        mockMvc.perform(get("/register"))
                 .andExpect(model().attributeExists("accountVO"))
                 .andExpect(view().name("navbar/create_account"))
                 .andExpect(status().isOk());
@@ -58,7 +58,7 @@ class AccountControllerTest {
     @DisplayName("POST 로그인 계정 생성 - 성공")
     public void postAccount_Create_success() throws Exception{
         mockMvc.perform(
-                        post("/account/create")
+                        post("/register")
                                 .param("email", "test@test.com")
                                 .param("password", "1234567890")
                                 .param("passwordcheck", "1234567890")
@@ -80,7 +80,7 @@ class AccountControllerTest {
     @DisplayName("로그인 계정 생성 - 실패 (Password Error)")
     public void postAccount_Create_fail_password() throws Exception{
         mockMvc.perform(
-                        post("/account/create")
+                        post("/register")
                                 .param("email", "test@test.com")
                                 .param("password", "1234567890")
                                 .param("passwordcheck", "12345678")
@@ -99,7 +99,7 @@ class AccountControllerTest {
     @DisplayName("로그인 계정 생성 - 실패 (Blank Value)")
     public void postAccount_Create_fail_blank() throws Exception{
         mockMvc.perform(
-                        post("/account/create")
+                        post("/register")
                                 .param("email", "test@test.com")
                                 .param("password", "1234567890")
                                 .param("passwordcheck", "12345678")
@@ -124,7 +124,7 @@ class AccountControllerTest {
         accountServiceImpl.createAccount(modelMapper.map(accountVO, Account.class));
 
         mockMvc.perform(
-                        post("/account/create")
+                        post("/register")
                                 .param("email", "test@test.com")
                                 .param("password", "1234567890")
                                 .param("passwordcheck", "1234567890")
@@ -150,7 +150,7 @@ class AccountControllerTest {
         accountServiceImpl.createAccount(modelMapper.map(accountVO, Account.class));
 
         mockMvc.perform(
-                        post("/account/create")
+                        post("/register")
                                 .param("email", "test2@test.com")
                                 .param("password", "1234567890")
                                 .param("passwordcheck", "1234567890")

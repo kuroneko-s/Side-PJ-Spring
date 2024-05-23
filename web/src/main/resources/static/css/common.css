@@ -72,6 +72,7 @@ a:hover {
 
 :root {
     --hover-text-color: #737373;
+    --warning-text-color: #dc3545;
 }
 
 .container{
@@ -106,6 +107,21 @@ a:hover {
     outline: none;
     box-shadow: 0 0 2px 2px rgba(169, 189, 253, 0.7);
     border: rgba(169, 189, 253, 1) 1px solid;
+}
+
+.form .button {
+    display: block;
+    width: 100%;
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+    text-align: center;
+}
+
+.form .button:hover {
+    color: #fff;
+    background-color: #218838;
+    border-color: #1e7e34;
 }
 /* form end */
 

@@ -34,28 +34,6 @@ public class AccountController {
     }
 
     /**
-     * Get 회원가입 화면
-     */
-    @GetMapping("/create")
-    public String getCreateAccountView(Model model) {
-        model.addAttribute(new AccountVO());
-
-        return "navbar/create_account";
-    }
-
-    /**
-     * Post 회원가입 처리
-     */
-    @PostMapping("/create")
-    public String postCreateAccount(@Valid AccountVO accountVO, Errors errors, Model model) {
-        if (errors.hasErrors()) return "navbar/create_account";
-
-        accountService.postCreateAccount(model, accountVO);
-
-        return "navbar/token_validation";
-    }
-
-    /**
      * Get 이메일 인증 화면
      */
     @GetMapping("/mailAuth")

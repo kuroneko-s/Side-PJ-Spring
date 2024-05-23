@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+
+    <div th:replace="fragment.html :: imports"></div>
+
+    <link rel="stylesheet" href="/css/register.css"/>
+</head>
+
+<body class="container">
+    <div th:replace="fragment/navbar/navbar.html :: navbar"></div>
+
+    <div class="register-container">
+        <p class="register-title">회원가입</p>
+
+        <form class="form register-form needs-validation" action="#" th:object="${accountVO}" th:action="@{/register}" method="post" novalidate>
+            <label for="nickname">별칭</label>
+            <input type="text" id="nickname" th:field="*{nickname}" placeholder="흑우냥이" minlength="2" maxlength="20" required>
+            <small class="register-form-help-message">※ 2자이상 20자이내로 입력해주세요.</small>
+            <small class="invalid-feedback">닉네임을 다시 입력해주세요.</small>
+            <small class="register-form-error-message" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname Error</small>
+
+            <label for="email">이메일</label>
+            <input type="email" class="form-control" id="email" placeholder="sample@gmail.com" th:field="*{email}" required
+                   pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}">
+            <small class="invalid-feedback">이메일을 다시 입력해주세요.</small>
+            <small class="register-form-error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</small>
+
+            <label for="password">비밀번호</label>
+            <input type="password" class="form-control" id="password" th:field="*{password}" pattern="^[a-zA-Z0-9_!@#$]{10,14}$" required>
+            <small class="register-form-help-message">
+                ※ 10자 이상 14자 이내로 입력해주세요. 영문자, 숫자, 특수기호(_!@#$)를 사용할 수 있으며 공백은 사용할 수 없습니다.
+            </small>
+            <small class="invalid-feedback">비밀번호를 다시 입력해주세요.</small>
+            <small class="register-form-error-message" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</small>
+
+            <label for="passwordCheck">비밀번호 확인</label>
+            <input type="password" class="form-control" id="passwordCheck"  th:field="*{passwordcheck}" pattern="^[a-zA-Z0-9_!@#$]{10,14}$" required>
+            <small class="register-form-help-message">
+                ※ 10자 이상 14자 이내로 입력해주세요. 영문자, 숫자, 특수기호(_!@#$)를 사용할 수 있으며 공백은 사용할 수 없습니다.
+            </small>
+            <small class="invalid-feedback">비밀번호를 다시 입력해주세요.</small>
+            <small class="register-form-error-message" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</small>
+
+            <button type="submit" class="button register-form-button">회원가입</button>
+
+            <div class="register-check-wrapper">
+                <div class="register-check-notification">
+                    <input type="checkbox" class="" id="check-notification">
+                    <label class="" for="check-notification">다양한 소식을 받아보시겠어요?</label>
+                </div>
+            </div>
+
+            <div class="register-footer" id="register-footer"></div>
+        </form>
+    </div>
+
+    <div th:replace="fragment.html::form-validation"></div>
+
+    <script type="text/javascript">
+        window.addEventListener("DOMContentLoaded", () => {
+            const registerFooterEl = document.getElementById("register-footer");
+            registerFooterEl.textContent = `© 2021-${new Date().getFullYear()}`;
+        })
+    </script>
+</body>
+</html>

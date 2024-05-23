@@ -3,15 +3,22 @@ package com.choidh.web.main.controller;
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.repository.LearningRepository;
+import com.choidh.web.account.service.AccountService;
+import com.choidh.web.account.validator.AccountValidator;
+import com.choidh.web.account.vo.AccountVO;
 import com.choidh.web.main.service.MainService;
 import com.choidh.web.common.annotation.CurrentAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -19,6 +26,14 @@ import java.util.List;
 public class MainController {
     private final MainService mainService;
     private final LearningRepository learningRepository;
+    private final AccountService accountService;
+    private final AccountValidator accountValidator;
+
+    // AccountController 에 Validator 추가.
+    @InitBinder("accountVO")
+    private void accountVOValidator(WebDataBinder webDataBinder){
+        webDataBinder.addValidators(accountValidator);
+    }
 
     @GetMapping("/")
     public String indexGet(@CurrentAccount Account account, Model model) {
@@ -56,5 +71,27 @@ public class MainController {
         attributes.addFlashAttribute("message", "로그인 정보가 없습니다. 계정을 확인 해주세요.");
 
         return "redirect:/login";
+    }
+
+    /**
+     * Get 회원가입 화면
+     */
+    @GetMapping("/register")
+    public String getCreateAccountView(Model model) {
+        model.addAttribute("accountVO", new AccountVO());
+
+        return "register";
+    }
+
+    /**
+     * Post 회원가입 처리
+     */
+    @PostMapping("/register")
+    public String postCreateAccount(@Valid AccountVO accountVO, Errors errors, Model model) {
+        if (errors.hasErrors()) return "register";
+
+        accountService.postCreateAccount(model, accountVO);
+
+        return "register_success";
     }
 }
