@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <div th:replace="fragment.html :: imports"></div>
+    <div th:replace="fragment/fragment.html :: imports"></div>
     <link rel="stylesheet" href="/css/review.css"/>
     <link rel="stylesheet" href="/node_modules/summernote/dist/summernote-bs4.min.css"/>
 </head>
@@ -20,7 +20,7 @@
         <div class="d-flex flex-column">
             <label for="rating">평점!</label>
             <select class="custom-select form-control rating-selecter" id="rating" th:field="*{rating}">
-                <option value='0.5' checked>
+                <option value='0.5' selected>
                     💔🤍🤍🤍🤍 0.5
                 </option>
                 <option value="1">
@@ -85,6 +85,6 @@
         }
 
     </script>
-    <div th:replace="fragment.html::form-validation"></div>
+    <div th:replace="fragment/fragment.html :: form-validation"></div>
 </body>
 </html>

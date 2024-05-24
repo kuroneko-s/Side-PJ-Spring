@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <div th:replace="fragment.html :: imports"></div>
+    <div th:replace="fragment/fragment.html :: imports"></div>
     <link rel="stylesheet" href="/css/profile-bar.css"/>
     <link rel="stylesheet" href="/css/profile-settings.css"/>
     <link rel="stylesheet" href="/node_modules/summernote/dist/summernote-bs4.min.css"/>
@@ -181,7 +181,7 @@
     <!--page body-->
 
     <div th:replace="fragment/footer/footer.html :: footer"></div>
-    <script th:replace="fragment.html :: csrf-code"></script>
+    <script th:replace="fragment/fragment.html :: csrf-code"></script>
     <script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
     <script type="application/javascript">
         $(function(){
@@ -242,7 +242,7 @@
         });
     </script>
 
-    <div th:replace="fragment.html::form-validation"></div>
+    <div th:replace="fragment/fragment.html :: form-validation"></div>
 </body>
 
 </html>
