@@ -6,8 +6,8 @@ import com.choidh.service.learning.repository.LearningRepository;
 import com.choidh.web.account.service.AccountService;
 import com.choidh.web.account.validator.AccountValidator;
 import com.choidh.web.account.vo.AccountVO;
-import com.choidh.web.main.service.MainService;
 import com.choidh.web.common.annotation.CurrentAccount;
+import com.choidh.web.main.service.MainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -73,7 +73,10 @@ public class MainController {
         return "redirect:/login";
     }
 
-    @GetMapping("/find-account")
+    /**
+     * Get 계정 찾기
+     */
+    @GetMapping("/findAccount")
     public String findAccount(Model model) {
         return "findAccount";
     }

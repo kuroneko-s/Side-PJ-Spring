@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>로그인</title>
+    <title>계정찾기</title>
 
     <script th:replace="fragment.html :: imports"></script>
 
@@ -37,7 +37,7 @@
             <input id="password" type="password" name="password" required
                    pattern="^[a-zA-Z0-9_!@#$]{10,14}$">
             <small class="login-form-help-message">
-                패스워드가 기억나지 않는다면, <a href="#" th:href="@{/findAccount}">계정찾기</a>를 클릭해주세요.
+                패스워드가 기억나지 않는다면, <a href="#" th:href="@{/find-account}">계정찾기</a>를 클릭해주세요.
             </small>
             <small class="invalid-feedback">패스워드를 다시 입력해주세요.</small>
 
