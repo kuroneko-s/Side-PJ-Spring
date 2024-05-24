@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 
 @Configuration
-@MapperScan(basePackages = "com.choidh.service")
+@MapperScan(basePackages = "com.choidh.service.*.mapper")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class MyBatisConfig {
     private final ApplicationContext applicationContext;

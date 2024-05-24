@@ -9,7 +9,6 @@ import com.choidh.service.question.entity.Question;
 import com.choidh.service.review.entity.Review;
 import com.choidh.service.tag.entity.Tag;
 import lombok.*;
-import org.apache.ibatis.type.Alias;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
