@@ -1,8 +1,8 @@
 package com.choidh.web.account.service;
 
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.security.AccountUser;
 import com.choidh.service.learning.entity.Learning;
+import com.choidh.service.security.AccountUser;
 import com.choidh.service.tag.entity.Tag;
 import com.choidh.web.account.vo.AccountVO;
 import com.choidh.web.profile.vo.NotificationUpdateForm;
@@ -27,7 +27,7 @@ public interface AccountService {
     /**
      * Post 회원가입 처리
      */
-    void postCreateAccount(Model model, AccountVO accountVO);
+    void postCreateAccount(AccountVO accountVO);
 
     /**
      * 이메일 인증 화면

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script th:replace="fragment/fragment.html :: imports"></script>
+
+    <link rel="stylesheet" href="/css/registerSuccess.css"/>
+</head>
+
+<body class="container">
+    <div th:replace="fragment/navbar/navbar.html :: navbar"></div>
+
+    <!-- toast message start -->
+    <div class="register-success-toast-message-container" id="register-success-toast-message-container">
+        <div class="register-success-toast-message" th:if="${message}">
+            <p th:text="${message}">인증용 메일이 전송 되었습니다. 확인해주세요.</p>
+            <button type="button" class="register-success-toast-message-close-button" id="register-success-toast-message-close-button">
+                <span>&times;</span>
+            </button>
+        </div>
+    </div>
+    <!-- toast message end -->
+
+    <div class="register-success-container">
+        <form class="form register-success-form needs-validation" method="post" action="#" th:action="@{/account/mailAuthRetry}">
+            <label for="email">이메일</label>
+            <input type="email" id="email" name="email" placeholder="sample@gmail.com">
+            <small class="register-success-form-help-message">
+                회원 가입 신청시 입력하셨던 이메일을 입력해주세요. <br>
+                인증번호 재발송은 1시간에 한번만 가능합니다.
+            </small>
+            <button type="submit" class="button register-success-form-button">인증 다시 받기</button>
+        </form>
+
+        <div class="register-success-footer" id="register-success-footer"></div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    window.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("register-success-toast-message-close-button")?.addEventListener("click", () => {
+            document.getElementById("register-success-toast-message-container")?.classList.add("hide");
+        });
+
+        const emailEl = document.getElementById("email");
+        emailEl.addEventListener("input", function() {
+            const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!pattern.test(emailEl.value)) {
+                emailEl.setCustomValidity("Please enter a valid email address.");
+            } else {
+                emailEl.setCustomValidity("");
+            }
+        });
+
+        const registerFooterEl = document.getElementById("register-success-footer");
+        registerFooterEl.textContent = `© 2021-${new Date().getFullYear()}`;
+
+        setTimeout(() => {
+            const elementById = document.getElementById("register-success-toast-message-container");
+            if (!elementById?.classList.contains("hide")) {
+                elementById.classList.add("hide");
+            }
+        }, 5000)
+    });
+</script>
+</html>
+

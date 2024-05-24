@@ -47,11 +47,8 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     @Transactional
-    public void postCreateAccount(Model model, AccountVO accountVO) {
+    public void postCreateAccount(AccountVO accountVO) {
         this.createAccount(modelMapper.map(accountVO, Account.class));
-
-        model.addAttribute("message", "인증용 메일이 전송 되었습니다. 확인해주세요");
-        model.addAttribute(new EmailTokenVO());
     }
 
     /**
@@ -85,20 +82,22 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public String postMailAuthenticationRetry(String email, Model model, RedirectAttributes attributes) {
-        Account account = accountRepository.findByEmailAndTokenChecked(email, false);
+        if (email == null || email.isEmpty()) {
+            model.addAttribute("message", "메일이 옳바르지 않습니다. 다시 입력해주세요.");
 
+            return "registerSuccess";
+        }
+
+        Account account = accountRepository.findByEmailAndTokenChecked(email, false);
         if (account != null && account.canCheckingEmailToken()) {
             // 이메일 재전송 요청
             emailService.sendCheckEmail(EmailCheckMessageVO.getInstance(account));
             attributes.addFlashAttribute("message", "인증용 메일이 전송 되었습니다. 확인해주세요");
-
-            return "redirect:/";
+        } else {
+            model.addAttribute("message", "인증용 메일은 1시간에 한번만 전송이 가능합니다. 양해 부탁드립니다");
         }
 
-        model.addAttribute("message", "인증용 메일은 1시간에 한번만 전송이 가능합니다. 양해 부탁드립니다");
-        model.addAttribute(new EmailTokenVO());
-
-        return "navbar/token_validation";
+        return "registerSuccess";
     }
 
     /**

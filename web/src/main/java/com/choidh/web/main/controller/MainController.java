@@ -96,10 +96,23 @@ public class MainController {
      */
     @PostMapping("/register")
     public String postCreateAccount(@Valid AccountVO accountVO, Errors errors, Model model) {
-        if (errors.hasErrors()) return "register";
+        if (errors.hasErrors()) {
+            model.addAttribute("errors", true);
+            return "register";
+        }
 
-        accountService.postCreateAccount(model, accountVO);
+        accountService.postCreateAccount(accountVO);
 
-        return "register_success";
+        model.addAttribute("message", "인증용 메일이 전송 되었습니다. 확인해주세요");
+
+        return "registerSuccess";
+    }
+
+    // 테스트용.
+    //    @GetMapping("/registerSuccess")
+    public String registerSuccess(Model model) {
+        model.addAttribute("message", "인증용 메일이 전송 되었습니다. 확인해주세요");
+
+        return "registerSuccess";
     }
 }
