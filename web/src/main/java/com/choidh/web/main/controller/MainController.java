@@ -6,6 +6,7 @@ import com.choidh.service.learning.repository.LearningRepository;
 import com.choidh.web.account.service.AccountService;
 import com.choidh.web.account.validator.AccountValidator;
 import com.choidh.web.account.vo.AccountVO;
+import com.choidh.web.account.vo.EmailTokenVO;
 import com.choidh.web.common.annotation.CurrentAccount;
 import com.choidh.web.main.service.MainService;
 import lombok.RequiredArgsConstructor;
@@ -114,5 +115,21 @@ public class MainController {
         model.addAttribute("message", "인증용 메일이 전송 되었습니다. 확인해주세요");
 
         return "registerSuccess";
+    }
+
+    /**
+     * Get 이메일 인증 화면
+     */
+    @GetMapping("/mailAuth")
+    public String getEmailAuthentication(String token, String email, Model model, RedirectAttributes attributes) {
+        return accountService.getMailAuthentication(token, email, model, attributes);
+    }
+
+    /**
+     * Post 이메일 인증 재전송 처리
+     */
+    @PostMapping("/mailAuthRetry")
+    public String submitReCheckEmailToken(EmailTokenVO emailTokenVO, Model model, RedirectAttributes attributes) {
+        return accountService.postMailAuthenticationRetry(emailTokenVO.getEmail(), model, attributes);
     }
 }

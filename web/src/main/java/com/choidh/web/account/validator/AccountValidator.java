@@ -3,7 +3,6 @@ package com.choidh.web.account.validator;
 
 import com.choidh.service.account.repository.AccountRepository;
 import com.choidh.web.common.annotation.IsValidator;
-import com.choidh.web.account.controller.AccountController;
 import com.choidh.web.account.vo.AccountVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 /**
- * {@link AccountController}의 Validator
+ * {@link AccountVO}의 Validator
  */
 @IsValidator
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))

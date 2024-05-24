@@ -178,7 +178,7 @@ class AccountControllerTest {
         verify(emailService, times(1)).sendCheckEmail(EmailCheckMessageVO.getInstance(beforeAccount)); // 메서드 호출 여부 검증
 
         mockMvc.perform(
-                        get("/account/mailAuth")
+                        get("/mailAuth")
                                 .param("token", account.getEmailCheckToken())
                                 .param("email", account.getEmail())
                 )
@@ -207,7 +207,7 @@ class AccountControllerTest {
         Account account = accountServiceImpl.createAccount(modelMapper.map(accountVO, Account.class));
 
         mockMvc.perform(
-                        get("/account/mailAuth")
+                        get("/mailAuth")
                                 .param("token", account.getEmailCheckToken() + "dp2")
                                 .param("email", account.getEmail())
                 )
@@ -234,7 +234,7 @@ class AccountControllerTest {
         Account account = accountServiceImpl.createAccount(modelMapper.map(accountVO, Account.class));
 
         mockMvc.perform(
-                        get("/account/mailAuth")
+                        get("/mailAuth")
                                 .param("token", account.getEmailCheckToken())
                                 .param("email", "kuroneko2@naver.com")
                 )
@@ -262,7 +262,7 @@ class AccountControllerTest {
         account.setCreateEmailToken(LocalDateTime.now().minusHours(3));
 
         mockMvc.perform(
-                        post("/account/mailAuthRetry")
+                        post("/mailAuthRetry")
                                 .param("email", accountVO.getEmail())
                                 .with(csrf())
                 )
@@ -285,7 +285,7 @@ class AccountControllerTest {
         accountServiceImpl.createAccount(modelMapper.map(accountVO, Account.class));
 
         mockMvc.perform(
-                        post("/account/mailAuthRetry")
+                        post("/mailAuthRetry")
                                 .param("email", accountVO.getEmail())
                                 .with(csrf())
                 )

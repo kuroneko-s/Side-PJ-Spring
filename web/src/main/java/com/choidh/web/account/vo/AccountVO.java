@@ -1,13 +1,15 @@
 package com.choidh.web.account.vo;
 
-import lombok.Data;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-@Data
+@Getter @Setter @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AccountVO {
 
     @NotBlank
