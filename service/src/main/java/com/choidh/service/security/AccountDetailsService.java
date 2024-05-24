@@ -5,6 +5,7 @@ import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,7 +24,15 @@ public class AccountDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Account account = accountRepository.findByEmailAndTokenChecked(email, true);
 
-        if (account == null) throw new UsernameNotFoundException(email);
+        if (account == null) {
+            account = accountRepository.findByEmailAndTokenChecked(email, false);
+
+            if (account != null) {
+                throw new CredentialsExpiredException(email);
+            } else {
+                throw new UsernameNotFoundException(email);
+            }
+        }
 
         return new AccountUser(account);
     }

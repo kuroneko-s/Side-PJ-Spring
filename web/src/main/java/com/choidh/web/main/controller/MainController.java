@@ -67,13 +67,6 @@ public class MainController {
         return "login";
     }
 
-    @GetMapping("/login-error")
-    public String loginPost(RedirectAttributes attributes) {
-        attributes.addFlashAttribute("message", "로그인 정보가 없습니다. 계정을 확인 해주세요.");
-
-        return "redirect:/login";
-    }
-
     /**
      * Get 계정 찾기
      */
@@ -109,11 +102,11 @@ public class MainController {
         return "registerSuccess";
     }
 
-    // 테스트용.
-    //    @GetMapping("/registerSuccess")
+    /**
+     * 이메일 재인증 화면
+     */
+    @GetMapping("/registerSuccess")
     public String registerSuccess(Model model) {
-        model.addAttribute("message", "인증용 메일이 전송 되었습니다. 확인해주세요");
-
         return "registerSuccess";
     }
 

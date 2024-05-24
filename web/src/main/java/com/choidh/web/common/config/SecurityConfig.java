@@ -1,6 +1,8 @@
 package com.choidh.web.common.config;
 
 import com.choidh.service.security.AccountDetailsService;
+import com.choidh.service.security.CustomAuthenticationFailureHandler;
+import com.choidh.service.security.CustomAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +33,7 @@ import java.io.IOException;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final DataSource dataSource;
     private final AccountDetailsService accountDetailsService;
+    private final CustomAuthenticationFailureHandler authenticationFailureHandler;
     private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     // 바로 접근 가능한 URL
@@ -47,13 +50,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.formLogin()
             .loginPage("/login")
-                .failureUrl("/login-error")
-                .successHandler(new AuthenticationSuccessHandler() {
-                    @Override
-                    public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
-                        redirectStrategy.sendRedirect(httpServletRequest, httpServletResponse, "/");
-                    }
-                })
+            .failureHandler(authenticationFailureHandler)
+            .successHandler(new AuthenticationSuccessHandler() {
+                @Override
+                public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
+                    redirectStrategy.sendRedirect(httpServletRequest, httpServletResponse, "/");
+                }
+            })
             .permitAll();
 
         http.logout()
