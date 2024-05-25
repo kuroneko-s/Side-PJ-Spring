@@ -4,6 +4,7 @@ function CardSlider(sliderId, sliderTrackId) {
     let currentTranslate = 0;
     let prevTranslate = 0;
     let animationID = 0;
+    let dragTrigger = false;
 
     let slider= document.getElementById(sliderId);
     let sliderTrack= document.getElementById(sliderTrackId);
@@ -16,7 +17,19 @@ function CardSlider(sliderId, sliderTrackId) {
     slider.addEventListener('touchend', dragEnd);
     slider.addEventListener('touchmove', drag);
 
+    document.querySelectorAll(`#${sliderId} .learning-item-card-anchor`).forEach(el => el.addEventListener("dragstart", (e) => e.preventDefault()));
+    document.querySelectorAll(`#${sliderId} .learning-item-card-anchor`).forEach(el => el.addEventListener("click", (e) => {
+        if (dragTrigger) {
+            console.log("drag");
+            e.preventDefault();
+        } else {
+            console.log("click");
+        }
+    }));
+
     function dragStart(event) {
+        event.preventDefault();
+
         isDragging = true;
         startPos = getPositionX(event);
         animationID = requestAnimationFrame(animation);
@@ -30,14 +43,23 @@ function CardSlider(sliderId, sliderTrackId) {
         }
     }
 
-    function dragEnd() {
+    function dragEnd(e) {
+        e.preventDefault();
+
         isDragging = false;
         cancelAnimationFrame(animationID);
+        let isDrag = false;
 
-        if (currentTranslate > 0) currentTranslate = 0;
-        else if (currentTranslate < -2200) currentTranslate = -2200;
+        if (currentTranslate > 0) {
+            currentTranslate = 0;
+            isDrag = true;
+        }
+        else if (currentTranslate < -2200) {
+            currentTranslate = -2200;
+            isDrag = true;
+        }
 
-        setSliderPosition();
+        setSliderPosition(isDrag);
         prevTranslate = currentTranslate;
 
         sliderTrack.style.transition = 'transform 0.3s ease';
@@ -52,7 +74,12 @@ function CardSlider(sliderId, sliderTrackId) {
         if (isDragging) requestAnimationFrame(animation);
     }
 
-    function setSliderPosition() {
+    function setSliderPosition(isDrag) {
+        if (isDrag) {
+            dragTrigger = true;
+        } else {
+            dragTrigger = prevTranslate !== currentTranslate;
+        }
         sliderTrack.style.transform = `translateX(${currentTranslate}px)`;
     }
 }
