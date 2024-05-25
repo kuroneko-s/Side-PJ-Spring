@@ -1,5 +1,7 @@
 .login-container {
-    width: 100%;
+    position: fixed;
+    top: calc(50% - 170px);
+    left: calc(50% - 240px);
 
     display: flex;
     flex-direction: column;
@@ -119,22 +121,4 @@
 .login-btn-font{
     font-size: 1.25rem;
     font-weight: 500;
-}
-
-@media (min-height: 720px) {
-    .login-container {
-        height: 720px;
-    }
-}
-
-@media (min-height: 1080px) {
-    .login-container {
-        height: 1080px;
-    }
-}
-
-@media (min-height: 1440px) {
-    .login-container {
-        height: 1440px;
-    }
 }

@@ -1,5 +1,7 @@
 .register-container {
-    width: 100%;
+    position: fixed;
+    top: calc(50% - 270px);
+    left: calc(50% - 240px);
 
     display: flex;
     flex-direction: column;
@@ -87,22 +89,4 @@
     opacity: .7;
     text-align: center;
     font-size: 1rem;
-}
-
-@media (min-height: 720px) {
-    .register-container {
-        height: 720px;
-    }
-}
-
-@media (min-height: 1080px) {
-    .register-container {
-        height: 1080px;
-    }
-}
-
-@media (min-height: 1440px) {
-    .register-container {
-        height: 1440px;
-    }
 }
