@@ -9,6 +9,8 @@
     <script src="/node_modules/jquery-form/dist/jquery.form.min.js"></script>
     <script src="/node_modules/tooltipster/dist/js/tooltipster.bundle.min.js"></script>
     <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/node_modules/moment/min/moment-with-locales.min.js"></script>
+
     <script src="/node_modules/jdenticon/dist/jdenticon.min.js"></script>
     <!--    <script src="https://cdn.jsdelivr.net/npm/jdenticon@3.3.0/dist/jdenticon.min.js" async-->
     <!--            integrity="sha384-LfouGM03m83ArVtne1JPk926e3SGD0Tz8XHtW2OKGsgeBU/UfR0Fa8eX+UlwSSAZ"-->
@@ -23,37 +25,83 @@
     <link rel="stylesheet" href="/css/navbar.css"/>
 </div>
 
-<div class="row col-md-2 mt-md-5 list-group" th:fragment="profile-bar">
-    <form action="#" th:action="@{'/profile/' + ${account.id}}"><button type="submit" class="list-group-item list-group-item-action">대시보드</button></form>
-    <form action="#" th:action="@{'/profile/notification'}" method="get"><button type="submit" class="list-group-item list-group-item-action">알람</button></form>
-    <form action="#" th:action="@{'/profile/learning'}"><button type="submit" class="list-group-item list-group-item-action">내 학습</button></form>
-    <form action="#" th:action="@{'/profile/' + ${account.id} + '/custom'}" method="get"><button type="submit" class="list-group-item list-group-item-action">설정</button></form>
-    <div class="accordion" id="accordionExample">
+<div class="profile-bar-container" id="profile-bar-container" th:fragment="profile-bar">
+    <link rel="stylesheet" href="/css/profileBar.css"/>
+
+    <a th:href="@{'/profile/' + ${account.id}}">
+        <p class="profile-bar-menu">
+            대시보드
+        </p>
+    </a>
+
+    <a href="/profile/notification">
+        <p class="profile-bar-menu">
+            알람
+        </p>
+    </a>
+
+    <a href="/profile/learning">
+        <p class="profile-bar-menu">
+            내 학습
+        </p>
+    </a>
+
+    <a th:href="@{'/profile/' + ${account.id} + '/custom'}">
+        <p class="profile-bar-menu">
+            설정
+        </p>
+    </a>
+
+    <div class="profile-bar-menu-accordion" id="profile-bar-menu-accordion" th:if="${account.uploader}">
         <div>
-            <div class="list-group-item list-group-item-action list-header" id="headingOne" >
-                <h2 class="m-0">
-                    <button class="btn btn-block text-left list-btn" th:disabled="${!account.uploader}" type="button" data-toggle="collapse" data-target="#collapse" aria-expanded="true" aria-controls="collapseOne" >
-                        업로더
-                    </button>
-                </h2>
-            </div>
-            <div id="collapse" class="collapse" aria-labelledby="headingOne">
-                <form action="#" th:action="@{'/profile/learning/create'}" method="get">
-                    <button class="list-group-item list-group-item-action list-body" th:disabled="${!account.uploader}" type="submit">
-                            강의 개설
-                    </button>
-                </form>
-                <form action="#" th:action="@{'/profile/learning/list'}" method="get">
-                    <button class="list-group-item list-group-item-action list-body" th:disabled="${!account.uploader}" type="submit">
-                        강의 영상 업로드
-                    </button>
-                </form>
-            </div>
+            <p class="profile-bar-menu-accordion-trigger">
+                업로드
+            </p>
         </div>
-        <div style="height: 400px"></div>
+
+        <div class="profile-bar-menu-accordion-details hide" id="profile-bar-menu-accordion-details">
+            <a href='/profile/learning/create'>
+                <p class="profile-bar-menu-accordion-details-menu">
+                    강의 개설
+                </p>
+            </a>
+
+            <a href="/profile/learning/list">
+                <p class="profile-bar-menu-accordion-details-menu">
+                    강의 영상 업로드
+                </p>
+            </a>
+        </div>
     </div>
-<!--    <form action="#" th:action="" method="get" ><button type="submit" class="list-group-item list-group-item-action" th:disabled="${!account.uploader}">강의 개설</button></form>-->
-<!--    <form action="#" th:action="" method="get" ><button type="submit" class="list-group-item list-group-item-action" th:disabled="${!account.uploader}">강의 영상 업로드</button></form>-->
+
+    <script type="text/javascript">
+        window.addEventListener("DOMContentLoaded", () => {
+            const accordionEl = document.getElementById("profile-bar-menu-accordion");
+            accordionEl.addEventListener("click", (e) => {
+                document.getElementById("profile-bar-menu-accordion-details").classList.toggle("hide");
+            });
+
+            const dashboardRegex = /^\/profile\/\d+$/;
+            const settingRegex = /^\/profile\/\d+\/custom$/;
+            const pathName = window.location.pathname;
+            const menuEls = document.getElementById("profile-bar-container").querySelectorAll(".profile-bar-menu");
+            if (dashboardRegex.test(pathName)) {
+                menuEls[0].classList.add("active");
+            } else if (pathName === "/profile/notification") {
+                menuEls[1].classList.add("active");
+            } else if (pathName === "/profile/learning") {
+                menuEls[2].classList.add("active");
+            } else if (settingRegex.test(pathName)) {
+                menuEls[3].classList.add("active");
+            } else if (pathName === "/profile/learning/create") {
+                document.getElementById("profile-bar-container").querySelectorAll(".profile-bar-menu-accordion-details-menu")[0].classList.add("active");
+                document.getElementById("profile-bar-menu-accordion-details").classList.remove("hide");
+            } else if (pathName === "/profile/learning/list") {
+                document.getElementById("profile-bar-container").querySelectorAll(".profile-bar-menu-accordion-details-menu")[1].classList.add("active");
+                document.getElementById("profile-bar-menu-accordion-details").classList.remove("hide");
+            }
+        });
+    </script>
 </div>
 
 <script type="application/javascript" th:fragment="form-validation">

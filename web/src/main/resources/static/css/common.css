@@ -78,6 +78,7 @@ a:hover {
 .container{
     position: relative;
     max-width: 1280px;
+    height: 100vh;
 }
 
 .hide {

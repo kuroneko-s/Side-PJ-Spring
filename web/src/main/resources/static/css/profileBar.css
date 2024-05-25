@@ -1,0 +1,68 @@
+.profile-bar-container {
+    width: 16%;
+}
+
+.profile-bar-menu {
+    padding: .75rem 1.25rem;
+    color: #495057;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, .125);
+
+    font-weight: 600;
+}
+
+.profile-bar-menu:hover {
+    background-color: #e4e4e4;
+}
+
+.profile-bar-menu.active {
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.profile-bar-menu.active:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+.profile-bar-menu-accordion {
+    cursor: pointer;
+}
+
+.profile-bar-menu-accordion-trigger {
+    padding: .75rem 1.25rem;
+    color: #495057;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, .125);
+
+    font-weight: 600;
+}
+
+.profile-bar-menu-accordion-trigger:hover {
+    background-color: #e4e4e4;
+}
+
+.profile-bar-menu-accordion-details-menu {
+    padding: .75rem 1.25rem;
+    color: #495057;
+    background-color: #F7F7F7;
+    border: 1px solid rgba(0, 0, 0, .125);
+
+    font-weight: 400;
+}
+
+.profile-bar-menu-accordion-details-menu:hover {
+    background-color: #e4e4e4;
+}
+
+.profile-bar-menu-accordion-details-menu.active {
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.profile-bar-menu-accordion-details-menu.active:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}

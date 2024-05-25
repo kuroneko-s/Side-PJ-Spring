@@ -6,14 +6,13 @@
     <title>Title</title>
     <div th:replace="fragment/fragment.html :: imports"></div>
     <link rel="stylesheet" href="/css/profile.css">
-    <script src="/node_modules/moment/min/moment-with-locales.min.js"></script>
 </head>
 
 <body class="container">
     <div th:replace="fragment/navbar/navbar.html :: navbar"></div>
 
     <div class="d-flex">
-        <div th:replace="fragment.html :: profile-bar"></div>
+        <div th:replace="fragment/fragment.html :: profile-bar"></div>
 
         <div class="row mt-md-5">
             <div class="col-md-12 mb-2">
