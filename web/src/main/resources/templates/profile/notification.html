@@ -19,76 +19,79 @@
     <div class="notification-container">
         <div th:replace="fragment/fragment.html :: profile-bar"></div>
 
-        <div class="col-md-10 mt-md-5">
-            <div class="alert alert-info alert-dismissible fade show mt-3 alert-custom" role="alert" th:if="${message}">
-                <p th:text="${message}">flush message</p>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+        <div class="notification-body">
+            <!-- toast message start -->
+            <div class="notification-toast-message-container" id="notification-toast-message-container" th:if="${message}">
+                <div class="notification-toast-message">
+                    <p th:text="${message}">flush message</p>
+                    <button type="button" class="notification-toast-message-close-button" id="notification-toast-message-close-button">
+                        <span>&times;</span>
+                    </button>
+                </div>
+            </div>
+            <!-- toast message end -->
+
+            <p class="notification-menu-title">알림</p>
+
+            <div class="notification-menu-nav-tabs">
+                <div class="notification-menu-nav-tab active">
+                    <a class="nav-link active d-flex justify-content-between align-items-center nav-btn1" href="#notread"
+                       aria-controls="notread" role="tab" data-toggle="tab">
+                        읽지 않은 알림
+                        <span class="badge badge-primary badge-pill" th:text="${notChecked.size()}">1</span>
+                    </a>
+                </div>
+                <div class="nav-item" role="presentation">
+                    <a class="nav-link d-flex justify-content-between align-items-center nav-btn2" href="#read" role="tab"
+                       aria-controls="read" data-toggle="tab">
+                        읽은 알림
+                        <span class="badge badge-primary badge-pill" th:text="${checked.size()}">1</span>
+                    </a>
+                </div>
             </div>
 
-            <div class="col-md-12 mb-2">
-                <div style="opacity: 0.7; font-size: 13px">설정/알림</div>
-                <span style="font-size: 17px; font-weight: bold">설정/알림</span>
-            </div>
-
-            <div class="col">
-                <ul class="nav nav-tabs">
-                    <li class="nav-item active" role="presentation">
-                        <a class="nav-link active d-flex justify-content-between align-items-center nav-btn1" href="#notread"
-                           aria-controls="notread" role="tab" data-toggle="tab">
-                            읽지 않은 알림
-                            <span class="badge badge-primary badge-pill" th:text="${notChecked.size()}">1</span>
-                        </a>
-
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link d-flex justify-content-between align-items-center nav-btn2" href="#read" role="tab"
-                           aria-controls="read" data-toggle="tab">
-                            읽은 알림
-                            <span class="badge badge-primary badge-pill" th:text="${checked.size()}">1</span>
-                        </a>
-                    </li>
-                </ul>
-
-                <div class="tab-content d-flex justify-content-start">
-                    <div class="profile-body tab-pane active profile-content-body col-9" id="notread" role="tabpanel">
-                        <div class="d-flex flex-column notification-body mt-md-2 justify-content-between pl-2 pr-2 pt-1 pb-1"
-                             th:each="noti : ${notChecked}">
-                            <p class="notification-title" th:text="${noti.title}">default title</p>
-                            <span id="description" th:text="${noti.description}" hidden></span>
-                            <p class="notification-description"></p>
-                            <p class="notification-foot d-flex justify-content-between">
+            <div class="tab-content d-flex justify-content-start">
+                <!-- 읽지 않은 알림 start -->
+                <div class="profile-body tab-pane active profile-content-body col-9" id="notread" role="tabpanel">
+                    <div class="d-flex flex-column notification-body mt-md-2 justify-content-between pl-2 pr-2 pt-1 pb-1"
+                         th:each="noti : ${notChecked}">
+                        <p class="notification-title" th:text="${noti.title}">default title</p>
+                        <span id="description" th:text="${noti.description}" hidden></span>
+                        <p class="notification-description"></p>
+                        <p class="notification-foot d-flex justify-content-between">
                                 <span>
                                     from: <span class="notification-lectureName" th:text="${noti.lectureName}"></span>
                                 </span>
-                                <span class="notification-dateTime date-time" th:text="${noti.createNotification}"></span>
-                            </p>
-                        </div>
+                            <span class="notification-dateTime date-time" th:text="${noti.createNotification}"></span>
+                        </p>
                     </div>
-                    <!--읽지 않은 알림-->
+                </div>
+                <!-- 읽지 않은 알림 end -->
 
-                    <div class="tab-pane fade notification-setting col-9" id="read" role="tabpanel">
-                        <div class="d-flex flex-column notification-body mt-md-2 justify-content-between pl-2 pr-2 pt-1 pb-1"
-                             th:each="noti : ${checked}">
-                            <p class="notification-title" th:text="${noti.title}">default title</p>
-                            <span id="description-checked" th:text="${noti.description}" hidden></span>
-                            <p class="notification-description-checked"></p>
-                            <p class="notification-foot d-flex justify-content-between">
+                <!-- 읽은 알림 start -->
+                <div class="tab-pane fade notification-setting col-9" id="read" role="tabpanel">
+                    <div class="d-flex flex-column notification-body mt-md-2 justify-content-between pl-2 pr-2 pt-1 pb-1"
+                         th:each="noti : ${checked}">
+                        <p class="notification-title" th:text="${noti.title}">default title</p>
+                        <span id="description-checked" th:text="${noti.description}" hidden></span>
+                        <p class="notification-description-checked"></p>
+                        <p class="notification-foot d-flex justify-content-between">
                                 <span>
                                     from: <span class="notification-lectureName" th:text="${noti.lectureName}"></span>
                                 </span>
-                                <span class="notification-dateTime date-time" th:text="${noti.createNotification}"></span>
-                            </p>
-                        </div>
+                            <span class="notification-dateTime date-time" th:text="${noti.createNotification}"></span>
+                        </p>
                     </div>
-                    <!--읽은 알림-->
+                </div>
+                <!-- 읽은 알림 end -->
 
-                    <div class="col-3 mt-3">
-                        <form action="#" th:action="@{'/profile/notification/remove'}" method="get">
-                            <button class="btn btn-info notification-btn" type="submit">읽은 알림 전체 삭제</button>
-                        </form>
-                    </div>
+                <div class="col-3 mt-3">
+                    <form action="#" th:action="@{'/profile/notification/remove'}" method="get">
+                        <button class="btn btn-info notification-btn" type="submit">선택 삭제</button>
+                    </form>
+                    <form action="#" th:action="@{'/profile/notification/remove'}" method="get">
+                        <button class="btn btn-info notification-btn" type="submit">전체 삭제</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -98,6 +101,11 @@
     <div th:replace="fragment/footer/footer.html :: footer"></div>
     <script type="application/javascript">
         window.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("notification-toast-message-close-button").addEventListener("click", () => {
+                document.getElementById('click');
+                document.getElementById("notification-toast-message-container").classList.add("hide");
+            })
+
             moment.locale('ko');
             $(".date-time").text(function (index, dateTime) {
                 return moment(dateTime, "YYYY-MM-DD'T'hh:mm").format("LL");
