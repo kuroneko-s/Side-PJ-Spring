@@ -17,8 +17,8 @@
         <p class="login-title">로그인</p>
 
         <!-- toast message start -->
-        <div class="login-toast-message-container" id="login-toast-message-container">
-            <div class="login-toast-message" th:if="${param.error}">
+        <div class="login-toast-message-container" id="login-toast-message-container" th:if="${param.error}">
+            <div class="login-toast-message">
                 <p th:if="${param.error.toString().equals('username')}">옳바르지 않은 이메일과 패스워드입니다.</p>
                 <p th:if="${param.error.toString().equals('bad_credentials')}">이메일과 패스워드를 다시 입력해주세요.</p>
                 <p th:if="${param.error.toString().equals('email_credentials_expired')}">이메일 인증이 완료되지 않았습니다. <a href="#" th:href="@{/registerSuccess}">이메일 인증 화면</a></p>
