@@ -1,7 +1,7 @@
 package com.choidh.service.mail.service;
 
 
-import com.choidh.service.mail.vo.EmailCheckMessageVO;
+import com.choidh.service.mail.vo.EmailForAuthenticationVO;
 import com.choidh.service.mail.vo.EmailMessageVO;
 
 /**
@@ -17,5 +17,5 @@ public interface EmailService {
     /**
      * 확인용 메일 전송
      */
-    void sendCheckEmail(EmailCheckMessageVO emailCheckMessageVO);
+    void sendEmailForAuthentication(EmailForAuthenticationVO emailForAuthenticationVO);
 }

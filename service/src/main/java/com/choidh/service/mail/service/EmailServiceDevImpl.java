@@ -2,7 +2,7 @@ package com.choidh.service.mail.service;
 
 
 import com.choidh.service.common.ServiceAppProperties;
-import com.choidh.service.mail.vo.EmailCheckMessageVO;
+import com.choidh.service.mail.vo.EmailForAuthenticationVO;
 import com.choidh.service.mail.vo.EmailMessageVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,21 +56,21 @@ public class EmailServiceDevImpl implements EmailService {
      * 확인용 메일 전송
      */
     @Override
-    public void sendCheckEmail(EmailCheckMessageVO emailCheckMessageVO) {
+    public void sendEmailForAuthentication(EmailForAuthenticationVO emailForAuthenticationVO) {
         Context context = new Context();
-        context.setVariable("nickname", emailCheckMessageVO.getNickname());
+        context.setVariable("nickname", emailForAuthenticationVO.getNickname());
         context.setVariable("linkName", "이메일 인증하기");
         context.setVariable("message", "이메일 인증을 마치시려면 링크를 클릭해주세요.");
         context.setVariable("host", serviceAppProperties.getHost());
-        context.setVariable("link", "/mailAuth?token=" + emailCheckMessageVO.getEmailCheckToken() + "&email=" + emailCheckMessageVO.getEmail());
+        context.setVariable("link", "/mailAuth?token=" + emailForAuthenticationVO.getEmailAuthenticationToken() + "&email=" + emailForAuthenticationVO.getEmail());
 
         this.sendEmail(EmailMessageVO.builder()
-                .to(emailCheckMessageVO.getEmail())
+                .to(emailForAuthenticationVO.getEmail())
                 .subject("회원 가입 안내 메일")
                 .message(templateEngine.process("mail/simplemail", context))
                 .build()
         );
 
-        log.info("/mailAuth?token={}&email={}", emailCheckMessageVO.getEmailCheckToken(), emailCheckMessageVO.getEmail());
+        log.info("/mailAuth?token={}&email={}", emailForAuthenticationVO.getEmailAuthenticationToken(), emailForAuthenticationVO.getEmail());
     }
 }

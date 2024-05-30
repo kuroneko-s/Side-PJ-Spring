@@ -4,7 +4,6 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.AbstractAuditable_;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.security.core.userdetails.User;
 
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
@@ -18,8 +17,8 @@ import java.io.Serializable;
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity extends BaseDateEntity implements Serializable {
     @CreatedBy
-    private User createUser;
+    private String createUser;
 
     @LastModifiedBy
-    private User updateUser;
+    private String updateUser;
 }

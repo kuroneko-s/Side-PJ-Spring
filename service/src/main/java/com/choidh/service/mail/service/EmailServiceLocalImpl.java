@@ -1,7 +1,7 @@
 package com.choidh.service.mail.service;
 
 
-import com.choidh.service.mail.vo.EmailCheckMessageVO;
+import com.choidh.service.mail.vo.EmailForAuthenticationVO;
 import com.choidh.service.mail.vo.EmailMessageVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
@@ -27,7 +27,7 @@ public class EmailServiceLocalImpl implements EmailService {
      * 확인용 메일 전송
      */
     @Override
-    public void sendCheckEmail(EmailCheckMessageVO emailCheckMessageVO) {
-        log.info("sent check email to: {}", emailCheckMessageVO.getNickname());
+    public void sendEmailForAuthentication(EmailForAuthenticationVO emailForAuthenticationVO) {
+        log.info("sent check email to: {}", emailForAuthenticationVO.getNickname());
     }
 }

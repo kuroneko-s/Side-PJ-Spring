@@ -8,7 +8,8 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 public class QuestionForm {
-    private String s_title;
-    private String s_description;
-    private String s_answer;
+    private Long questionId;
+    private String title;
+    private String description;
+    private String answer;
 }

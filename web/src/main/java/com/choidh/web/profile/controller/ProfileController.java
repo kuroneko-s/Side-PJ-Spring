@@ -1,28 +1,31 @@
 package com.choidh.web.profile.controller;
 
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.account.repository.AccountRepository;
+import com.choidh.service.account.service.AccountService;
+import com.choidh.service.account.vo.ModNotificationVO;
+import com.choidh.service.account.vo.ModPasswordVO;
+import com.choidh.service.account.vo.ModProfileVO;
+import com.choidh.service.joinTables.entity.AccountTagJoinTable;
+import com.choidh.service.joinTables.service.AccountTagService;
 import com.choidh.service.learning.entity.Learning;
+import com.choidh.service.learning.service.LearningService;
 import com.choidh.service.notification.entity.Notification;
-import com.choidh.service.notification.repository.NotificationRepository;
+import com.choidh.service.notification.service.NotificationService;
+import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
 import com.choidh.service.question.entity.Question;
 import com.choidh.service.tag.entity.Tag;
-import com.choidh.service.tag.repository.TagRepository;
-import com.choidh.web.account.service.AccountServiceImpl;
-import com.choidh.web.notification.service.NotificationService;
+import com.choidh.service.tag.service.TagService;
+import com.choidh.web.common.annotation.CurrentAccount;
 import com.choidh.web.profile.validator.ProfileNicknameValidator;
 import com.choidh.web.profile.validator.ProfilePasswordValidator;
 import com.choidh.web.profile.vo.NotificationUpdateForm;
 import com.choidh.web.profile.vo.PasswordUpdateForm;
 import com.choidh.web.profile.vo.ProfileUpdateForm;
-import com.choidh.web.common.annotation.CurrentAccount;
-import com.choidh.web.tag.vo.TagForm;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -39,15 +42,15 @@ import java.util.stream.Collectors;
 @Controller
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ProfileController {
-    private final ProfileNicknameValidator profileNicknameValidator;
-    private final AccountServiceImpl accountServiceImpl;
     private final ModelMapper modelMapper;
-    private final ProfilePasswordValidator profilePasswordValidator;
-    private final TagRepository tagRepository;
     private final ObjectMapper objectMapper;
-    private final NotificationRepository notificationRepository;
+    private final ProfileNicknameValidator profileNicknameValidator;
+    private final ProfilePasswordValidator profilePasswordValidator;
+    private final AccountService accountService;
+    private final LearningService learningService;
     private final NotificationService notificationService;
-    private final AccountRepository accountRepository;
+    private final AccountTagService accountTagService;
+    private final TagService tagService;
 
     public final static String CUSTOM_PROFILE = "profile/custom_profile";
 
@@ -66,43 +69,50 @@ public class ProfileController {
     }
 
     @GetMapping("/profile/{id}")
-    public String viewProfile(@CurrentAccount Account account, @PathVariable Long id, Model model) {
-        Account newAccount = accountRepository.findAccountWithAll(id);
-        List<String> learningTitle = newAccount.getListenLearning().stream().map(Learning::getTitle).limit(3).collect(Collectors.toList());
-        List<Question> accountQuestion = newAccount.getQuestions().stream().limit(4).collect(Collectors.toList());
-        List<String> tagList = newAccount.getTags().stream().map(Tag::getTitle).collect(Collectors.toList());
-        List<Learning> learnings = newAccount.getLearnings().stream().limit(4).collect(Collectors.toList());
+    public String getProfileView(@PathVariable Long id, Model model) {
+        Account account = accountService.getAccountForProfile(id);
 
-        model.addAttribute("account", newAccount);
+        List<Tag> tagList = account.getTags().stream().map(AccountTagJoinTable::getTag).collect(Collectors.toList());
+        List<Learning> learningList = account.getPurchaseHistories().stream().map(PurchaseHistory::getLearning).collect(Collectors.toList());
+        List<Question> questionList = account.getQuestions().stream().limit(4).collect(Collectors.toList());
+        List<String> tagTitleList = tagList.stream().map(Tag::getTitle).collect(Collectors.toList());
+        List<String> learningTitle = learningList.stream().map(Learning::getTitle).limit(3).collect(Collectors.toList());
+        List<Learning> learnings = learningList.stream().limit(4).collect(Collectors.toList());
+
+        model.addAttribute("account", account);
         model.addAttribute("learningTitle", learningTitle);
-        model.addAttribute("accountQuestion", accountQuestion);
-        model.addAttribute("tagList", tagList);
+        model.addAttribute("accountQuestion", questionList);
+        model.addAttribute("tagList", tagTitleList);
         model.addAttribute("learnings", learnings);
 
         return "profile/profile";
     }
 
+    /**
+     * GET 프로필 수정 화면
+     */
     @GetMapping("/profile/{id}/custom")
-    public String viewRevise(@CurrentAccount Account account, @PathVariable Long id, Model model) throws JsonProcessingException {
-        Set<Tag> tags = accountServiceImpl.getTags(account);
-        List<String> tagList = tagRepository.findAll().stream().map(Tag::getTitle).collect(Collectors.toList());
+    public String getAccountView(@CurrentAccount Account account, Model model) throws JsonProcessingException {
+        Set<AccountTagJoinTable> tagListByAccountId = accountTagService.getTagListByAccountId(account.getId());
+        List<String> tagtitleList = tagListByAccountId.stream().map(accountTagJoinTable -> accountTagJoinTable.getTag().getTitle()).collect(Collectors.toList());
+        List<String> tagAllTitleList = tagService.getTitleList();
 
-        model.addAttribute(account);
-        model.addAttribute("tags", tags.stream().map(Tag::getTitle).collect(Collectors.toList()));
-        model.addAttribute("whiteList", objectMapper.writeValueAsString(tagList));
-        model.addAttribute(modelMapper.map(account, ProfileUpdateForm.class));
+        model.addAttribute("account", account);
+        model.addAttribute("tags", tagtitleList);
+        model.addAttribute("whiteList", objectMapper.writeValueAsString(tagAllTitleList));
         model.addAttribute(new PasswordUpdateForm());
+        model.addAttribute(modelMapper.map(account, ProfileUpdateForm.class));
         model.addAttribute(modelMapper.map(account, NotificationUpdateForm.class));
 
         return CUSTOM_PROFILE;
     }
 
     /**
-     * 프로필 수정
+     * PATCH 프로필 수정
      */
-    @PostMapping("/update/nickname/{id}")
-    public String updateNicknameForm(@CurrentAccount Account account, @PathVariable Long id, Model model,
-                                     @Valid ProfileUpdateForm profileUpdateForm, Errors errors, RedirectAttributes attributes) {
+    @PatchMapping("/update/nickname/{id}")
+    public String modAccount(@CurrentAccount Account account, @PathVariable Long id, Model model,
+                             @Valid ProfileUpdateForm profileUpdateForm, Errors errors, RedirectAttributes attributes) {
         if (errors.hasErrors()) {
             model.addAttribute(account);
             model.addAttribute(new PasswordUpdateForm());
@@ -111,101 +121,87 @@ public class ProfileController {
             return CUSTOM_PROFILE;
         }
 
-        Account newAccount = accountServiceImpl.updateNicknameAndDescription(profileUpdateForm, account);
+        account = accountService.modAccount(modelMapper.map(profileUpdateForm, ModProfileVO.class), account.getId());
 
-        attributes.addFlashAttribute("account", newAccount);
+        attributes.addFlashAttribute("account", account);
         attributes.addFlashAttribute("message", "프로필이 수정되었습니다.");
-        return redirectPath_Custom(newAccount.getId());
+
+        return redirectPath_Custom(account.getId());
     }
 
     /**
-     * 패스워드 수정
+     * PATCH 패스워드 수정
      */
-    @PostMapping("/update/password/{id}")
-    public String updatePasswordForm(@CurrentAccount Account account, @PathVariable Long id,
-                                     @Valid PasswordUpdateForm passwordUpdateForm, Errors errors, Model model, RedirectAttributes attributes) {
+    @PatchMapping("/update/password/{id}")
+    public String modPassword(@CurrentAccount Account account, @PathVariable Long id,
+                              @Valid PasswordUpdateForm passwordUpdateForm, Errors errors, Model model, RedirectAttributes attributes) {
         if (errors.hasErrors()) {
-            model.addAttribute(account);
-            model.addAttribute(new ProfileUpdateForm());
+            model.addAttribute("account", account);
+            model.addAttribute("profileUpdateForm", new ProfileUpdateForm());
             model.addAttribute(modelMapper.map(account, NotificationUpdateForm.class));
             model.addAttribute("message", "비밀번호가 잘못되었습니다. 다시 입력해주세요.");
 
             return CUSTOM_PROFILE;
         }
 
-        final Account newAccount = accountServiceImpl.updatePassword(passwordUpdateForm, account);
+        account = accountService.modPassword(modelMapper.map(passwordUpdateForm, ModPasswordVO.class), account.getId());
 
-        attributes.addFlashAttribute("account", newAccount);
+        attributes.addFlashAttribute("account", account);
         attributes.addFlashAttribute("message", "비밀번호가 수정되었습니다.");
 
         return redirectPath_Custom(account.getId());
     }
 
-    @PostMapping("/update/noti/{id}")
-    public String updateNotificationForm(@CurrentAccount Account account, @PathVariable Long id, Model model,
-                                         NotificationUpdateForm notificationUpdateForm, RedirectAttributes attributes) {
-        Account newAccount = accountServiceImpl.updateNotifications(notificationUpdateForm, account);
+    /**
+     * PATCH 알림 설정 수정
+     */
+    @PatchMapping("/update/noti/{id}")
+    public String modNotification(@CurrentAccount Account account, @PathVariable Long id,
+                                  NotificationUpdateForm notificationUpdateForm, RedirectAttributes attributes) {
+        account = accountService.modNotifications(modelMapper.map(notificationUpdateForm, ModNotificationVO.class), account.getId());
 
-        attributes.addFlashAttribute("account", newAccount);
+        attributes.addFlashAttribute("account", account);
         attributes.addFlashAttribute("message", "알림 설정이 완료되었습니다.");
+
         return redirectPath_Custom(account.getId());
     }
 
-    @PostMapping("/update/tags/add")
-    public @ResponseBody ResponseEntity addTag(@CurrentAccount Account account, @RequestBody TagForm tagForm) {
-        Tag tag = tagRepository.findByTitle(tagForm.getTitle());
-        if (tag == null) {
-            tag = tagRepository.save(Tag.builder()
-                    .title(tagForm.getTitle())
-                    .build());
-        }
-
-        accountServiceImpl.addTag(account, tag);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/update/tags/remove")
-    public @ResponseBody ResponseEntity removeTag(@CurrentAccount Account account, @RequestBody TagForm tagForm) {
-        Tag tag = tagRepository.findByTitle(tagForm.getTitle());
-
-        if (tag == null) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        accountServiceImpl.deleteTag(account, tag);
-        return ResponseEntity.ok().build();
-    }
-
+    /**
+     * GET 프로필 알람 페이지
+     */
     @GetMapping("/profile/notification")
-    public String viewNotification(@CurrentAccount Account account, Model model) {
-        List<Notification> notCheckedNotifications = notificationRepository.findByAccountAndChecked(account, false);
-        List<Notification> checkedNotifications = notificationRepository.findByAccountAndChecked(account, true);
+    public String getNotificationView(@CurrentAccount Account account, Model model) {
+        List<Learning> learningList = learningService.getLearningList(account.getId());
+        List<Notification> notificationList = notificationService.getNotificationListByType(
+                learningList.stream().map(Learning::getId).collect(Collectors.toList())
+        );
 
         model.addAttribute(account);
-        model.addAttribute("notChecked", notCheckedNotifications);
-        model.addAttribute("checked", checkedNotifications);
-
-        notificationService.readNotifications(notCheckedNotifications);
+        model.addAttribute("notificationList", notificationList);
 
         return "profile/notification";
     }
 
+    /**
+     * 알람 비활성화. (관리자 전용)
+     */
     @GetMapping("/profile/notification/remove")
-    public String removeNotification(@CurrentAccount Account account, RedirectAttributes attributes) {
-
-        notificationService.deleteNotifications(account);
+    public String removeNotification(@RequestBody Long notificationId, RedirectAttributes attributes) {
+        notificationService.delNotification(notificationId);
 
         attributes.addFlashAttribute("message", "알림이 삭제되었습니다.");
         return "redirect:/profile/notification";
     }
 
+    /**
+     * 프로필 내 학습 화면
+     */
     @GetMapping("/profile/learning")
-    public String viewLearning(@CurrentAccount Account account, Model model) {
-        Account newAccount = accountRepository.findById(account.getId()).orElseThrow();
-        Set<Learning> listenLearning = newAccount.getListenLearning();
+    public String getProfileLearningView(@CurrentAccount Account account, Model model) {
+        List<Learning> learningList = learningService.getLearningList(account.getId());
 
         model.addAttribute("account", account);
-        model.addAttribute("learningList", listenLearning);
+        model.addAttribute("learningList", learningList);
         model.addAttribute("now", LocalDateTime.now().minusDays(3));
 
         return "profile/learning";

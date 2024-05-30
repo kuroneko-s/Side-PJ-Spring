@@ -22,10 +22,10 @@ public class AccountDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Account account = accountRepository.findByEmailAndTokenChecked(email, true);
+        Account account = accountRepository.findByEmailAndChecked(email, true);
 
         if (account == null) {
-            account = accountRepository.findByEmailAndTokenChecked(email, false);
+            account = accountRepository.findByEmailAndChecked(email, false);
 
             if (account != null) {
                 throw new CredentialsExpiredException(email);

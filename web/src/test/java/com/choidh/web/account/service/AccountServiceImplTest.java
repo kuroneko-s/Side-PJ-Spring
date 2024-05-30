@@ -2,6 +2,7 @@ package com.choidh.web.account.service;
 
 
 import com.choidh.service.account.repository.AccountRepository;
+import com.choidh.service.account.service.AccountService;
 import com.choidh.service.mail.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,7 @@ class AccountServiceImplTest {
 
     @Test
     @DisplayName("Account 신규 생성 (성공)")
-    public void createAccount_Success() throws Exception {
+    public void regAccount_Success() throws Exception {
 //        Account account = Account.builder()
 //                .email("test@test.com")
 //                .password("12345678")

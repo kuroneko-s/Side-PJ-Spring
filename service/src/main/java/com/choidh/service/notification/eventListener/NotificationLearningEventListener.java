@@ -5,15 +5,17 @@ import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.repository.AccountPredicates;
 import com.choidh.service.account.repository.AccountRepository;
 import com.choidh.service.common.ServiceAppProperties;
+import com.choidh.service.joinTables.entity.LearningTagJoinTable;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.repository.LearningRepository;
 import com.choidh.service.mail.service.EmailService;
 import com.choidh.service.mail.vo.EmailMessageVO;
+import com.choidh.service.notice.entity.Notice;
 import com.choidh.service.notification.entity.Notification;
+import com.choidh.service.notification.eventListener.vo.LearningClosedEvent;
+import com.choidh.service.notification.eventListener.vo.LearningCreateEvent;
+import com.choidh.service.notification.eventListener.vo.LearningUpdateEvent;
 import com.choidh.service.notification.repository.NotificationRepository;
-import com.choidh.service.notification.vo.LearningClosedEvent;
-import com.choidh.service.notification.vo.LearningCreateEvent;
-import com.choidh.service.notification.vo.LearningUpdateEvent;
 import com.choidh.service.notification.vo.NotificationType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
@@ -22,8 +24,10 @@ import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Async
 @Component
@@ -35,18 +39,21 @@ public class NotificationLearningEventListener {
     private final EmailService emailService;
     private final TemplateEngine templateEngine;
     private final ServiceAppProperties serviceAppProperties;
+    private final AccountPredicates accountPredicates;
 
     @EventListener
     public void learningCreateListener(LearningCreateEvent event) {
         Optional<Learning> learning = learningRepository.findById(event.getLearning().getId());
         Learning newLearning = learning.orElseThrow();
-        Iterable<Account> accounts = accountRepository.findAll(AccountPredicates.findByTags(newLearning.getTags()));
+        Set<Long> tags = newLearning.getTags().stream().map(LearningTagJoinTable::getId).collect(Collectors.toSet());
+
+        Iterable<Account> accounts = accountRepository.findAll(accountPredicates.findByTags(tags));
         for (Account account : accounts) {
             if (account.isSiteMailNotification())
                 sendEmail(account, "강의가 새롭게 생성되었습니다.", "/learning/" + newLearning.getId(), newLearning.getTitle(), "강의 생성 알림");
 
             if (account.isSiteWebNotification())
-                createNotification(newLearning, account, "강의가 새롭게 생성되었습니다.", NotificationType.CREATE);
+                createNotification(newLearning, null, "강의가 새롭게 생성되었습니다.", NotificationType.NOTICE);
         }
     }
 
@@ -54,27 +61,32 @@ public class NotificationLearningEventListener {
     public void learningClosedListener(LearningClosedEvent event) {
         Optional<Learning> learning = learningRepository.findById(event.getLearning().getId());
         Learning newLearning = learning.orElseThrow();
-        Iterable<Account> accounts = accountRepository.findAll(AccountPredicates.findByTags(newLearning.getTags()));
+        Set<Long> tags = newLearning.getTags().stream().map(LearningTagJoinTable::getId).collect(Collectors.toSet());
+
+        Iterable<Account> accounts = accountRepository.findAll(accountPredicates.findByTags(tags));
         for (Account account : accounts) {
             if (account.isSiteMailNotification())
                 sendEmail(account, "강의가 종료되었습니다.", "/learning/" + newLearning.getId(), newLearning.getTitle(), "강의 종료 알림");
 
             if (account.isSiteWebNotification())
-                createNotification(newLearning, account, "강의가 종료되었습니다.", NotificationType.CLOSED);
+                createNotification(newLearning, null, "강의가 종료되었습니다.", NotificationType.NOTICE);
         }
     }
 
+    // 강의 갱신 시 동작하는 이벤트 리스너.
     @EventListener
     public void learningUpdateListener(LearningUpdateEvent event) {
         Optional<Learning> learning = learningRepository.findById(event.getLearning().getId());
         Learning newLearning = learning.orElseThrow();
-        Iterable<Account> accounts = accountRepository.findAll(AccountPredicates.findByTags(newLearning.getTags()));
+        Set<Long> tags = newLearning.getTags().stream().map(LearningTagJoinTable::getId).collect(Collectors.toSet());
+
+        Iterable<Account> accounts = accountRepository.findAll(accountPredicates.findByTags(tags));
         for (Account account : accounts) {
             if (account.isSiteMailNotification())
                 sendEmail(account, "강의 내용이 갱신되었습니다.", "/learning/" + newLearning.getId(), newLearning.getTitle(), "강의 변경 알림");
 
             if (account.isSiteWebNotification())
-                createNotification(newLearning, account, "강의 내용이 갱신되었습니다.", NotificationType.UPDATE);
+                createNotification(newLearning, null, "강의 내용이 갱신되었습니다.", NotificationType.NOTICE);
         }
     }
 
@@ -97,15 +109,14 @@ public class NotificationLearningEventListener {
         emailService.sendEmail(emailMessageVO);
     }
 
-    private void createNotification(Learning newLearning, Account account, String message, NotificationType type) {
-        Notification notification = new Notification();
-        notification.setTitle(newLearning.getTitle() + " " + message);
-        notification.setLectureName(newLearning.getLecturerName());
-        notification.setDescription(newLearning.getSimpleSubscription());
-        notification.setAccount(account);
-        notification.setChecked(false);
-        notification.setCreateNotification(LocalDateTime.now());
-        notification.setNotificationType(type);
-        notificationRepository.save(notification);
+    private void createNotification(Learning learning, Notice notice, String message, NotificationType type) {
+        notificationRepository.save(Notification.builder()
+                .title(learning.getTitle() + " " + message)
+                .description(learning.getSimpleSubscription())
+                .used(true)
+                .notificationType(type)
+                .learning(learning)
+                .notice(notice)
+                .build());
     }
 }

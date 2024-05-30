@@ -1,8 +1,6 @@
 package com.choidh.service.kakao.service;
 
-import com.choidh.service.kakao.vo.KakaoPayApprovalVO;
-import com.choidh.service.kakao.vo.KakaoPayCancelVO;
-import com.choidh.service.kakao.vo.KakaoPayReadyVO;
+import com.choidh.service.kakao.vo.*;
 
 public interface KakaoPayService {
     /**
@@ -19,4 +17,15 @@ public interface KakaoPayService {
      * 카카오 페이 결제 취소
      */
     KakaoPayCancelVO kakaoPayCancel(String tid);
+
+    /**
+     * 강의 구매
+     */
+    KakaoPaySuccessResult paidLearning(Long accountId, String pgToken, String kakaoPayTid, String learningId);
+
+    /**
+     * 강의 구매 취소 처리
+     */
+    KakaoPayCancelResult cancelLearning(Long accountId, String learningId, String kakaoPayTid);
+
 }

@@ -2,20 +2,23 @@ package com.choidh.web.profile;
 
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.repository.AccountRepository;
+import com.choidh.service.account.service.AccountServiceImpl;
+import com.choidh.service.account.vo.RegAccountVO;
+import com.choidh.service.joinTables.service.AccountTagService;
 import com.choidh.service.tag.entity.Tag;
 import com.choidh.service.tag.repository.TagRepository;
-import com.choidh.web.account.service.AccountServiceImpl;
+import com.choidh.service.tag.vo.RegTagVO;
 import com.choidh.web.account.vo.AccountVO;
 import com.choidh.web.config.WithAccount;
 import com.choidh.web.profile.controller.ProfileController;
 import com.choidh.web.tag.vo.TagForm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -33,15 +36,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
+@RequiredArgsConstructor
 class ProfileControllerTest {
-
-    @Autowired MockMvc mockMvc;
-    @Autowired private AccountRepository accountRepository;
-    @Autowired private AccountServiceImpl accountServiceImpl;
-    @Autowired private TagRepository tagRepository;
-    @Autowired private ModelMapper modelMapper;
-    @Autowired private PasswordEncoder passwordEncoder;
-    @Autowired private ObjectMapper objectMapper;
+    private final MockMvc mockMvc;
+    private final AccountRepository accountRepository;
+    private final AccountServiceImpl accountServiceImpl;
+    private final TagRepository tagRepository;
+    private final ModelMapper modelMapper;
+    private final PasswordEncoder passwordEncoder;
+    private final ObjectMapper objectMapper;
+    private final AccountTagService accountTagService;
 
     @AfterEach
     void afterEach(){
@@ -51,8 +55,8 @@ class ProfileControllerTest {
     @Test
     @DisplayName("프로필 대시보드 보여주기")
     @WithAccount("test@naver.com")
-    public void viewProfileDashBoard() throws Exception{
-        Account account = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
+    public void getProfileViewDashBoard() throws Exception{
+        Account account = accountRepository.findByEmailAndChecked("test@naver.com", true);
 
         mockMvc.perform(get("/profile/" + account.getId()))
                 .andExpect(model().attributeExists("account"))
@@ -68,16 +72,16 @@ class ProfileControllerTest {
     @Test
     @WithAccount("test@naver.com")
     @DisplayName("프로필 수정 화면 보여주기 - 성공")
-    public void viewProfile_success() throws Exception {
-        Account account = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
-        Tag tag_1 = Tag.builder()
+    public void getProfile_View_success() throws Exception {
+        Account account = accountRepository.findByEmailAndChecked("test@naver.com", true);
+        RegTagVO tag_1 = RegTagVO.builder()
                 .title("java")
                 .build();
-        Tag tag_2 = Tag.builder()
+        RegTagVO tag_2 = RegTagVO.builder()
                 .title("spring")
                 .build();
-        accountServiceImpl.addTag(account, tag_1);
-        accountServiceImpl.addTag(account, tag_2);
+        accountTagService.regTag(tag_1, account.getId());
+        accountTagService.regTag(tag_2, account.getId());
 
         mockMvc.perform(get("/profile/" + account.getId() + "/custom"))
                 .andExpect(model().attributeExists("account"))
@@ -93,8 +97,8 @@ class ProfileControllerTest {
     @Test
     @WithAccount("test@naver.com")
     @DisplayName("프로필 수정 화면 보여주기 - 성공_빈값")
-    public void viewProfile_success_isEmpty() throws Exception {
-        Account account = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
+    public void getProfile_View_success_isEmpty() throws Exception {
+        Account account = accountRepository.findByEmailAndChecked("test@naver.com", true);
 
         mockMvc.perform(get("/profile/" + account.getId() + "/custom"))
                 .andExpect(model().attributeExists("account"))
@@ -111,7 +115,7 @@ class ProfileControllerTest {
     @WithAccount("test@naver.com")
     @DisplayName("프로필 수정하기 - 성공")
     public void updateProfile_success() throws Exception{
-        Account account = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
+        Account account = accountRepository.findByEmailAndChecked("test@naver.com", true);
 
         mockMvc.perform(post("/update/nickname/" + account.getId())
                 .param("nickname", "테스트냥이_2")
@@ -123,7 +127,7 @@ class ProfileControllerTest {
                 .andExpect(redirectedUrl("/profile/" + account.getId() + "/custom"))
                 .andExpect(status().is3xxRedirection());
 
-        Account newAccount = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
+        Account newAccount = accountRepository.findByEmailAndChecked("test@naver.com", true);
 
         assertEquals(newAccount.getNickname(), "테스트냥이_2");
         assertEquals(newAccount.getDescription(), "테스트 코드에용");
@@ -133,7 +137,7 @@ class ProfileControllerTest {
     @WithAccount("test@naver.com")
     @DisplayName("프로필 수정하기 - 실패(nickname pattern error)")
     public void updateProfile_fail_pattern() throws Exception{
-        Account account = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
+        Account account = accountRepository.findByEmailAndChecked("test@naver.com", true);
 
         mockMvc.perform(post("/update/nickname/" + account.getId())
                 .param("nickname", "테스트냥이_2( )")
@@ -147,7 +151,7 @@ class ProfileControllerTest {
                 .andExpect(view().name(ProfileController.CUSTOM_PROFILE))
                 .andExpect(status().isOk());
 
-        Account newAccount = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
+        Account newAccount = accountRepository.findByEmailAndChecked("test@naver.com", true);
 
         assertNotEquals(newAccount.getNickname(), "테스트냥이_2( )");
     }
@@ -156,15 +160,15 @@ class ProfileControllerTest {
     @WithAccount("test@naver.com")
     @DisplayName("프로필 수정하기 - 실패(nickname duplication)")
     public void updateProfile_fail_duplication() throws Exception{
-        Account account_1 = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
+        Account account_1 = accountRepository.findByEmailAndChecked("test@naver.com", true);
 
         AccountVO accountVO = new AccountVO();
         accountVO.setNickname("테스트냥이2");
         accountVO.setEmail("test2@naver.com");
         accountVO.setPassword("1234567890");
         accountVO.setPasswordcheck("1234567890");
-        Account account_2 = accountServiceImpl.createAccount(modelMapper.map(accountVO, Account.class));
-        account_2.setTokenChecked(true);
+        Account account_2 = accountServiceImpl.regAccount(modelMapper.map(accountVO, RegAccountVO.class));
+        account_2.setChecked(true);
 
         mockMvc.perform(post("/update/nickname/" + account_1.getId())
                 .param("nickname", "테스트냥이")
@@ -178,7 +182,7 @@ class ProfileControllerTest {
                 .andExpect(view().name(ProfileController.CUSTOM_PROFILE))
                 .andExpect(status().isOk());
 
-        Account newAccount = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
+        Account newAccount = accountRepository.findByEmailAndChecked("test@naver.com", true);
 
         assertNotEquals(newAccount.getNickname(), "테스트냥이2");
     }
@@ -187,7 +191,7 @@ class ProfileControllerTest {
     @WithAccount("test@naver.com")
     @DisplayName("프로필 수정하기 - 실패(description empty and null)")
     public void updateProfile_fail_description() throws Exception{
-        Account account = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
+        Account account = accountRepository.findByEmailAndChecked("test@naver.com", true);
         account.setDescription("테스트용 문구");
 
         mockMvc.perform(post("/update/nickname/" + account.getId())
@@ -202,7 +206,7 @@ class ProfileControllerTest {
                 .andExpect(view().name(ProfileController.CUSTOM_PROFILE))
                 .andExpect(status().isOk());
 
-        Account newAccount = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
+        Account newAccount = accountRepository.findByEmailAndChecked("test@naver.com", true);
 
         assertNotEquals(newAccount.getNickname(), "테스트냥이_3");
         log.info("=====================info=====================");
@@ -215,7 +219,7 @@ class ProfileControllerTest {
     @WithAccount("test@naver.com")
     @DisplayName("프로필 비밀번호 수정하기 - 성공")
     public void updateProfilePassword_success() throws Exception{
-        Account account = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
+        Account account = accountRepository.findByEmailAndChecked("test@naver.com", true);
         String newPassword = "0987654321";
 
         mockMvc.perform(post("/update/password/" + account.getId())
@@ -230,7 +234,7 @@ class ProfileControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/profile/" + account.getId() + "/custom"));
 
-        Account newAccount = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
+        Account newAccount = accountRepository.findByEmailAndChecked("test@naver.com", true);
 
         assertTrue(passwordEncoder.matches(newPassword, newAccount.getPassword()));
     }
@@ -239,7 +243,7 @@ class ProfileControllerTest {
     @WithAccount("test@naver.com")
     @DisplayName("프로필 비밀번호 수정하기 - 실패_passwordForm unmatch Pattern_min")
     public void updateProfilePassword_fail_pattern_min() throws Exception{
-        Account account = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
+        Account account = accountRepository.findByEmailAndChecked("test@naver.com", true);
         String newPassword = "0987654";
 
         mockMvc.perform(post("/update/password/" + account.getId())
@@ -256,7 +260,7 @@ class ProfileControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name(ProfileController.CUSTOM_PROFILE));
 
-        Account newAccount = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
+        Account newAccount = accountRepository.findByEmailAndChecked("test@naver.com", true);
 
         assertFalse(passwordEncoder.matches(newPassword, newAccount.getPassword()));
     }
@@ -265,7 +269,7 @@ class ProfileControllerTest {
     @WithAccount("test@naver.com")
     @DisplayName("프로필 비밀번호 수정하기 - 실패_passwordForm unmatch Pattern_max")
     public void updateProfilePassword_fail_pattern_max() throws Exception{
-        Account account = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
+        Account account = accountRepository.findByEmailAndChecked("test@naver.com", true);
         String newPassword = "0987654wequiosaklnlvzroppqnfslb!@$padj!212@mdpowqn!!@";
 
         mockMvc.perform(post("/update/password/" + account.getId())
@@ -282,7 +286,7 @@ class ProfileControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name(ProfileController.CUSTOM_PROFILE));
 
-        Account newAccount = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
+        Account newAccount = accountRepository.findByEmailAndChecked("test@naver.com", true);
 
         assertFalse(passwordEncoder.matches(newPassword, newAccount.getPassword()));
     }
@@ -291,7 +295,7 @@ class ProfileControllerTest {
     @WithAccount("test@naver.com")
     @DisplayName("프로필 비밀번호 수정하기 - 실패_passwordForm unmatch validator nowPassword")
     public void updateProfilePassword_fail_validator_unmatch_now() throws Exception{
-        Account account = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
+        Account account = accountRepository.findByEmailAndChecked("test@naver.com", true);
         String nowPassword = "12345678qrwq#@!";
         String newPassword = "0987654wequinlvzroppqnfslb!@$padj!212@mdpow";
         String newPasswordCheck = "0987654wequinlvzroppqnfslb!@$padj!212@mdpow";
@@ -310,7 +314,7 @@ class ProfileControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name(ProfileController.CUSTOM_PROFILE));
 
-        Account newAccount = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
+        Account newAccount = accountRepository.findByEmailAndChecked("test@naver.com", true);
 
         assertFalse(passwordEncoder.matches(nowPassword, account.getPassword()));
         assertFalse(passwordEncoder.matches(newPasswordCheck, newAccount.getPassword()));
@@ -320,7 +324,7 @@ class ProfileControllerTest {
     @WithAccount("test@naver.com")
     @DisplayName("프로필 비밀번호 수정하기 - 실패_passwordForm unmatch validator newPassword")
     public void updateProfilePassword_fail_validator_unmatch_new() throws Exception{
-        Account account = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
+        Account account = accountRepository.findByEmailAndChecked("test@naver.com", true);
         String newPassword = "0987654wequinlvzroppqnfslb!@$padj!212@mdpow";
         String newPasswordCheck = "0987654wequinlvzroppqnfslb!@$padj!212@mdpowqn@";
         String nowPassword = "1234567890";
@@ -347,7 +351,7 @@ class ProfileControllerTest {
     @WithAccount("test@naver.com")
     @DisplayName("프로필 알림 설정 - 성공")
     public void updateProfileNotifications_success() throws Exception{
-        Account account = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
+        Account account = accountRepository.findByEmailAndChecked("test@naver.com", true);
 
         mockMvc.perform(post("/update/noti/" + account.getId())
                 .param("siteMailNotification", "true")
@@ -370,7 +374,7 @@ class ProfileControllerTest {
     @WithAccount("test@naver.com")
     @DisplayName("프로필 태그 추가 - 성공")
     public void updateProfileTags_success() throws Exception {
-        Account account = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
+        Account account = accountRepository.findByEmailAndChecked("test@naver.com", true);
         TagForm tagForm = new TagForm();
         tagForm.setTitle("test_Tag");
 
@@ -389,9 +393,8 @@ class ProfileControllerTest {
     @WithAccount("test@naver.com")
     @DisplayName("프로필 태그 추가 중복값 - 성공")
     public void updateProfileTagsDuplication_success() throws Exception {
-        Account account = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
-        Tag tag = tagRepository.save(Tag.builder().title("test_Tag").build());
-        accountServiceImpl.addTag(account, tag);
+        Account account = accountRepository.findByEmailAndChecked("test@naver.com", true);
+        accountTagService.regTag(RegTagVO.builder().title("test_Tag").build(), account.getId());
 
         TagForm tagForm = new TagForm();
         tagForm.setTitle("test_Tag");
@@ -411,9 +414,8 @@ class ProfileControllerTest {
     @WithAccount("test@naver.com")
     @DisplayName("프로필 태그 삭제 - 성공")
     public void removeProfileTags_success() throws Exception{
-        Account account = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
-        Tag tag = tagRepository.save(Tag.builder().title("test_Tag").build());
-        accountServiceImpl.addTag(account, tag);
+        Account account = accountRepository.findByEmailAndChecked("test@naver.com", true);
+        accountTagService.regTag(RegTagVO.builder().title("test_Tag").build(), account.getId());
 
         TagForm tagForm = new TagForm();
         tagForm.setTitle("test_Tag");
@@ -434,7 +436,7 @@ class ProfileControllerTest {
     @WithAccount("test@naver.com")
     @DisplayName("프로필 태그 삭제 - 실패")
     public void removeProfileTags_fail() throws Exception{
-        Account account = accountRepository.findByEmailAndTokenChecked("test@naver.com", true);
+        Account account = accountRepository.findByEmailAndChecked("test@naver.com", true);
 
         TagForm tagForm = new TagForm();
         tagForm.setTitle("test_Tag");

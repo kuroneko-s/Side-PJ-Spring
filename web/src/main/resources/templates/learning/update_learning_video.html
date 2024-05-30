@@ -37,7 +37,7 @@
                 <div class="tab-content d-flex justify-content-start">
                     <div class="profile-body tab-pane active profile-content-body" id="videos" role="tabpanel">
                         <div class="align-items-center profile-content ">
-                            <div class="mb-4" th:each="video : ${videoList}">
+                            <div class="mb-4" th:each="video : ${fileList}">
                                 <p class="video-p">영상 제목: <span th:text="${video.videoTitle}"></span></p>
                                 <p class="video-p">영상 크기: <span th:text="${video.videoSize}"></span></p>
                                 <form action="#" th:action="@{'/profile/video/'+ ${learning.id} +'/remove/' + ${video.id}}" method="post">

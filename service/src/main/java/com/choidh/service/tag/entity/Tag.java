@@ -1,11 +1,11 @@
 package com.choidh.service.tag.entity;
 
+import com.choidh.service.joinTables.entity.LearningTagJoinTable;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @EqualsAndHashCode(of = "id")
@@ -20,4 +20,6 @@ public class Tag {
     @Column(unique = true, nullable = false)
     private String title;
 
+    @OneToMany(mappedBy = "tag")
+    private List<LearningTagJoinTable> learningTagJoinTables = new ArrayList<>();
 }

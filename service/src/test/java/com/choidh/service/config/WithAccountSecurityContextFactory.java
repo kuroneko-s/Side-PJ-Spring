@@ -30,8 +30,8 @@ public class WithAccountSecurityContextFactory implements WithSecurityContextFac
         account.setNickname("테스트냥이");
         account.setEmail(email);
         account.setPassword(passwordEncoder.encode("1234567890"));
-        account.setTokenChecked(true);
-        account.createEmailCheckToken();
+        account.setChecked(true);
+        account.createTokenForEmailForAuthentication();
         accountRepository.save(account);
 
         UserDetails principal = accountDetailsService.loadUserByUsername(email);

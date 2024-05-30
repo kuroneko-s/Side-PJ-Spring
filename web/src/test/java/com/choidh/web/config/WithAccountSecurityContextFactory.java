@@ -1,8 +1,9 @@
 package com.choidh.web.config;
 
 import com.choidh.service.account.entity.Account;
+import com.choidh.service.account.vo.RegAccountVO;
 import com.choidh.service.security.AccountDetailsService;
-import com.choidh.web.account.service.AccountServiceImpl;
+import com.choidh.service.account.service.AccountServiceImpl;
 import com.choidh.web.account.vo.AccountVO;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -32,8 +33,8 @@ public class WithAccountSecurityContextFactory implements WithSecurityContextFac
         accountVO.setEmail(email);
         accountVO.setPassword("1234567890");
         accountVO.setPasswordcheck("1234567890");
-        Account account = accountServiceImpl.createAccount(modelMapper.map(accountVO, Account.class));
-        account.setTokenChecked(true);
+        Account account = accountServiceImpl.regAccount(modelMapper.map(accountVO, RegAccountVO.class));
+        account.setChecked(true);
 
         UserDetails principal = accountDetailsService.loadUserByUsername(email);
         Authentication authentication = new UsernamePasswordAuthenticationToken(principal, principal.getPassword(),

@@ -3,7 +3,6 @@ package com.choidh.service.learning.repository;
 
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.entity.QLearning;
-import com.choidh.service.tag.entity.QTag;
 import com.choidh.service.tag.entity.Tag;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Predicate;
@@ -14,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.List;
-import java.util.Set;
 
 public class LearningRepositoryExtensionImpl extends QuerydslRepositorySupport implements LearningRepositoryExtension{
 
@@ -25,9 +23,10 @@ public class LearningRepositoryExtensionImpl extends QuerydslRepositorySupport i
     @Override
     public Page<Learning> findByKeywordWithPageable(String keyword, Pageable pageable) {
         QLearning learning = QLearning.learning;
-        JPQLQuery<Learning> query = from(learning).where(learning.startingLearning.isTrue()
+
+        JPQLQuery<Learning> query = from(learning).where(learning.opening
                 .and(learning.title.containsIgnoreCase(keyword))
-                .or(learning.tags.any().title.containsIgnoreCase(keyword)))
+                .or(learning.tags.any().tag.title.containsIgnoreCase(keyword)))
                 .distinct();
         JPQLQuery<Learning> pageableQuery = getQuerydsl().applyPagination(pageable, query);
         QueryResults<Learning> pageableQueryResult = pageableQuery.fetchResults();
@@ -40,7 +39,7 @@ public class LearningRepositoryExtensionImpl extends QuerydslRepositorySupport i
         //.distinct() 중복값 제거
 
         QLearning learning = QLearning.learning;
-        JPQLQuery<Learning> query = from(learning).where(learning.startingLearning.isTrue());
+        JPQLQuery<Learning> query = from(learning).where(learning.opening);
         JPQLQuery<Learning> pageableQuery = getQuerydsl().applyPagination(pageable, query);
         QueryResults<Learning> pageableQueryResult = pageableQuery.fetchResults();
 
@@ -51,8 +50,8 @@ public class LearningRepositoryExtensionImpl extends QuerydslRepositorySupport i
     public Page<Learning> findByKategorieWithPageable(boolean b, String kategorie, Pageable pageable) {
         int index = kategorie.equalsIgnoreCase("web") ? 1 : 2;
         QLearning learning = QLearning.learning;
-        JPQLQuery<Learning> query = from(learning).where(learning.startingLearning.isTrue()
-                .and(learning.kategorie.eq(index+"")));
+        JPQLQuery<Learning> query = from(learning).where(learning.opening
+                .and(learning.mainCategory.eq(index+"")));
         JPQLQuery<Learning> pageableQuery = getQuerydsl().applyPagination(pageable, query);
         QueryResults<Learning> pageableQueryResult = pageableQuery.fetchResults();
 
@@ -65,10 +64,10 @@ public class LearningRepositoryExtensionImpl extends QuerydslRepositorySupport i
         String match = "[^\uAC00-\uD7A3xfe0-9a-zA-Z]";
         keyword = keyword.replaceAll(match, "");
         QLearning learning = QLearning.learning;
-        JPQLQuery<Learning> query = from(learning).where(learning.startingLearning.isTrue()
-                .and(learning.kategorie.eq(index + ""))
+        JPQLQuery<Learning> query = from(learning).where(learning.opening
+                .and(learning.mainCategory.eq(index + ""))
                 .and(learning.title.containsIgnoreCase(keyword))
-                .or(learning.tags.any().title.containsIgnoreCase(keyword)))
+                .or(learning.tags.any().tag.title.containsIgnoreCase(keyword)))
                 .distinct();
         JPQLQuery<Learning> pageableQuery = getQuerydsl().applyPagination(pageable, query);
         QueryResults<Learning> pageableQueryResult = pageableQuery.fetchResults();
@@ -76,9 +75,9 @@ public class LearningRepositoryExtensionImpl extends QuerydslRepositorySupport i
         return new PageImpl<>(pageableQueryResult.getResults(), pageable, pageableQueryResult.getTotal());
     }
 
-    @Override
+    /*@Override
     public List<Learning> findTop4ByTagsOrderByRatingDesc(Set<Tag> tags) {
-        Predicate top4ByTags = LearningPredicates.findTop4ByTags(tags);
+        Predicate top4ByTags = LearningPredicates.findTop4ByTagIds(tags);
         QLearning learning = QLearning.learning;
         JPQLQuery<Learning> distinct;
 
@@ -88,41 +87,26 @@ public class LearningRepositoryExtensionImpl extends QuerydslRepositorySupport i
         }else {
             distinct = from(learning).where(learning.startingLearning.isTrue()
                     .and(learning.closedLearning.isFalse())
-                    .and(LearningPredicates.findTop4ByTags(tags)))
+                    .and(LearningPredicates.findTop4ByTagIds(tags)))
                     .leftJoin(learning.tags, QTag.tag).fetchJoin()
                     .limit(4)
                     .distinct();
         }
 
         return distinct.fetch();
-    }
+    }*/
 
     @Override
-    public List<Learning> findTop12ByTagsOrderByRatingDesc(Set<Tag> tags) {
-        Predicate top4ByTags = LearningPredicates.findTop4ByTags(tags);
+    public List<Learning> findTop12ByTagsOrderByRatingDesc(List<Tag> accountTagList) {
         QLearning learning = QLearning.learning;
-        JPQLQuery<Learning> distinct;
 
-        if (top4ByTags == null) {
-            distinct = from(learning)
-                    .where(
-                            learning.startingLearning.isTrue()
-                                    .and(learning.closedLearning.isFalse())
-                    )
-                    .limit(12)
-                    .distinct();
-        }else {
-            distinct = from(learning)
-                    .where(
-                            learning.startingLearning.isTrue()
-                                    .and(learning.closedLearning.isFalse())
-                                    .and(LearningPredicates.findTop4ByTags(tags))
-                    )
-                    .leftJoin(learning.tags, QTag.tag).fetchJoin()
-                    .limit(12)
-                    .distinct();
-        }
-
-        return distinct.fetch();
+        return from(learning)
+                .where(
+                        learning.opening.isTrue()
+                                .and(learning.tags.any().tag.in(accountTagList))
+                )
+                .limit(12)
+                .distinct()
+                .fetch();
     }
 }

@@ -5,6 +5,7 @@ import com.choidh.service.account.entity.Account;
 import com.choidh.service.common.entity.BaseDateEntity;
 import com.choidh.service.learning.entity.Learning;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor @AllArgsConstructor
+@BatchSize(size = 50)
 public class Review extends BaseDateEntity {
     @Id @Column(name = "review_id")
     @GeneratedValue
@@ -25,19 +27,11 @@ public class Review extends BaseDateEntity {
     private String description;
     private LocalDateTime createTime;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
     private Account account;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "learning_id")
     private Learning learning;
-
-    /**
-     * 리뷰를 각각의 Account, Learning 에 추가.
-     */
-    public void addReview(Account account, Learning learning) {
-        account.setReviews(this);
-        learning.setReviews(this);
-    }
 }

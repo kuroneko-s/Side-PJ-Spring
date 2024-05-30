@@ -28,15 +28,13 @@ class NotificationTest {
 
         Notification notification = Notification.builder()
                 .title("sample1")
-                .lectureName("sample")
                 .description("sample description")
-                .checked(false)
-                .account(account)
-                .notificationType(NotificationType.CREATE)
+                .used(true)
+                .notificationType(NotificationType.SITE)
                 .build();
 
         notificationRepository.save(notification);
-        account.getNotifications().add(notification);
+        // account.getNotifications().add(notification);
     }
 
 }

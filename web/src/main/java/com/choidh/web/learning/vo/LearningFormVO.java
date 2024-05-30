@@ -1,15 +1,12 @@
 package com.choidh.web.learning.vo;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Getter @Setter
+@Getter @Setter @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class LearningFormVO {

@@ -1,5 +1,6 @@
 package com.choidh.service;
 
+import com.choidh.service.account.entity.Account;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.NameTokenizers;
 import org.springframework.boot.SpringApplication;
@@ -29,17 +30,16 @@ public class ServiceApplication {
     @Bean
     public AuditorAware<String> auditorProvider() {
         // EnableJpaAuditing 을 사용해서 사용자 정보를 자동으로 저장해주는 기능을 제공해줄 때의 유저의 정보를 가져오는 방법을 정의
-        return new AuditorAware<String>() {
-            @Override
-            public Optional<String> getCurrentAuditor() {
-                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return () -> {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-                if (authentication == null || !authentication.isAuthenticated()) {
-                    return Optional.of("DEFAULT");
-                }
-
-                return Optional.of(authentication.getName());
+            if (authentication == null || !authentication.isAuthenticated()) {
+                return Optional.empty();
             }
+
+            Account account = (Account) authentication.getPrincipal();
+
+            return Optional.of(account.getId().toString());
         };
     }
 

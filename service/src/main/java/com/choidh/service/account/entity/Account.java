@@ -2,19 +2,18 @@ package com.choidh.service.account.entity;
 
 
 import com.choidh.service.annotation.Name;
-import com.choidh.service.common.entity.BaseDateEntity;
-import com.choidh.service.learning.entity.Learning;
-import com.choidh.service.notification.entity.Notification;
+import com.choidh.service.cart.entity.Cart;
+import com.choidh.service.common.entity.BaseEntity;
+import com.choidh.service.joinTables.entity.AccountTagJoinTable;
+import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
 import com.choidh.service.question.entity.Question;
 import com.choidh.service.review.entity.Review;
-import com.choidh.service.tag.entity.Tag;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 유저 Entity
@@ -27,66 +26,72 @@ import java.util.UUID;
 @EqualsAndHashCode(of = "id", callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
-public class Account extends BaseDateEntity {
+@BatchSize(size = 50)
+public class Account extends BaseEntity {
     @Id
     @GeneratedValue
+    @Column(name = "account_id")
     private Long id;
 
-    private String password;
-
     @Column(unique = true)
+    @Name(name = "별명")
     private String nickname;
 
     @Column(unique = true)
+    @Name(name = "이메일", description = "로그인 시 아이디로 사용")
     private String email;
 
-    @Lob
+    @Name(name = "패스워드", description = "sha256 암호화")
+    private String password;
+
+    @Column(length = 500)
+    @Name(name = "자기소개")
     private String description;
 
-    // private LocalDateTime createAccount;
-    private LocalDateTime createEmailToken;
+    @Name(name = "이메일 인증용 랜덤 토큰")
+    private String tokenForEmailForAuthentication;
 
-    private String emailCheckToken;
-    private boolean tokenChecked = false;
+    @Name(name = "이메일 인증 시 생성된 시간 기록.")
+    private LocalDateTime createTimeOfEmailToken;
 
-    //notifications
+    @Name(name = "이메일 인증 여부")
+    private boolean checked = false;
+
+    @Name(name = "사이트 관련 메일 알람 설정")
     private boolean siteMailNotification;
+
+    @Name(name = "사이트 관련 웹 알람 설정")
     private boolean siteWebNotification;
+
+    @Name(name = "강의 관련 메일 알람 설정")
     private boolean learningMailNotification;
+
+    @Name(name = "강의 관련 웹 알람 설정")
     private boolean learningWebNotification;
 
-    //uploader
-    private boolean uploader = true;
+    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
+    @Name(name = "업로더용 계정")
+    private ProfessionalAccount professionalAccount = null;
 
-    //cart List
-    @ManyToMany
-    private Set<Learning> cartList;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Set<Tag> tags = new HashSet<>();
-
-    //can listen Learning buy or free videos
-    @ManyToMany(mappedBy = "accounts")
-    @Name(name = "현재 수강중인 강의 목록")
-    private Set<Learning> listenLearning = new HashSet<>();
+    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
+    @Name(name = "장바구니 목록")
+    private Cart cart;
 
     @OneToMany(mappedBy = "account")
-    private Set<Learning> learnings = new HashSet<>();
+    @Name(name = "본인 선호 기술 스택 목록")
+    private List<AccountTagJoinTable> tags = new ArrayList<>();
 
     @OneToMany(mappedBy = "account")
+    @Name(name = "질의 글 목록")
     private Set<Question> questions = new HashSet<>();
 
     @OneToMany(mappedBy = "account")
+    @Name(name = "리뷰 글 목록")
     private Set<Review> reviews = new HashSet<>();
 
     @OneToMany(mappedBy = "account")
-    private Set<Notification> notifications = new HashSet<>();
-
-    public void setLearnings(Learning learning) {
-        this.getLearnings().add(learning);
-
-        if (learning.getAccount() != this) learning.setAccount(this);
-    }
+    @Name(name = "구매 이력 목록")
+    private List<PurchaseHistory> purchaseHistories = new ArrayList<>();
 
     public void setReviews(Review review) {
         this.getReviews().add(review);
@@ -95,34 +100,13 @@ public class Account extends BaseDateEntity {
     }
 
     // 랜덤 이메일 토큰 생성.
-    public void createEmailCheckToken(){
-        this.emailCheckToken = UUID.randomUUID().toString();
-        this.createEmailToken = LocalDateTime.now();
+    public void createTokenForEmailForAuthentication(){
+        this.tokenForEmailForAuthentication = UUID.randomUUID().toString();
+        this.createTimeOfEmailToken = LocalDateTime.now();
     }
 
     // 이메일 전송 가능여부 확인 (1시간)
     public Boolean canCheckingEmailToken() {
-        return this.createEmailToken.isBefore(LocalDateTime.now().minusHours(1));
-    }
-
-    public boolean canUploadVideo(){
-        return !this.learnings.isEmpty();
-    }
-
-    /**
-     * 강의 구매 처리
-     */
-    public void buyLearning(Learning learning) {
-        this.getListenLearning().add(learning); // 수강중인 강의 목록 추가
-        this.getCartList().remove(learning); // 카트에서 구매한 강의 삭제
-    }
-
-    /**
-     * 강의 구매 취소 처리
-     */
-    public void cancelLearning(Learning learning) {
-        this.getListenLearning().remove(learning); // 현재 수강중인 강의에서 삭제
-
-        // 강의를 다시 카트에 넣고 싶으면 Alert 로 띄워줘도 되고 취소한 화면에서 다시 카트에 넣어줄 수 있도록 개선해도 됨.
+        return this.createTimeOfEmailToken.isBefore(LocalDateTime.now().minusHours(1));
     }
 }

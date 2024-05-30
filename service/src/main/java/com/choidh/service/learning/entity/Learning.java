@@ -1,27 +1,34 @@
 package com.choidh.service.learning.entity;
 
 
-import com.choidh.service.account.entity.Account;
+import com.choidh.service.account.entity.ProfessionalAccount;
 import com.choidh.service.annotation.Name;
+import com.choidh.service.attachment.entity.AttachmentGroup;
+import com.choidh.service.common.entity.BaseEntity;
+import com.choidh.service.joinTables.entity.LearningCartJoinTable;
+import com.choidh.service.joinTables.entity.LearningTagJoinTable;
+import com.choidh.service.notice.entity.Notice;
+import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
 import com.choidh.service.question.entity.Question;
 import com.choidh.service.review.entity.Review;
-import com.choidh.service.tag.entity.Tag;
-import com.choidh.service.video.entity.Video;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode(of = "id")
+@ToString
+@EqualsAndHashCode(of = "id", callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
-public class Learning {
+public class Learning extends BaseEntity {
     @Id
     @GeneratedValue
     private Long id;
@@ -29,84 +36,41 @@ public class Learning {
     @Name(name = "강의 제목")
     private String title;
 
-    @Name(name = "강사 이름")
-    private String lecturerName;
-
-    @Name(name = "강사 설명")
-    private String lecturerDescription;
-
-    @Name(name = "간단 소개 (강의?)")
+    @Name(name = "간단 간단 소개")
     private String simpleSubscription;
 
     @Lob
     @Name(name = "강의 소개")
     private String subscription;
 
-    @Lob
-    @Name(name = "배너 이미지 데이터 (base64)", description = "나중에 서버에 저장하고 경로 저장해서 들고오는거로 쓸 듯 이렇게 쓰면 안됨")
-    private String bannerBytes;
+    @Name(name = "대분류 카테고리")
+    private String mainCategory;
 
-    @Name(name = "배너 이미지 경로")
-    private String bannerServerPath;
-
-    @Name(name = "카테고리", description = "왜 구분값이나 그런게 없고 list 같은 형식이 아닐까 ?")
-    private String kategorie;
+    @Name(name = "소분류 카테고리")
+    private String subCategory;
 
     @Name(name = "가격")
     private int price;
 
-    @Name(name = "강의 생성 일시")
-    private LocalDateTime createLearning;
+    @Name(name = "강의 공개 시작 일시")
+    private LocalDateTime openingDate = null;
 
-    @Name(name = "강의 시작 일시")
-    private LocalDateTime openLearning = null;
-
-    @Name(name = "강의 종료 일시")
-    private LocalDateTime closeLearning = null;
-
-    @Name(name = "강의 영상 갱신 일시")
-    private LocalDateTime uploadVideo = null;
-
-    @Name(name = "강의 갱신 일시")
-    private LocalDateTime updateLearning = null;
-
-    @Name(name = "구매 일시", description = "???????? 판매된 일시가 아닐까 ?")
-    private LocalDateTime buyLearning;
+    @Name(name = "강의 공개 종료 일시")
+    private LocalDateTime closingDate = null;
 
     @Name(name = "강의 오픈 여부")
-    private boolean startingLearning = false;
-
-    @Name(name = "강의 폐쇄 여부")
-    private boolean closedLearning = true;
-
-    @Name(name = "강의 갯수")
-    private int videoCount = 0;
-
-    @Name(name = "강의 후기")
-    private String comment;
+    private boolean opening = false;
 
     @Name(name = "강의 평점")
     private float rating = 0;
 
-    @Name(name = "총 가격 ?")
-    private Integer totalPrice;
+    @OneToOne
+    @Name(name = "강의에 해당하는 파일들.", description = "AttachmentFile 의 Type 으로 구분.")
+    private AttachmentGroup attachmentGroup;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @Name(name = "수강중인 사람들 목록")
-    private Set<Account> accounts = new HashSet<>();
-
-    @ManyToOne
-    @JoinColumn(name = "account_id")
-    @Name(name = "업로더 (게시자)")
-    private Account account;
-
-    @OneToMany(mappedBy = "learning", fetch = FetchType.LAZY)
-    @Name(name = "비디오 목록들")
-    private Set<Video> videos = new HashSet<>();
-
-    @ManyToMany
+    @OneToMany(mappedBy = "learning")
     @Name(name = "강의 관련 태그들")
-    private Set<Tag> tags = new HashSet<>();
+    private List<LearningTagJoinTable> tags = new ArrayList<>();
 
     @OneToMany(mappedBy = "learning")
     @Name(name = "강의 관련 질문글들")
@@ -116,10 +80,42 @@ public class Learning {
     @Name(name = "강의 관련 리뷰들")
     private Set<Review> reviews = new HashSet<>();
 
-    public void setVideos(Video video) {
-        this.getVideos().add(video);
+    @OneToMany(mappedBy = "learning")
+    @Name(name = "구매이력")
+    private List<PurchaseHistory> purchaseHistories = new ArrayList<>();
 
-        if (video.getLearning() != this) video.setLearning(this);
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "professional_account_id")
+    @Name(name = "강의자")
+    private ProfessionalAccount professionalAccount;
+
+    @OneToMany(mappedBy = "learning")
+    @Name(name = "카트에 추가되어 있는 수.", description = "유저가 카트에 추가한 강의들을 나타냄.")
+    private List<LearningCartJoinTable> learningCartJoinTables = new ArrayList<>();
+
+    @OneToMany(mappedBy = "learning")
+    @Name(name = "공지사항")
+    private List<Notice> noticesList = new ArrayList<>();
+
+    /**
+     * 강의 오픈 처리
+     */
+    public void setOpening(boolean opening) {
+        this.opening = opening;
+
+        if (opening) this.openingDate = LocalDateTime.now();
+        else this.closingDate = LocalDateTime.now();
+    }
+
+    /**
+     * 강의자 추가
+     */
+    public void setProfessionalAccount(ProfessionalAccount professionalAccount) {
+        this.professionalAccount = professionalAccount;
+
+        if (!professionalAccount.getLearningList().contains(this)) {
+            professionalAccount.getLearningList().add(this);
+        }
     }
 
     public void setReviews(Review review) {
@@ -132,15 +128,10 @@ public class Learning {
         this.setRating((float) (sum / ratingLength));
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
-        if(!account.getLearnings().contains(this)){
-            account.getLearnings().add(this);
-        }
-    }
     public int getRating_int(){
         return (int)Math.floor(this.rating);
     }
+
     public boolean checkRating_boolean(){
         int rating_double = getRating_int();
         return ((this.rating * 10) - (rating_double * 10)) >= 5 && rating_double <= 5;
@@ -172,14 +163,9 @@ public class Learning {
         }
         return String.valueOf(str);
     }
-    public boolean checkUploadLearning(){
-        return !(this.uploadVideo instanceof LocalDateTime) || this.uploadVideo == null;
-    }
-    public boolean checkUpdateLearning(){
-        return !(this.updateLearning instanceof LocalDateTime) || this.updateLearning == null;
-    }
+
     public String getKategorieValue(){
-        switch (this.kategorie) {
+        switch (this.mainCategory) {
             case "1":
                 return "Web";
             case "2":
@@ -187,26 +173,5 @@ public class Learning {
             default:
                 return "none";
         }
-    }
-
-    /**
-     * 강의 구매 처리
-     */
-    public void buyLearning(Account account) {
-        this.getAccounts().add(account); // 해당 강의를 수강하고 있는 유저 목록에 추가.
-
-        // TODO: Learning 과 Account 간 조인 테이블 생성 필요할 듯. 검토 필요.
-        // Learning 을 구매한 이력을 시간으로도 관리하고 싶으면 중간에 조인테이블을 만들어서 따로 관리를 해줘야함.
-        // 근데 구매한 이력만을 가지고 조인테이블을 만들어서 관리할 이유가 있냐고 생각하면 있긴한데 ...
-        this.setBuyLearning(LocalDateTime.now());
-    }
-
-    /**
-     * 강의 구매 취소 처리
-     */
-    public void cancelLearning(Learning learning) {
-        learning.getAccounts().remove(account); // 강의에서 수강중인 학생에서 삭제
-
-        this.setBuyLearning(null);
     }
 }

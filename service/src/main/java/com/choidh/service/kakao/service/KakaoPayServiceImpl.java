@@ -1,13 +1,15 @@
 package com.choidh.service.kakao.service;
 
 
+import com.choidh.service.account.entity.Account;
+import com.choidh.service.account.service.AccountService;
 import com.choidh.service.common.AppConstant;
-import com.choidh.service.kakao.vo.KakaoPayApprovalVO;
-import com.choidh.service.kakao.vo.KakaoPayCancelVO;
-import com.choidh.service.kakao.vo.KakaoPayReadyVO;
+import com.choidh.service.kakao.vo.*;
+import com.choidh.service.learning.entity.Learning;
+import com.choidh.service.learning.service.LearningService;
+import com.choidh.service.purchaseHistory.service.PurchaseHistoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +22,10 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 카카오 페이 API (<a href="https://developers.kakao.com/product/kakaoPay">카카오 페이</a>)
@@ -28,13 +34,16 @@ import java.net.URISyntaxException;
 @Slf4j
 @Service
 @Transactional(readOnly = true)
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 public class KakaoPayServiceImpl implements KakaoPayService {
     @Value("${kakao.host}") private String KAKAO_HOST;
     @Value("${kakao.admin.key}") private String ADMIN_KEY;
     @Value("${kakao.redirect.host}") private String HOST;
 
     private final RestTemplate restTemplate;
+    private final AccountService accountService;
+    private final LearningService learningService;
+    private final PurchaseHistoryService purchaseHistoryService;
 
     /**
      * 카카오 페이 결제 초기 진행
@@ -54,13 +63,13 @@ public class KakaoPayServiceImpl implements KakaoPayService {
         params.add("cancel_url", HOST + AppConstant.KAKAO_PAY_CANCEL_REDIRECT_URL); // 취소시 redirect URL
         params.add("fail_url", HOST + AppConstant.KAKAO_PAY_FAIL_REDIRECT_URL); // 실패시 redirect URL
 
-        //header와 body를 합치는 부분
+        // header와 body를 합치는 부분
         HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(params, this.getKakaoHeader());
 
         try{
             return restTemplate.postForObject(new URI(KAKAO_HOST + "/v1/payment/ready"), body, KakaoPayReadyVO.class);
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
 
             throw new RuntimeException(e);
         }
@@ -119,5 +128,65 @@ public class KakaoPayServiceImpl implements KakaoPayService {
         headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=utf-8");
 
         return headers;
+    }
+
+    /**
+     * 강의 구매 승인
+     */
+    @Override
+    @Transactional
+    public KakaoPaySuccessResult paidLearning(Long accountId, String pgToken, String kakaoPayTid, String learningId) {
+        KakaoPaySuccessResult kakaoPaySuccessResult = new KakaoPaySuccessResult();
+        Account account = accountService.getAccountById(accountId);
+        kakaoPaySuccessResult.setAccount(account);
+
+        // 결제 진행
+        KakaoPayApprovalVO kakaoPayApprovalVO = this.kakaoPayInfo(pgToken, kakaoPayTid);
+        kakaoPaySuccessResult.setKakaoPayApprovalVO(kakaoPayApprovalVO);
+
+        // 구매처리한 강의 리스트
+        List<Learning> learningList = learningService.getLearningListByIdList(
+                Stream.of(learningId.split(","))
+                        .map(Long::valueOf)
+                        .collect(Collectors.toList())
+        );
+        kakaoPaySuccessResult.setLearningList(Collections.unmodifiableList(learningList));
+
+        // 구매 이력 등록.
+        for (Learning learning : learningList) {
+            purchaseHistoryService.regPurchaseHistory(account, learning);
+        }
+
+        return kakaoPaySuccessResult;
+    }
+
+    /**
+     * 강의 구매 취소
+     */
+    @Override
+    @Transactional
+    public KakaoPayCancelResult cancelLearning(Long accountId, String learningId, String kakaoPayTid) {
+        KakaoPayCancelResult kakaoPayCancelResult = new KakaoPayCancelResult();
+        Account account = accountService.getAccountById(accountId);
+        kakaoPayCancelResult.setAccount(account);
+
+        // 구매 취소 진행
+        KakaoPayCancelVO kakaoPayCancelVO = this.kakaoPayCancel(kakaoPayTid);
+        kakaoPayCancelResult.setKakaoPayCancelVO(kakaoPayCancelVO);
+
+        // 구매 취소한 강의들
+        List<Learning> learningList = learningService.getLearningListByIdList(
+                Stream.of(learningId.split(","))
+                        .map(Long::valueOf)
+                        .collect(Collectors.toList())
+        );
+        kakaoPayCancelResult.setLearningList(Collections.unmodifiableList(learningList));
+
+        // 구매 이력 취소 처리
+        for (Learning learning : learningList) {
+            purchaseHistoryService.modPurchaseHistoryOfCancel(account, learning);
+        }
+
+        return kakaoPayCancelResult;
     }
 }

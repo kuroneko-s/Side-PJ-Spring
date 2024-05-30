@@ -25,7 +25,7 @@ class AccountRepositoryTest {
     @DisplayName("Account 단건조회 (성공). By Nickname. Token checked is true")
     @WithAccount("test@test.com")
     public void getAccountByNicknameAndCheckedIsTrue() throws Exception {
-        Account account = accountRepository.findByNicknameAndTokenChecked("테스트냥이", true);
+        Account account = accountRepository.findByNicknameAndChecked("테스트냥이", true);
 
         assertNotNull(account);
     }
@@ -34,7 +34,7 @@ class AccountRepositoryTest {
     @DisplayName("Account 단건조회 (실패). By Nickname. Token checked is false")
     @WithAccount("test@test.com")
     public void getAccountByNicknameAndCheckedIsFalse() throws Exception {
-        Account account = accountRepository.findByNicknameAndTokenChecked("테스트냥이", false);
+        Account account = accountRepository.findByNicknameAndChecked("테스트냥이", false);
 
         assertNull(account);
     }
@@ -79,7 +79,7 @@ class AccountRepositoryTest {
     @DisplayName("Account 단건 조회 By Email and Email Authenticated (성공)")
     @WithAccount("test@test.com")
     public void getAccountByEmailAndEmailAuthenticated_Success() throws Exception {
-        Account account = accountRepository.findByEmailAndTokenChecked("test@test.com", true);
+        Account account = accountRepository.findByEmailAndChecked("test@test.com", true);
 
         assertNotNull(account);
     }
@@ -88,7 +88,7 @@ class AccountRepositoryTest {
     @DisplayName("Account 단건 조회 By Email and Email Authenticated (실패)")
     @WithAccount("test@test.com")
     public void getAccountByEmailAndEmailAuthenticated_Fail() throws Exception {
-        Account account = accountRepository.findByEmailAndTokenChecked("test@test.com", false);
+        Account account = accountRepository.findByEmailAndChecked("test@test.com", false);
 
         assertNull(account);
     }
@@ -97,7 +97,7 @@ class AccountRepositoryTest {
     @DisplayName("Account 단건 조회 By Nickname and Email Authenticated (성공)")
     @WithAccount("test@test.com")
     public void getAccountByNicknameAndEmailAuthenticated_Success() throws Exception {
-        Account account = accountRepository.findByNicknameAndTokenChecked("테스트냥이", true);
+        Account account = accountRepository.findByNicknameAndChecked("테스트냥이", true);
 
         assertNotNull(account);
     }
@@ -106,7 +106,7 @@ class AccountRepositoryTest {
     @DisplayName("Account 단건 조회 By Nickname and Email Authenticated (실패)")
     @WithAccount("test@test.com")
     public void getAccountByNicknameAndEmailAuthenticated_Fail() throws Exception {
-        Account account = accountRepository.findByNicknameAndTokenChecked("테스트냥이2", false);
+        Account account = accountRepository.findByNicknameAndChecked("테스트냥이2", false);
 
         assertNull(account);
     }
@@ -116,7 +116,7 @@ class AccountRepositoryTest {
     @WithAccount("test@test.com")
     public void findAccountWithLearnings_Success() throws Exception {
         System.out.println("###################"); // 쿼리 확인용
-        Account account = accountRepository.findByNicknameAndTokenChecked("테스트냥이", true);
+        Account account = accountRepository.findByNicknameAndChecked("테스트냥이", true);
         Account accountWithLearnings = accountRepository.findAccountWithLearnings(account.getId());
 
         assertNotNull(accountWithLearnings);
@@ -127,7 +127,7 @@ class AccountRepositoryTest {
     @WithAccount("test@test.com")
     public void findAccountWithQuestion_Success() throws Exception {
         System.out.println("###################"); // 쿼리 확인용
-        Account account = accountRepository.findByNicknameAndTokenChecked("테스트냥이", true);
+        Account account = accountRepository.findByNicknameAndChecked("테스트냥이", true);
         Account accountWithQuestion = accountRepository.findAccountWithQuestion(account.getId());
 
         assertNotNull(accountWithQuestion);
@@ -138,21 +138,21 @@ class AccountRepositoryTest {
     @WithAccount("test@test.com")
     public void findAccountWithTags_Success() throws Exception {
         System.out.println("###################"); // 쿼리 확인용
-        Account account = accountRepository.findByNicknameAndTokenChecked("테스트냥이", true);
+        Account account = accountRepository.findByNicknameAndChecked("테스트냥이", true);
         Account accountWithQuestion = accountRepository.findAccountWithTags(account.getId());
 
         assertNotNull(accountWithQuestion);
     }
 
-    @Test
-    @DisplayName("Account 단건 조회 with learning, question, listenLearning (성공) - 쿼리 확인용")
-    @WithAccount("test@test.com")
-    public void findAccountWithAll_Success() throws Exception {
-        System.out.println("###################"); // 쿼리 확인용
-        Account account = accountRepository.findByNicknameAndTokenChecked("테스트냥이", true);
-        Account accountWithQuestion = accountRepository.findAccountWithAll(account.getId());
-
-        assertNotNull(accountWithQuestion);
-    }
+//    @Test
+//    @DisplayName("Account 단건 조회 with learning, question, listenLearning (성공) - 쿼리 확인용")
+//    @WithAccount("test@test.com")
+//    public void findAccountWithAll_Success() throws Exception {
+//        System.out.println("###################"); // 쿼리 확인용
+//        Account account = accountRepository.findByNicknameAndTokenChecked("테스트냥이", true);
+//        Account accountWithQuestion = accountRepository.findAccountWithAll(account.getId());
+//
+//        assertNotNull(accountWithQuestion);
+//    }
 
 }

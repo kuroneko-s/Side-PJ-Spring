@@ -2,9 +2,10 @@ package com.choidh.web.account.controller;
 
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.repository.AccountRepository;
+import com.choidh.service.account.vo.RegAccountVO;
 import com.choidh.service.mail.service.EmailService;
-import com.choidh.service.mail.vo.EmailCheckMessageVO;
-import com.choidh.web.account.service.AccountServiceImpl;
+import com.choidh.service.mail.vo.EmailForAuthenticationVO;
+import com.choidh.service.account.service.AccountServiceImpl;
 import com.choidh.web.account.vo.AccountVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -71,7 +72,7 @@ class AccountControllerTest {
                 .andExpect(view().name("navbar/token_validation"))
                 .andExpect(status().isOk());
 
-        Account account = accountRepository.findByNicknameAndTokenChecked("Test", false);
+        Account account = accountRepository.findByNicknameAndChecked("Test", false);
         assertNotNull(account);
         assertTrue(passwordEncoder.matches("1234567890", account.getPassword()));
     }
@@ -91,7 +92,7 @@ class AccountControllerTest {
                 .andExpect(view().name("navbar/create_account"))
                 .andExpect(status().isOk());
 
-        Account account = accountRepository.findByNicknameAndTokenChecked("Test", false);
+        Account account = accountRepository.findByNicknameAndChecked("Test", false);
         assertNull(account);
     }
 
@@ -109,7 +110,7 @@ class AccountControllerTest {
                 .andExpect(view().name("navbar/create_account"))
                 .andExpect(status().isOk());
 
-        Account account = accountRepository.findByNicknameAndTokenChecked("Test", false);
+        Account account = accountRepository.findByNicknameAndChecked("Test", false);
         assertNull(account);
     }
 
@@ -121,7 +122,7 @@ class AccountControllerTest {
         accountVO.setPassword("1234567890");
         accountVO.setPasswordcheck("1234567890");
         accountVO.setNickname("Test");
-        accountServiceImpl.createAccount(modelMapper.map(accountVO, Account.class));
+        accountServiceImpl.regAccount(modelMapper.map(accountVO, RegAccountVO.class));
 
         mockMvc.perform(
                         post("/register")
@@ -135,7 +136,7 @@ class AccountControllerTest {
                 .andExpect(view().name("navbar/create_account"))
                 .andExpect(status().isOk());
 
-        Account newAccount = accountRepository.findByNicknameAndTokenChecked("test2", false);
+        Account newAccount = accountRepository.findByNicknameAndChecked("test2", false);
         assertNull(newAccount);
     }
 
@@ -147,7 +148,7 @@ class AccountControllerTest {
         accountVO.setPassword("1234567890");
         accountVO.setPasswordcheck("1234567890");
         accountVO.setNickname("Test");
-        accountServiceImpl.createAccount(modelMapper.map(accountVO, Account.class));
+        accountServiceImpl.regAccount(modelMapper.map(accountVO, RegAccountVO.class));
 
         mockMvc.perform(
                         post("/register")
@@ -161,7 +162,7 @@ class AccountControllerTest {
                 .andExpect(view().name("navbar/create_account"))
                 .andExpect(status().isOk());
 
-        Account newAccount = accountRepository.findByEmailAndTokenChecked("test2@test.com", false);
+        Account newAccount = accountRepository.findByEmailAndChecked("test2@test.com", false);
         assertNull(newAccount);
     }
 
@@ -174,24 +175,24 @@ class AccountControllerTest {
         accountVO.setPasswordcheck("1234567890");
         accountVO.setNickname("Test");
         Account beforeAccount = modelMapper.map(accountVO, Account.class);
-        Account account = accountServiceImpl.createAccount(beforeAccount);
-        verify(emailService, times(1)).sendCheckEmail(EmailCheckMessageVO.getInstance(beforeAccount)); // 메서드 호출 여부 검증
+        Account account = accountServiceImpl.regAccount(modelMapper.map(beforeAccount, RegAccountVO.class));
+        verify(emailService, times(1)).sendEmailForAuthentication(EmailForAuthenticationVO.getInstance(beforeAccount)); // 메서드 호출 여부 검증
 
         mockMvc.perform(
                         get("/mailAuth")
-                                .param("token", account.getEmailCheckToken())
+                                .param("token", account.getTokenForEmailForAuthentication())
                                 .param("email", account.getEmail())
                 )
                 .andExpect(flash().attributeExists("account"))
                 .andExpect(flash().attributeExists("success"))
                 .andExpect(redirectedUrl("/"))
                 .andExpect(status().is3xxRedirection());
-        verify(emailService, times(1)).sendCheckEmail(EmailCheckMessageVO.getInstance(account)); // 메서드 호출 여부 검증
+        verify(emailService, times(1)).sendEmailForAuthentication(EmailForAuthenticationVO.getInstance(account)); // 메서드 호출 여부 검증
 
-        Account emailAccount = accountRepository.findByEmailAndTokenChecked("test@test.com", true);
+        Account emailAccount = accountRepository.findByEmailAndChecked("test@test.com", true);
         assertNotNull(emailAccount);
 
-        Account nicknameAccount = accountRepository.findByNicknameAndTokenChecked("Test", true);
+        Account nicknameAccount = accountRepository.findByNicknameAndChecked("Test", true);
         assertNotNull(nicknameAccount);
         assertEquals(emailAccount, nicknameAccount);
     }
@@ -204,11 +205,11 @@ class AccountControllerTest {
         accountVO.setPassword("1234567890");
         accountVO.setPasswordcheck("1234567890");
         accountVO.setNickname("Test");
-        Account account = accountServiceImpl.createAccount(modelMapper.map(accountVO, Account.class));
+        Account account = accountServiceImpl.regAccount(modelMapper.map(accountVO, RegAccountVO.class));
 
         mockMvc.perform(
                         get("/mailAuth")
-                                .param("token", account.getEmailCheckToken() + "dp2")
+                                .param("token", account.getTokenForEmailForAuthentication() + "dp2")
                                 .param("email", account.getEmail())
                 )
                 .andExpect(model().attributeExists("message"))
@@ -217,9 +218,9 @@ class AccountControllerTest {
                 .andExpect(view().name("navbar/token_validation"))
                 .andExpect(status().isOk());
 
-        Account emailAccount = accountRepository.findByEmailAndTokenChecked("test@test.com", true);
+        Account emailAccount = accountRepository.findByEmailAndChecked("test@test.com", true);
         assertNull(emailAccount);
-        Account nicknameAccount = accountRepository.findByNicknameAndTokenChecked("Test", true);
+        Account nicknameAccount = accountRepository.findByNicknameAndChecked("Test", true);
         assertNull(nicknameAccount);
     }
 
@@ -231,11 +232,11 @@ class AccountControllerTest {
         accountVO.setPassword("1234567890");
         accountVO.setPasswordcheck("1234567890");
         accountVO.setNickname("Test");
-        Account account = accountServiceImpl.createAccount(modelMapper.map(accountVO, Account.class));
+        Account account = accountServiceImpl.regAccount(modelMapper.map(accountVO, RegAccountVO.class));
 
         mockMvc.perform(
                         get("/mailAuth")
-                                .param("token", account.getEmailCheckToken())
+                                .param("token", account.getTokenForEmailForAuthentication())
                                 .param("email", "kuroneko2@naver.com")
                 )
                 .andExpect(model().attributeExists("message"))
@@ -244,9 +245,9 @@ class AccountControllerTest {
                 .andExpect(view().name("navbar/token_validation"))
                 .andExpect(status().isOk());
 
-        Account emailAccount = accountRepository.findByEmailAndTokenChecked("test@test.com", true);
+        Account emailAccount = accountRepository.findByEmailAndChecked("test@test.com", true);
         assertNull(emailAccount);
-        Account nicknameAccount = accountRepository.findByNicknameAndTokenChecked("Test", true);
+        Account nicknameAccount = accountRepository.findByNicknameAndChecked("Test", true);
         assertNull(nicknameAccount);
     }
 
@@ -258,8 +259,8 @@ class AccountControllerTest {
         accountVO.setPassword("1234567890");
         accountVO.setPasswordcheck("1234567890");
         accountVO.setNickname("Test");
-        Account account = accountServiceImpl.createAccount(modelMapper.map(accountVO, Account.class));
-        account.setCreateEmailToken(LocalDateTime.now().minusHours(3));
+        Account account = accountServiceImpl.regAccount(modelMapper.map(accountVO, RegAccountVO.class));
+        account.setCreateTimeOfEmailToken(LocalDateTime.now().minusHours(3));
 
         mockMvc.perform(
                         post("/mailAuthRetry")
@@ -270,8 +271,8 @@ class AccountControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
 
-        Account newAccount = accountRepository.findByEmailAndTokenChecked(accountVO.getEmail(), false);
-        assertNotNull(newAccount.getEmailCheckToken());
+        Account newAccount = accountRepository.findByEmailAndChecked(accountVO.getEmail(), false);
+        assertNotNull(newAccount.getTokenForEmailForAuthentication());
     }
 
     @Test
@@ -282,7 +283,7 @@ class AccountControllerTest {
         accountVO.setPassword("1234567890");
         accountVO.setPasswordcheck("1234567890");
         accountVO.setNickname("Test");
-        accountServiceImpl.createAccount(modelMapper.map(accountVO, Account.class));
+        accountServiceImpl.regAccount(modelMapper.map(accountVO, RegAccountVO.class));
 
         mockMvc.perform(
                         post("/mailAuthRetry")
@@ -294,7 +295,7 @@ class AccountControllerTest {
                 .andExpect(view().name("navbar/token_validation"))
                 .andExpect(status().isOk());
 
-        Account account = accountRepository.findByEmailAndTokenChecked(accountVO.getEmail(), false);
+        Account account = accountRepository.findByEmailAndChecked(accountVO.getEmail(), false);
         assertNotNull(account);
     }
 }

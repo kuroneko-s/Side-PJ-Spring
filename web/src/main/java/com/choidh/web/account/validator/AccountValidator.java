@@ -2,7 +2,7 @@ package com.choidh.web.account.validator;
 
 
 import com.choidh.service.account.repository.AccountRepository;
-import com.choidh.web.common.annotation.IsValidator;
+import com.choidh.service.excel.validator.IsValidator;
 import com.choidh.web.account.vo.AccountVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +12,7 @@ import org.springframework.validation.Validator;
 /**
  * {@link AccountVO}의 Validator
  */
+
 @IsValidator
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AccountValidator implements Validator {
@@ -24,16 +25,16 @@ public class AccountValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        AccountVO accountServiceVO = (AccountVO) target;
+        AccountVO accountVO = (AccountVO) target;
 
-        if (accountRepository.existsByEmail(accountServiceVO.getEmail()))
-            errors.rejectValue("email", "wrong.email", new Object[]{accountServiceVO.getEmail()}, "이 이메일은 사용하실 수 없습니다.");
+        if (accountRepository.existsByEmail(accountVO.getEmail()))
+            errors.rejectValue("email", "wrong.email", new Object[]{accountVO.getEmail()}, "이 이메일은 사용하실 수 없습니다.");
 
-        if (accountRepository.existsByNickname(accountServiceVO.getNickname()))
-            errors.rejectValue("nickname", "wrong.nickname", new Object[]{accountServiceVO.getNickname()}, "이 닉네임은 사용하실 수 없습니다.");
+        if (accountRepository.existsByNickname(accountVO.getNickname()))
+            errors.rejectValue("nickname", "wrong.nickname", new Object[]{accountVO.getNickname()}, "이 닉네임은 사용하실 수 없습니다.");
 
-        if (!accountServiceVO.checkingPassword())
-            errors.rejectValue("password", "wrong.password", new Object[]{accountServiceVO.getPassword()}, "패스워드가 일치하지 않습니다.");
+        if (!accountVO.checkingPassword())
+            errors.rejectValue("password", "wrong.password", new Object[]{accountVO.getPassword()}, "패스워드가 일치하지 않습니다.");
 
     }
 }
