@@ -121,7 +121,7 @@ public class LearningProfessionalController {
         LearningFormVO learningFormVO = LearningFormVO.builder()
                 .title(learning.getTitle())
                 .price(learning.getPrice())
-                .kategorie(learning.getKategorieValue())
+                .kategorie(learning.getCategoryValue())
                 .subscription(learning.getSubscription())
                 .simplesubscription(learning.getSimpleSubscription())
                 .build();

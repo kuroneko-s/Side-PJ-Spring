@@ -12,6 +12,7 @@ import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
 import com.choidh.service.question.entity.Question;
 import com.choidh.service.review.entity.Review;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -28,6 +29,7 @@ import java.util.Set;
 @EqualsAndHashCode(of = "id", callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
+@BatchSize(size = 50)
 public class Learning extends BaseEntity {
     @Id
     @GeneratedValue
@@ -70,7 +72,7 @@ public class Learning extends BaseEntity {
 
     @OneToMany(mappedBy = "learning")
     @Name(name = "강의 관련 태그들")
-    private List<LearningTagJoinTable> tags = new ArrayList<>();
+    private Set<LearningTagJoinTable> tags = new HashSet<>();
 
     @OneToMany(mappedBy = "learning")
     @Name(name = "강의 관련 질문글들")
@@ -82,20 +84,28 @@ public class Learning extends BaseEntity {
 
     @OneToMany(mappedBy = "learning")
     @Name(name = "구매이력")
-    private List<PurchaseHistory> purchaseHistories = new ArrayList<>();
+    private Set<PurchaseHistory> purchaseHistories = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "professional_account_id")
     @Name(name = "강의자")
     private ProfessionalAccount professionalAccount;
 
     @OneToMany(mappedBy = "learning")
     @Name(name = "카트에 추가되어 있는 수.", description = "유저가 카트에 추가한 강의들을 나타냄.")
-    private List<LearningCartJoinTable> learningCartJoinTables = new ArrayList<>();
+    private Set<LearningCartJoinTable> carts = new HashSet<>();
 
     @OneToMany(mappedBy = "learning")
     @Name(name = "공지사항")
-    private List<Notice> noticesList = new ArrayList<>();
+    private Set<Notice> noticesList = new HashSet<>();
+
+    public void setTags(LearningTagJoinTable learningCartJoinTable) {
+        this.tags.add(learningCartJoinTable);
+
+        if (learningCartJoinTable.getLearning() == null) {
+            learningCartJoinTable.setLearning(this);
+        }
+    }
 
     /**
      * 강의 오픈 처리
@@ -128,24 +138,26 @@ public class Learning extends BaseEntity {
         this.setRating((float) (sum / ratingLength));
     }
 
-    public int getRating_int(){
+    public int getRatingInt(){
         return (int)Math.floor(this.rating);
     }
 
-    public boolean checkRating_boolean(){
-        int rating_double = getRating_int();
+    public boolean checkRatingBoolean(){
+        int rating_double = getRatingInt();
         return ((this.rating * 10) - (rating_double * 10)) >= 5 && rating_double <= 5;
     }
+
     public int emptyRating(){
-        int rating_double = getRating_int();
-        boolean halfRating = checkRating_boolean();
+        int rating_double = getRatingInt();
+        boolean halfRating = checkRatingBoolean();
         return 5 - rating_double - (halfRating ? 1 : 0);
     }
-    public String price_comma(){
+
+    public String priceComma(){
         StringBuilder str = new StringBuilder().append(this.price);
         int index = str.length();
         int insertTime = index - 3;
-        float i = index / 3;
+        float i = (float) index / 3;
 
         if(index <= 1){
             return "free";
@@ -164,7 +176,7 @@ public class Learning extends BaseEntity {
         return String.valueOf(str);
     }
 
-    public String getKategorieValue(){
+    public String getCategoryValue(){
         switch (this.mainCategory) {
             case "1":
                 return "Web";

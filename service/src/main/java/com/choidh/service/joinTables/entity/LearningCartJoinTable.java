@@ -21,11 +21,11 @@ public class LearningCartJoinTable extends BaseEntity {
     @Column(name = "learning_cart_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "learning_id")
     private Learning learning;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
@@ -40,8 +40,8 @@ public class LearningCartJoinTable extends BaseEntity {
     public void setLearning(Learning learning) {
         this.learning = learning;
 
-        if (!learning.getLearningCartJoinTables().contains(this)) {
-            learning.getLearningCartJoinTables().add(this);
+        if (!learning.getCarts().contains(this)) {
+            learning.getCarts().add(this);
         }
     }
 }

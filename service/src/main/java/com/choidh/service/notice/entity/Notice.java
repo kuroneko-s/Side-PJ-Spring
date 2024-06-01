@@ -23,7 +23,7 @@ public class Notice extends BaseEntity {
 
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "learning_id")
     private Learning learning;
 }

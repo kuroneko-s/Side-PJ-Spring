@@ -20,6 +20,6 @@ public class Tag {
     @Column(unique = true, nullable = false)
     private String title;
 
-    @OneToMany(mappedBy = "tag")
-    private List<LearningTagJoinTable> learningTagJoinTables = new ArrayList<>();
+//    @OneToMany(mappedBy = "tag")
+//    private List<LearningTagJoinTable> learningTagJoinTables = new ArrayList<>();
 }

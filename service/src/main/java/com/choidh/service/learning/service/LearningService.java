@@ -12,35 +12,19 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface LearningService {
-    default String updateVideoTitle(String title) {
-        String regExp = "[a-zA-Zㄱ-ㅎ가-힣ㅏ-ㅣ\\s_](.mp3|.mp4|mkv)";
-        String regExpNot = "[0-9]+(.)[0-9]+";
-        String number = title.replaceAll(regExp, "").trim();
-        String notNumber = title.replaceAll(regExpNot, "").trim();
-        int i = number.indexOf("-");
-        int strIndex = number.indexOf(notNumber.charAt(0));
-
-        String f = number.substring(0, i); //앞
-        String e = number.substring(i + 1, strIndex); //뒤
-        String newf = "";
-        String newe = "";
-
-        if (f.length() <= 1) newf = 0 + f;
-        else newf = f;
-
-        if (e.length() <= 1) newe = 0 + e;
-        else newe = e;
-
-        return newf + "-" + newe + notNumber;
-    }
-
     /**
-     * 유저의 Tag 기반 강의 목록조회 Top 12
+     * 강의 목록조회 By Account's Tags
      */
     List<Learning> getTop12LearningListByTag(Long accountId);
 
+    /**
+     * 강의 목록조회 By 생성 일시
+     */
     List<Learning> learningOrderByCreateLearning();
 
+    /**
+     * 강의 목록조회 By 평점
+     */
     List<Learning> learningOrderByRating();
 
     /**
@@ -48,14 +32,18 @@ public interface LearningService {
      */
     Learning regLearning(RegLearningVO regLearningVO, Long accountId);
 
-    // 강의 목록 조회
+    /**
+     * 강의 목록조회 By Account Id
+     */
     List<Learning> getLearningList(Long accountId);
 
-    // 강의 단건 조회 By Id
-    Learning getLearningById(Long id);
+    /**
+     * 강의 단건 조회 By
+     */
+    Learning getLearningById(Long learningId);
 
     /**
-     * 강의 단건 조회 By Id With Question and Video files
+     * 강의 단건 조회 By Id With Question
      */
     Learning getLearningByIdWithQuestion(Long learningId);
 

@@ -24,6 +24,7 @@ public class LearningTagJoinTable extends BaseDateEntity {
     @JoinColumn(name = "learning_id")
     private Learning learning;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "tag_id")
     private Tag tag;
@@ -33,14 +34,6 @@ public class LearningTagJoinTable extends BaseDateEntity {
 
         if (!learning.getTags().contains(this)) {
             learning.getTags().add(this);
-        }
-    }
-
-    public void setTag(Tag tag) {
-        this.tag = tag;
-
-        if (!tag.getLearningTagJoinTables().contains(this)) {
-            tag.getLearningTagJoinTables().add(this);
         }
     }
 

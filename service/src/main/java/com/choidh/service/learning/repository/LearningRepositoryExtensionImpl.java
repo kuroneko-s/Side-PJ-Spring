@@ -75,27 +75,6 @@ public class LearningRepositoryExtensionImpl extends QuerydslRepositorySupport i
         return new PageImpl<>(pageableQueryResult.getResults(), pageable, pageableQueryResult.getTotal());
     }
 
-    /*@Override
-    public List<Learning> findTop4ByTagsOrderByRatingDesc(Set<Tag> tags) {
-        Predicate top4ByTags = LearningPredicates.findTop4ByTagIds(tags);
-        QLearning learning = QLearning.learning;
-        JPQLQuery<Learning> distinct;
-
-        if (top4ByTags == null) {
-            distinct = from(learning).where(learning.startingLearning.isTrue()
-                    .and(learning.closedLearning.isFalse())).limit(4).distinct();
-        }else {
-            distinct = from(learning).where(learning.startingLearning.isTrue()
-                    .and(learning.closedLearning.isFalse())
-                    .and(LearningPredicates.findTop4ByTagIds(tags)))
-                    .leftJoin(learning.tags, QTag.tag).fetchJoin()
-                    .limit(4)
-                    .distinct();
-        }
-
-        return distinct.fetch();
-    }*/
-
     @Override
     public List<Learning> findTop12ByTagsOrderByRatingDesc(List<Tag> accountTagList) {
         QLearning learning = QLearning.learning;

@@ -31,7 +31,7 @@ class LearningTest {
                 .subscription("subscription")
                 .price(10000)
                 .rating(5)
-                .tags(Collections.emptyList())
+                .tags(Collections.emptySet())
                 .questions(Collections.emptySet())
                 .reviews(Collections.emptySet())
                 .build();

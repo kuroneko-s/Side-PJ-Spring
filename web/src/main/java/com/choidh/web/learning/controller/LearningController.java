@@ -186,8 +186,8 @@ public class LearningController {
         model.addAttribute("countVideo", videoCount);
         model.addAttribute("learning", learning);
         model.addAttribute("tags", tagList.stream().map(Tag::getTitle).collect(Collectors.toList()));
-        model.addAttribute("ratings", learning.getRating_int());
-        model.addAttribute("halfrating", learning.checkRating_boolean());
+        model.addAttribute("ratings", learning.getRatingInt());
+        model.addAttribute("halfrating", learning.checkRatingBoolean());
         model.addAttribute("rating", learning.emptyRating());
         model.addAttribute("learningRating", learning.getRating());
         model.addAttribute("questions", learning.getQuestions());

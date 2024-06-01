@@ -6,6 +6,7 @@ import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.repository.LearningRepository;
 import com.choidh.service.tag.entity.Tag;
 import com.choidh.service.tag.repository.TagRepository;
+import com.choidh.service.tag.vo.RegTagVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,14 @@ public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
     private final LearningRepository learningRepository;
     private final LearningTagRepository learningTagRepository;
+
+    // 태그 생성
+    @Override
+    public Tag regTag(RegTagVO regTagVO) {
+        return tagRepository.save(Tag.builder()
+                .title(regTagVO.getTitle())
+                .build());
+    }
 
     // 태그 타이틀 목록 조회
     @Override

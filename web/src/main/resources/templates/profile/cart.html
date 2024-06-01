@@ -39,10 +39,10 @@
                             <p class="buy-learning-lecturer">
                                 작성자: <span th:text="${learning.lecturerName}"></span>
                             </p>
-                            <p class="buy-learning-price" th:if="${!learning.price_comma().equals('free')}">
-                                가격: <span th:text="${learning.price_comma()}"></span>원
+                            <p class="buy-learning-price" th:if="${!learning.priceComma().equals('free')}">
+                                가격: <span th:text="${learning.priceComma()}"></span>원
                             </p>
-                            <p class="buy-learning-price" th:if="${learning.price_comma().equals('free')}">
+                            <p class="buy-learning-price" th:if="${learning.priceComma().equals('free')}">
                                 가격: 무료 강의
                             </p>
                         </div>

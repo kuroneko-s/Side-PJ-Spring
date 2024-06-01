@@ -81,10 +81,10 @@
                                     </span>
                                 </p>
                                 <p class="learning-item-card-body-rating">
-                                    <span class="full-star star" th:each="num : ${#numbers.sequence(0, learning.getRating_int() - 1)}" th:if="${learning.getRating_int() > 0}">
+                                    <span class="full-star star" th:each="num : ${#numbers.sequence(0, learning.getRatingInt() - 1)}" th:if="${learning.getRatingInt() > 0}">
                                         <i class="fas fa-star"></i>
                                     </span>
-                                    <span class="half-star star" th:if="${learning.checkRating_boolean()}">
+                                    <span class="half-star star" th:if="${learning.checkRatingBoolean()}">
                                         <i class="fas fa-star-half-alt"></i>
                                     </span>
                                     <span class="empty-star star" th:each="num : ${#numbers.sequence(1, learning.emptyRating())}" th:if="${learning.emptyRating() > 0}">
@@ -93,8 +93,8 @@
                                     <span class="learning-item-card-body-rating-number">(<span th:text="${learning.rating}"></span>)</span>
                                 </p>
                                 <div class="learning-item-card-body-price">
-                                    <div th:if="${!learning.price_comma().equals('free')}"><span th:text="${learning.price_comma()}"></span>원</div>
-                                    <div th:if="${learning.price_comma().equals('free')}"><span></span>무료 강의</div>
+                                    <div th:if="${!learning.priceComma().equals('free')}"><span th:text="${learning.priceComma()}"></span>원</div>
+                                    <div th:if="${learning.priceComma().equals('free')}"><span></span>무료 강의</div>
                                 </div>
                                 <div class="learning-item-card-body-opening">
                                     <div class="date-time" th:text="${learning.openLearning}"></div>
@@ -143,10 +143,10 @@
                                     </span>
                                 </p>
                                 <p class="learning-item-card-body-rating">
-                                    <span class="full-star star" th:each="num : ${#numbers.sequence(0, learning.getRating_int() - 1)}" th:if="${learning.getRating_int() > 0}">
+                                    <span class="full-star star" th:each="num : ${#numbers.sequence(0, learning.getRatingInt() - 1)}" th:if="${learning.getRatingInt() > 0}">
                                         <i class="fas fa-star"></i>
                                     </span>
-                                    <span class="half-star star" th:if="${learning.checkRating_boolean()}">
+                                    <span class="half-star star" th:if="${learning.checkRatingBoolean()}">
                                         <i class="fas fa-star-half-alt"></i>
                                     </span>
                                     <span class="empty-star star" th:each="num : ${#numbers.sequence(1, learning.emptyRating())}" th:if="${learning.emptyRating() > 0}">
@@ -155,8 +155,8 @@
                                     <span class="learning-item-card-body-rating-number">(<span th:text="${learning.rating}"></span>)</span>
                                 </p>
                                 <div class="learning-item-card-body-price">
-                                    <div th:if="${!learning.price_comma().equals('free')}"><span th:text="${learning.price_comma()}"></span>원</div>
-                                    <div th:if="${learning.price_comma().equals('free')}"><span></span>무료 강의</div>
+                                    <div th:if="${!learning.priceComma().equals('free')}"><span th:text="${learning.priceComma()}"></span>원</div>
+                                    <div th:if="${learning.priceComma().equals('free')}"><span></span>무료 강의</div>
                                 </div>
                                 <div class="learning-item-card-body-opening">
                                     <div class="date-time" th:text="${learning.openLearning}"></div>

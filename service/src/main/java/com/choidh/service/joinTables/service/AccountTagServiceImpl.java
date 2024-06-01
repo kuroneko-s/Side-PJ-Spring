@@ -5,6 +5,7 @@ import com.choidh.service.account.service.AccountService;
 import com.choidh.service.joinTables.entity.AccountTagJoinTable;
 import com.choidh.service.joinTables.repository.AccountTagRepository;
 import com.choidh.service.tag.entity.Tag;
+import com.choidh.service.tag.service.TagService;
 import com.choidh.service.tag.vo.RegTagVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import java.util.Set;
 public class AccountTagServiceImpl implements AccountTagService {
     private final AccountTagRepository accountTagRepository;
     private final AccountService accountService;
+    private final TagService tagService;
 
     @Override
     public Set<AccountTagJoinTable> getTagListByAccountId(Long accountId) {
@@ -33,9 +35,7 @@ public class AccountTagServiceImpl implements AccountTagService {
     @Transactional
     public AccountTagJoinTable regTag(RegTagVO regTagVO, Long accountId) {
         Account account = accountService.getAccountById(accountId);
-        Tag tag = Tag.builder()
-                .title(regTagVO.getTitle())
-                .build();
+        Tag tag = tagService.regTag(regTagVO);
 
         return accountTagRepository.save(AccountTagJoinTable.builder()
                 .account(account)
