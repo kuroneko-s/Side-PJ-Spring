@@ -32,11 +32,14 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * 쿼리 확인용일시 {@link Rollback} 활성화 필요
+ */
+
 @Slf4j
 @ActiveProfiles("local")
 @SpringBootTest
 @Transactional
-@Rollback(value = false)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class LearningRepositoryExtensionTest {
     private final LearningRepository learningRepository;

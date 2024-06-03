@@ -8,10 +8,12 @@ import com.choidh.service.joinTables.entity.LearningTagJoinTable;
 import com.choidh.service.joinTables.repository.LearningTagRepository;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.tag.entity.Tag;
+import com.choidh.service.tag.repository.TagRepository;
 import com.choidh.service.tag.service.TagService;
 import com.choidh.service.tag.vo.RegTagVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,22 +31,23 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Learning Repository 쿼리 확인용 테스트
+ * 쿼리 확인용일시 {@link Rollback} 활성화 필요
  */
 
 @Slf4j
 @ActiveProfiles("local")
 @SpringBootTest
 @Transactional
-@Rollback(value = false)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class LearningRepositoryTest {
+    private final PasswordEncoder passwordEncoder;
+    private final EntityManager entityManager;
     private final LearningRepository learningRepository;
     private final AccountRepository accountRepository;
-    private final PasswordEncoder passwordEncoder;
     private final ProfessionalAccountRepository professionalAccountRepository;
     private final LearningTagRepository learningTagRepository;
     private final TagService tagService;
-    private final EntityManager entityManager;
+    private final TagRepository tagRepository;
 
     private Account createAccount() {
         Account account = new Account();
