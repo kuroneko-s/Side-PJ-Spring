@@ -1,9 +1,7 @@
 package com.choidh.service.learning.repository;
 
-import com.choidh.service.account.entity.Account;
+import com.choidh.service.AbstractRepositoryTestConfig;
 import com.choidh.service.account.entity.ProfessionalAccount;
-import com.choidh.service.account.repository.AccountRepository;
-import com.choidh.service.account.repository.ProfessionalAccountRepository;
 import com.choidh.service.joinTables.entity.LearningTagJoinTable;
 import com.choidh.service.joinTables.repository.LearningTagRepository;
 import com.choidh.service.learning.entity.Learning;
@@ -15,16 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,81 +26,12 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 
 @Slf4j
-@ActiveProfiles("local")
-@SpringBootTest
-@Transactional
+// @Rollback(value = false)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-class LearningRepositoryTest {
-    private final PasswordEncoder passwordEncoder;
-    private final EntityManager entityManager;
+class LearningRepositoryTest extends AbstractRepositoryTestConfig {
     private final LearningRepository learningRepository;
-    private final AccountRepository accountRepository;
-    private final ProfessionalAccountRepository professionalAccountRepository;
     private final LearningTagRepository learningTagRepository;
     private final TagService tagService;
-
-    private Account createAccount() {
-        Account account = new Account();
-        account.setNickname("테스트냥이");
-        account.setEmail("test@test.com");
-        account.setPassword(passwordEncoder.encode("1234567890"));
-        account.setChecked(true);
-        account.createTokenForEmailForAuthentication();
-
-        return accountRepository.save(account);
-    }
-
-    private ProfessionalAccount createProfessionalAccount(Account account) {
-        return professionalAccountRepository.save(ProfessionalAccount.builder()
-                .account(account)
-                .name("강사 이름")
-                .description("개잘나가는 강사임")
-                .history("개쩌는 경력들")
-                .build());
-    }
-
-    private Learning createLearning(ProfessionalAccount professionalAccount) {
-        Learning learning = Learning.builder()
-                .title("샘플 강의 1")
-                .simpleSubscription("간단한 강의 설명")
-                .subscription("장황한 강의 설명글")
-                .mainCategory("자바")
-                .mainCategory("알고리즘")
-                .price(10000)
-                .rating((int) Math.floor(Math.random() * 5) + 1)
-                .opening(true)
-                .openingDate(LocalDateTime.now())
-                .attachmentGroup(null)
-                .professionalAccount(professionalAccount)
-                .tags(new HashSet<>())
-                .questions(new HashSet<>())
-                .reviews(new HashSet<>())
-                .purchaseHistories(new HashSet<>())
-                .build();
-
-        return learningRepository.save(learning);
-    }
-
-    private void persistClear() {
-        entityManager.flush();
-        entityManager.clear();
-    }
-
-    private void theLine() {
-        persistClear();
-
-        log.info("################## THE LINE ##################");
-        log.info("################## THE LINE ##################");
-        log.info("################## THE LINE ##################");
-        log.info("################## THE LINE ##################");
-        log.info("################## THE LINE ##################");
-        log.info("################## THE LINE ##################");
-        log.info("################## THE LINE ##################");
-        log.info("################## THE LINE ##################");
-        log.info("################## THE LINE ##################");
-        log.info("################## THE LINE ##################");
-        log.info("################## THE LINE ##################");
-    }
 
     @Test
     @DisplayName("기본 강의 생성 - 성공")
