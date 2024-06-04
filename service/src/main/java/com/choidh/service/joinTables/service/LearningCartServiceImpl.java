@@ -14,7 +14,7 @@ public class LearningCartServiceImpl implements LearningCartService {
 
     @Override
     public List<LearningCartJoinTable> getCartListWithLearningByCartId(Long cartId) {
-        return learningCartRepository.findAllWithLearningByCartId(cartId);
+        return learningCartRepository.findListWithLearningByCartId(cartId);
     }
 
     @Override

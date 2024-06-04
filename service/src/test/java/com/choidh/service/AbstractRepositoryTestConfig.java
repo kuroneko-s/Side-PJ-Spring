@@ -4,6 +4,8 @@ import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.entity.ProfessionalAccount;
 import com.choidh.service.account.repository.AccountRepository;
 import com.choidh.service.account.repository.ProfessionalAccountRepository;
+import com.choidh.service.cart.entity.Cart;
+import com.choidh.service.cart.service.CartService;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.repository.LearningRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,7 @@ public abstract class AbstractRepositoryTestConfig {
     @Autowired protected PasswordEncoder passwordEncoder;
     @Autowired protected LearningRepository learningRepository;
     @Autowired protected ProfessionalAccountRepository professionalAccountRepository;
+    @Autowired protected CartService cartService;
 
     protected Account createAccount() {
         Account account = new Account();
@@ -36,7 +39,12 @@ public abstract class AbstractRepositoryTestConfig {
         account.setChecked(true);
         account.createTokenForEmailForAuthentication();
 
-        return accountRepository.save(account);
+        Account newAccount = accountRepository.save(account);
+
+        Cart cart = cartService.regCart(newAccount.getId());
+        account.setCart(cart);
+
+        return newAccount;
     }
 
     protected Account createAccount(String nickname, String email) {
