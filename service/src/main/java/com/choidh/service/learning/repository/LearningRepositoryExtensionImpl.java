@@ -2,11 +2,8 @@ package com.choidh.service.learning.repository;
 
 
 import com.choidh.service.learning.entity.Learning;
-import com.choidh.service.learning.entity.QLearning;
 import com.choidh.service.tag.entity.Tag;
-import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

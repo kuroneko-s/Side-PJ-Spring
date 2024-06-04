@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -240,4 +241,19 @@ class AccountRepositoryTest extends AbstractRepositoryTestConfig {
         });
     }
 
+    @Test
+    @DisplayName("Account 단건 조회 By Account Id With PurchaseHistories")
+    @WithAccount("test@test.com")
+    public void findAccountWithPurchaseHistories() throws Exception {
+        Account testAccount = accountRepository.findByNicknameAndChecked("테스트냥이", true);
+        theLine();
+
+        Account account = accountRepository.findAccountWithPurchaseHistories(testAccount.getId());
+
+        assertNotNull(account);
+
+        theLine();
+
+        log.info("{}", account.getPurchaseHistories().size());
+    }
 }

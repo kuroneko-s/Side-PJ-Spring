@@ -45,6 +45,11 @@ public interface AccountService {
     Account getAccountByIdWithCart(Long accountId);
 
     /**
+     * Get Account 단건 조회 By Id With PurchaseHistories
+     */
+    Account getAccountByIdWithPurchaseHistories(Long accountId);
+
+    /**
      * Reg Account 생성
      */
     Account regAccount(RegAccountVO regAccountVO);

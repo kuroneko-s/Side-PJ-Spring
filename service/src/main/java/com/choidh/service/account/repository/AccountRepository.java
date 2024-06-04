@@ -44,7 +44,7 @@ public interface AccountRepository extends JpaRepository<Account, Long>, Queryds
     Account findByNicknameAndChecked(String nickname, boolean check);
 
     /**
-     * Account 단건 조회 By Id with learning
+     * Account 단건 조회 By Id with Learning
      */
     @Query("select a " +
             "from Account a " +
@@ -78,4 +78,13 @@ public interface AccountRepository extends JpaRepository<Account, Long>, Queryds
             "where a.id = :accountId")
     @EntityGraph(attributePaths = {"tags.tag", "cart", "purchaseHistories.learning", "questions", "reviews"}, type = EntityGraph.EntityGraphType.LOAD)
     Account findAccountForProfile(Long accountId);
+
+    /**
+     * Account 단건 조회 By Account Id With PurchaseHistories
+     */
+    @Query(value = "select a " +
+            "from Account a " +
+            "where a.id = :accountId")
+    @EntityGraph(attributePaths = {"cart", "professionalAccount", "purchaseHistories"}, type = EntityGraph.EntityGraphType.LOAD)
+    Account findAccountWithPurchaseHistories(Long accountId);
 }

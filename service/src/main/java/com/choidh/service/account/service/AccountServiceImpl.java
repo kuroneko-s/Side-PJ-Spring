@@ -52,6 +52,20 @@ public class AccountServiceImpl implements AccountService {
     }
 
     /**
+     * Get Account 단건 조회 By Id With PurchaseHistories Learning
+     */
+    @Override
+    public Account getAccountByIdWithPurchaseHistories(Long accountId) {
+        Account account = accountRepository.findAccountWithPurchaseHistories(accountId);
+
+        if (account.getCart() == null) {
+            throw new IllegalArgumentException("우선 카트를 생성해주세요.");
+        }
+
+        return account;
+    }
+
+    /**
      * Reg Account 생성
      */
     @Override

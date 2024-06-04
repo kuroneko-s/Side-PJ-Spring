@@ -1,6 +1,7 @@
 package com.choidh.service.notification.service;
 
 
+import com.choidh.service.account.service.AccountService;
 import com.choidh.service.notification.entity.Notification;
 import com.choidh.service.notification.repository.NotificationRepository;
 import com.choidh.service.notification.vo.NotificationType;
@@ -9,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class NotificationServiceImpl implements NotificationService{
     private final NotificationRepository notificationRepository;
+    private final AccountService accountService;
 
     @Override
     public void delNotification(Long notificationId) {
@@ -28,12 +29,19 @@ public class NotificationServiceImpl implements NotificationService{
      */
     @Override
     public List<Notification> getNotificationListByType(List<Long> learningList) {
-        List<String> typeList = new ArrayList<>();
-        typeList.add(NotificationType.SITE.name());
-        typeList.add(NotificationType.EVENT.name());
+        List<NotificationType> typeList = List.of(
+                NotificationType.SITE,
+                NotificationType.EVENT
+        );
 
-        return notificationRepository.findListByType(typeList, learningList);
+        return notificationRepository.findListByTypeAndLearning(typeList, learningList);
     }
 
-
+    /**
+     * 알람 갯수 조회 By Account Id
+     */
+    @Override
+    public int getNotificationCountByAccount(Long accountId) {
+        return accountService.getAccountByIdWithPurchaseHistories(accountId).getPurchaseHistories().size();
+    }
 }
