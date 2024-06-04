@@ -37,9 +37,18 @@ public class AccountServiceImpl implements AccountService {
                 .orElseThrow(() -> new IllegalArgumentException(getAccountNotFoundErrorMessage(accountId)));
     }
 
+    /**
+     * Account 단건 조회. By Id With Learning In Cart
+     */
     @Override
     public Account getAccountByIdWithCart(Long accountId) {
-        return accountRepository.findAccountByIdWithLearning(accountId);
+        Account account = accountRepository.findAccountByIdWithLearning(accountId);
+
+        if (account.getCart() == null) {
+            throw new IllegalArgumentException("우선 카트를 생성해주세요.");
+        }
+
+        return account;
     }
 
     /**
@@ -93,8 +102,6 @@ public class AccountServiceImpl implements AccountService {
 
         return false;
     }
-
-
 
     /**
      * Mod 프로필 수정

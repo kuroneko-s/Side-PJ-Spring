@@ -3,6 +3,8 @@ package com.choidh.service.config;
 
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.repository.AccountRepository;
+import com.choidh.service.cart.entity.Cart;
+import com.choidh.service.cart.service.CartService;
 import com.choidh.service.security.AccountDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ public class WithAccountSecurityContextFactory implements WithSecurityContextFac
     private final AccountRepository accountRepository;
     private final AccountDetailsService accountDetailsService;
     private final PasswordEncoder passwordEncoder;
+    private final CartService cartService;
 
     @Override
     public SecurityContext createSecurityContext(WithAccount withAccount) {
@@ -33,6 +36,9 @@ public class WithAccountSecurityContextFactory implements WithSecurityContextFac
         account.setChecked(true);
         account.createTokenForEmailForAuthentication();
         accountRepository.save(account);
+
+        Cart cart = cartService.regCart(account.getId());
+        account.setCart(cart);
 
         UserDetails principal = accountDetailsService.loadUserByUsername(email);
         Authentication authentication = new UsernamePasswordAuthenticationToken(principal, principal.getPassword(),

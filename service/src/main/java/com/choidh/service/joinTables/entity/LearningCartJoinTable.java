@@ -40,8 +40,6 @@ public class LearningCartJoinTable extends BaseEntity {
     public void setLearning(Learning learning) {
         this.learning = learning;
 
-        if (!learning.getCarts().contains(this)) {
-            learning.getCarts().add(this);
-        }
+        learning.getCarts().add(this);
     }
 }

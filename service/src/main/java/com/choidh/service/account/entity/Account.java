@@ -69,17 +69,17 @@ public class Account extends BaseEntity {
     @Name(name = "강의 관련 웹 알람 설정")
     private boolean learningWebNotification;
 
-    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "account")
     @Name(name = "업로더용 계정")
     private ProfessionalAccount professionalAccount = null;
 
-    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "account")
     @Name(name = "장바구니 목록")
     private Cart cart;
 
     @OneToMany(mappedBy = "account")
     @Name(name = "본인 선호 기술 스택 목록")
-    private List<AccountTagJoinTable> tags = new ArrayList<>();
+    private Set<AccountTagJoinTable> tags = new HashSet<>();
 
     @OneToMany(mappedBy = "account")
     @Name(name = "질의 글 목록")
@@ -91,7 +91,7 @@ public class Account extends BaseEntity {
 
     @OneToMany(mappedBy = "account")
     @Name(name = "구매 이력 목록")
-    private List<PurchaseHistory> purchaseHistories = new ArrayList<>();
+    private Set<PurchaseHistory> purchaseHistories = new HashSet<>();
 
     public void setReviews(Review review) {
         this.getReviews().add(review);

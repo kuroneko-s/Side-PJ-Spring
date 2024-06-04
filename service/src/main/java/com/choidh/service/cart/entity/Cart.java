@@ -7,8 +7,8 @@ import lombok.*;
 import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -23,12 +23,16 @@ public class Cart extends BaseEntity {
     @Column(name = "cart_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @Setter
+    @OneToOne
     private Account account;
 
     @OneToMany(mappedBy = "cart")
-    private List<LearningCartJoinTable> learningCartJoinTables = new ArrayList<>();
+    private Set<LearningCartJoinTable> learningCartJoinTables = new HashSet<>();
+
+    public void setAccount(Account account) {
+        this.account = account;
+        account.setCart(this);
+    }
 
     public void addLearningCartJoinTable(LearningCartJoinTable learningCartJoinTable) {
         this.learningCartJoinTables.add(learningCartJoinTable);

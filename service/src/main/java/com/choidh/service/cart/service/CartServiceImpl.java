@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Slf4j
@@ -25,20 +26,32 @@ public class CartServiceImpl implements CartService {
     private final AccountService accountService;
     private final LearningService learningService;
 
+    /**
+     * 카트 생성
+     */
+    @Override
+    @Transactional
+    public Cart regCart(Long accountId) {
+        Account account = accountService.getAccountById(accountId);
+        Cart cart = cartRepository.save(Cart.builder()
+                .account(account)
+                .learningCartJoinTables(new HashSet<>())
+                .build());
+        account.setCart(cart);
+        return cart;
+    }
+
     @Override
     @Transactional
     public void addCart(Long accountId, Long learningId) {
-        Account account = accountService.getAccountById(accountId);
+        Account account = accountService.getAccountByIdWithCart(accountId);
         Learning learning = learningService.getLearningById(learningId);
 
         LearningCartJoinTable learningCartJoinTable = new LearningCartJoinTable();
         learningCartJoinTable.setLearning(learning);
 
-        Cart cart = new Cart();
-        cart.setAccount(account);
-        cart.addLearningCartJoinTable(learningCartJoinTable);
+        account.getCart().addLearningCartJoinTable(learningCartJoinTable);
 
-        cartRepository.save(cart);
         learningCartService.saveLearningCart(learningCartJoinTable);
     }
 

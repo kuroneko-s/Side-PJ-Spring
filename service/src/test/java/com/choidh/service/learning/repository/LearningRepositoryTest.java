@@ -8,12 +8,10 @@ import com.choidh.service.joinTables.entity.LearningTagJoinTable;
 import com.choidh.service.joinTables.repository.LearningTagRepository;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.tag.entity.Tag;
-import com.choidh.service.tag.repository.TagRepository;
 import com.choidh.service.tag.service.TagService;
 import com.choidh.service.tag.vo.RegTagVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -47,7 +47,6 @@ class LearningRepositoryTest {
     private final ProfessionalAccountRepository professionalAccountRepository;
     private final LearningTagRepository learningTagRepository;
     private final TagService tagService;
-    private final TagRepository tagRepository;
 
     private Account createAccount() {
         Account account = new Account();

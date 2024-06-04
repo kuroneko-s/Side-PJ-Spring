@@ -8,12 +8,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 public interface AccountRepository extends JpaRepository<Account, Long>, QuerydslPredicateExecutor<Account> {
+    /**
+     * Account 단건 조회. By Id With Learning In Cart
+     */
     @Query(value = "select a " +
             "from Account a " +
-            "join fetch a.cart ac " +
-            "join fetch ac.learningCartJoinTables lcjt " +
-            "join fetch lcjt.learning " +
             "where a.id = :accountId")
+     @EntityGraph(attributePaths = {"cart", "professionalAccount", "cart.learningCartJoinTables.learning"}, type = EntityGraph.EntityGraphType.LOAD)
     Account findAccountByIdWithLearning(Long accountId);
 
     /**
@@ -27,49 +28,54 @@ public interface AccountRepository extends JpaRepository<Account, Long>, Queryds
     boolean existsByNickname(String nickname);
 
     /**
-     * 유저 단건 조회 By Email and Email Token Checked
+     * Account 단건 조회 By Email and Email Token Checked
      */
-    Account findByEmailAndChecked(String email, boolean check);
+    @Query(value = "select a " +
+            "from Account a " +
+            "where a.checked = :checked " +
+            "and a.email = :email")
+    @EntityGraph(attributePaths = {"professionalAccount", "cart"}, type = EntityGraph.EntityGraphType.LOAD)
+    Account findByEmailAndChecked(String email, boolean checked);
 
     /**
-     * 유저 단건 조회 By 닉네임 and Email Token Checked
+     * Account 단건 조회 By 닉네임 and Email Token Checked
      */
+    @EntityGraph(attributePaths = {"professionalAccount", "cart"}, type = EntityGraph.EntityGraphType.LOAD)
     Account findByNicknameAndChecked(String nickname, boolean check);
 
     /**
-     * 유저 단건 조회 with learning
+     * Account 단건 조회 By Id with learning
      */
     @Query("select a " +
             "from Account a " +
-            "join fetch a.purchaseHistories pur " +
-            "join fetch pur.learning " +
             "where a.id = :id")
+    @EntityGraph(attributePaths = {"purchaseHistories.learning", "professionalAccount", "cart"}, type = EntityGraph.EntityGraphType.LOAD)
     Account findAccountWithLearnings(Long id);
 
     /**
-     * 유저 단건 조회 with question
+     * Account 단건 조회 with Questions
      */
     @Query("select a " +
             "from Account a " +
-            "join fetch a.questions " +
             "where a.id = :id")
+    @EntityGraph(attributePaths = {"professionalAccount", "cart", "questions"}, type = EntityGraph.EntityGraphType.LOAD)
     Account findAccountWithQuestion(Long id);
 
     /**
-     * 유저 단건 조회 with tag
+     * Account 단건 조회 with Tags
      */
     @Query("select a " +
             "from Account a " +
-            "join fetch a.tags " +
             "where a.id = :id")
+    @EntityGraph(attributePaths = {"tags.tag", "cart", "questions", "professionalAccount"}, type = EntityGraph.EntityGraphType.LOAD)
     Account findAccountWithTags(Long id);
 
     /**
-     * 유저 단건 조회 For 프로필 화면용
+     * Account 단건 조회 For 프로필 화면용
      */
-    @Query(value = "select acc " +
-            "from Account acc " +
-            "where acc.id = :accountId")
-    @EntityGraph(attributePaths = {"tags", "purchaseHistories", "questions"}, type = EntityGraph.EntityGraphType.LOAD)
+    @Query(value = "select a " +
+            "from Account a " +
+            "where a.id = :accountId")
+    @EntityGraph(attributePaths = {"tags.tag", "cart", "purchaseHistories.learning", "questions", "reviews"}, type = EntityGraph.EntityGraphType.LOAD)
     Account findAccountForProfile(Long accountId);
 }

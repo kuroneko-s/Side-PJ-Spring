@@ -6,6 +6,8 @@ import com.choidh.service.learning.entity.Learning;
 import java.util.List;
 
 public interface CartService {
+    Cart regCart(Long accountId);
+
     void addCart(Long accountId, Long learningId);
 
     void deleteCart(Cart cart, List<Learning> learningList);
