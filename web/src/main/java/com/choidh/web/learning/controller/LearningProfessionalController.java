@@ -29,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.choidh.service.common.AppConstant.CREATE_LEARNING;
@@ -82,7 +83,7 @@ public class LearningProfessionalController {
     // 강의 목록 페이지
     @GetMapping("/profile/learning/list")
     public String getLearningListView(@CurrentAccount Account account, Model model) {
-        List<Learning> learningList = learningService.getLearningList(account.getId());
+        Set<Learning> learningList = learningService.getLearningList(account.getId());
 
         model.addAttribute("account", account);
         model.addAttribute("learningList", learningList);

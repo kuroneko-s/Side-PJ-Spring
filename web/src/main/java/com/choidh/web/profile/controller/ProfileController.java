@@ -171,7 +171,7 @@ public class ProfileController {
      */
     @GetMapping("/profile/notification")
     public String getNotificationView(@CurrentAccount Account account, Model model) {
-        List<Learning> learningList = learningService.getLearningList(account.getId());
+        Set<Learning> learningList = learningService.getLearningList(account.getId());
         List<Notification> notificationList = notificationService.getNotificationListByType(
                 learningList.stream().map(Learning::getId).collect(Collectors.toList())
         );
@@ -198,7 +198,7 @@ public class ProfileController {
      */
     @GetMapping("/profile/learning")
     public String getProfileLearningView(@CurrentAccount Account account, Model model) {
-        List<Learning> learningList = learningService.getLearningList(account.getId());
+        Set<Learning> learningList = learningService.getLearningList(account.getId());
 
         model.addAttribute("account", account);
         model.addAttribute("learningList", learningList);

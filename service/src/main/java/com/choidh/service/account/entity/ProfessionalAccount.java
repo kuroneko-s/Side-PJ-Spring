@@ -7,8 +7,8 @@ import lombok.*;
 import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 강의자 관련 계정.
@@ -41,5 +41,13 @@ public class ProfessionalAccount extends BaseEntity {
     private String history;
 
     @OneToMany
-    private List<Learning> learningList = new ArrayList<>();
+    private Set<Learning> learningList = new HashSet<>();
+
+    public void setLearningList(Learning learning) {
+        this.learningList.add(learning);
+
+        if (learning.getProfessionalAccount() == null) {
+            learning.setProfessionalAccount(this);
+        }
+    }
 }

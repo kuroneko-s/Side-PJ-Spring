@@ -61,6 +61,7 @@ public abstract class AbstractRepositoryTestConfig {
                 .name("강사 이름")
                 .description("개잘나가는 강사임")
                 .history("개쩌는 경력들")
+                .learningList(new HashSet<>())
                 .build());
     }
 

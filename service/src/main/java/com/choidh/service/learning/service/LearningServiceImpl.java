@@ -99,7 +99,7 @@ public class LearningServiceImpl implements LearningService {
      * 강의 목록조회 By Account Id
      */
     @Override
-    public List<Learning> getLearningList(Long accountId) {
+    public Set<Learning> getLearningList(Long accountId) {
         ProfessionalAccount professionalAccount = professionalAccountRepository.findByAccountIdWithLearningList(accountId);
 
         if (professionalAccount == null) {

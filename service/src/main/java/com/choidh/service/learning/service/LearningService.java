@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
 
 public interface LearningService {
     /**
@@ -35,7 +36,7 @@ public interface LearningService {
     /**
      * 강의 목록조회 By Account Id
      */
-    List<Learning> getLearningList(Long accountId);
+    Set<Learning> getLearningList(Long accountId);
 
     /**
      * 강의 단건 조회 By
