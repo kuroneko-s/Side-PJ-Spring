@@ -14,7 +14,7 @@ import org.springframework.test.annotation.Rollback;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
-@Rollback(value = false)
+//@Rollback(value = false)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class ProfessionalAccountRepositoryTest extends AbstractRepositoryTestConfig {
     private final ProfessionalAccountRepository professionalAccountRepository;
