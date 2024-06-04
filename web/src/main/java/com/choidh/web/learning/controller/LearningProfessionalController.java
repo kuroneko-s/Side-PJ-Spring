@@ -117,7 +117,7 @@ public class LearningProfessionalController {
     @GetMapping("/profile/learning/update/{id}")
     public String getUpdateLearningView(@CurrentAccount Account account, Model model, @PathVariable Long id) throws JsonProcessingException {
         Learning learning = learningService.getLearningDetailForUpdate(id);
-        List<Tag> tagList = learningTagService.findAllByLearningId(id);
+        List<Tag> tagList = learningTagService.findListByLearningId(id);
 
         LearningFormVO learningFormVO = LearningFormVO.builder()
                 .title(learning.getTitle())

@@ -6,7 +6,7 @@ import com.choidh.service.joinTables.service.AccountTagService;
 import com.choidh.service.tag.vo.RegTagVO;
 import com.choidh.web.common.annotation.CurrentAccount;
 import com.choidh.web.tag.validator.TagFormValidator;
-import com.choidh.web.tag.vo.TagForm;
+import com.choidh.web.tag.vo.RegTagForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -33,14 +33,14 @@ public class ProfileRestController {
      * POST 계정 태그 추가
      */
     @PostMapping("/update/tags/add")
-    public ResponseEntity addTag(@CurrentAccount Account account, @RequestBody TagForm tagForm, Errors errors) {
+    public ResponseEntity addTag(@CurrentAccount Account account, @RequestBody RegTagForm regTagForm, Errors errors) {
         if (errors.hasErrors()) {
             return ResponseEntity.badRequest().body(errors.getFieldError("title").getDefaultMessage());
         }
 
         AccountTagJoinTable accountTagJoinTable = accountTagService.regTag(
                 RegTagVO.builder()
-                        .title(tagForm.getTitle())
+                        .title(regTagForm.getTitle())
                         .build(),
                 account.getId());
 

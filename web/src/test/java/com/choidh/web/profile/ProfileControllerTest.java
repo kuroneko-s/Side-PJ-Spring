@@ -11,7 +11,7 @@ import com.choidh.service.tag.vo.RegTagVO;
 import com.choidh.web.account.vo.AccountVO;
 import com.choidh.web.config.WithAccount;
 import com.choidh.web.profile.controller.ProfileController;
-import com.choidh.web.tag.vo.TagForm;
+import com.choidh.web.tag.vo.RegTagForm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -375,16 +375,16 @@ class ProfileControllerTest {
     @DisplayName("프로필 태그 추가 - 성공")
     public void updateProfileTags_success() throws Exception {
         Account account = accountRepository.findByEmailAndChecked("test@naver.com", true);
-        TagForm tagForm = new TagForm();
-        tagForm.setTitle("test_Tag");
+        RegTagForm regTagForm = new RegTagForm();
+        regTagForm.setTitle("test_Tag");
 
         mockMvc.perform(post("/update/tags/add")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(tagForm))
+                .content(objectMapper.writeValueAsString(regTagForm))
                 .with(csrf()))
                 .andExpect(status().isOk());
 
-        Tag newTag = tagRepository.findByTitle(tagForm.getTitle());
+        Tag newTag = tagRepository.findByTitle(regTagForm.getTitle());
 
         assertTrue( account.getTags().contains(newTag));
     }
@@ -396,16 +396,16 @@ class ProfileControllerTest {
         Account account = accountRepository.findByEmailAndChecked("test@naver.com", true);
         accountTagService.regTag(RegTagVO.builder().title("test_Tag").build(), account.getId());
 
-        TagForm tagForm = new TagForm();
-        tagForm.setTitle("test_Tag");
+        RegTagForm regTagForm = new RegTagForm();
+        regTagForm.setTitle("test_Tag");
 
         mockMvc.perform(post("/update/tags/add")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(tagForm))
+                .content(objectMapper.writeValueAsString(regTagForm))
                 .with(csrf()))
                 .andExpect(status().isOk());
 
-        Tag newTag = tagRepository.findByTitle(tagForm.getTitle());
+        Tag newTag = tagRepository.findByTitle(regTagForm.getTitle());
 
         assertTrue(account.getTags().contains(newTag));
     }
@@ -417,16 +417,16 @@ class ProfileControllerTest {
         Account account = accountRepository.findByEmailAndChecked("test@naver.com", true);
         accountTagService.regTag(RegTagVO.builder().title("test_Tag").build(), account.getId());
 
-        TagForm tagForm = new TagForm();
-        tagForm.setTitle("test_Tag");
+        RegTagForm regTagForm = new RegTagForm();
+        regTagForm.setTitle("test_Tag");
 
         mockMvc.perform(post("/update/tags/remove")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(tagForm))
+                .content(objectMapper.writeValueAsString(regTagForm))
                 .with(csrf()))
                 .andExpect(status().isOk());
 
-        Tag newTag = tagRepository.findByTitle(tagForm.getTitle());
+        Tag newTag = tagRepository.findByTitle(regTagForm.getTitle());
 
         assertNotNull(newTag);
         assertFalse(account.getTags().contains(newTag));
@@ -438,16 +438,16 @@ class ProfileControllerTest {
     public void removeProfileTags_fail() throws Exception{
         Account account = accountRepository.findByEmailAndChecked("test@naver.com", true);
 
-        TagForm tagForm = new TagForm();
-        tagForm.setTitle("test_Tag");
+        RegTagForm regTagForm = new RegTagForm();
+        regTagForm.setTitle("test_Tag");
 
         mockMvc.perform(post("/update/tags/remove")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(tagForm))
+                .content(objectMapper.writeValueAsString(regTagForm))
                 .with(csrf()))
                 .andExpect(status().isBadRequest());
 
-        Tag newTag = tagRepository.findByTitle(tagForm.getTitle());
+        Tag newTag = tagRepository.findByTitle(regTagForm.getTitle());
 
         assertNull(newTag);
     }

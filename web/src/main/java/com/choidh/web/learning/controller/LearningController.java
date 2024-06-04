@@ -2,7 +2,6 @@ package com.choidh.web.learning.controller;
 
 
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.account.service.AccountService;
 import com.choidh.service.attachment.entity.AttachmentFile;
 import com.choidh.service.attachment.entity.AttachmentFileType;
 import com.choidh.service.attachment.service.AttachmentService;
@@ -19,13 +18,10 @@ import com.choidh.service.question.vo.RegQuestionVO;
 import com.choidh.service.review.service.ReviewService;
 import com.choidh.service.review.vo.RegReviewVO;
 import com.choidh.service.tag.entity.Tag;
-import com.choidh.service.tag.service.TagService;
 import com.choidh.web.common.annotation.CurrentAccount;
 import com.choidh.web.kakao.vo.KakaoPayForm;
-import com.choidh.web.learning.validator.LearningValidator;
 import com.choidh.web.question.vo.QuestionForm;
 import com.choidh.web.review.vo.ReviewVO;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,20 +37,14 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.choidh.service.common.AppConstant.getQuestionNotFoundErrorMessage;
-
 @Controller
 @RequiredArgsConstructor
 public class LearningController {
-    private final ObjectMapper objectMapper;
     private final ModelMapper modelMapper;
     private final LearningService learningService;
-    private final LearningValidator learningValidator;
     private final AttachmentService attachmentService;
-    private final AccountService accountService;
     private final QuestionService questionService;
     private final ReviewService reviewService;
-    private final TagService tagService;
     private final CartService cartService;
     private final LearningCartService learningCartService;
     private final LearningTagService learningTagService;
@@ -178,7 +168,7 @@ public class LearningController {
     @GetMapping("/learning/question/{learningId}")
     public String getLearningQuestionView(@CurrentAccount Account account, Model model, @PathVariable("learningId") Long id){
         Learning learning = learningService.getLearningByIdWithQuestion(id);
-        List<Tag> tagList = learningTagService.findAllByLearningId(id);
+        List<Tag> tagList = learningTagService.findListByLearningId(id);
         int videoCount = attachmentService.cntAttachmentFiles(learning.getAttachmentGroup().getId(), AttachmentFileType.VIDEO);
 
         model.addAttribute("account", account);

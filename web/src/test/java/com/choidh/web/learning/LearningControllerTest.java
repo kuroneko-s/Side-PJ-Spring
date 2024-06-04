@@ -11,7 +11,7 @@ import com.choidh.service.tag.entity.Tag;
 import com.choidh.service.tag.repository.TagRepository;
 import com.choidh.web.config.WithAccount;
 import com.choidh.web.learning.vo.LearningFormVO;
-import com.choidh.web.tag.vo.TagForm;
+import com.choidh.web.tag.vo.RegTagForm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -261,16 +261,16 @@ class LearningControllerTest {
     public void learningAddTags_success() throws Exception {
         Account account = accountRepository.findByEmailAndChecked("test@naver.com", true);
         Learning learning = postLearning(account);
-        TagForm tagForm = new TagForm();
-        tagForm.setTitle("addTags_test_1");
+        RegTagForm regTagForm = new RegTagForm();
+        regTagForm.setTitle("addTags_test_1");
 
         mockMvc.perform(post("/profile/learning/upload/" + learning.getId() + "/add")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(tagForm))
+                .content(objectMapper.writeValueAsString(regTagForm))
                 .with(csrf()))
                 .andExpect(status().isOk());
 
-        Tag newTag = tagRepository.findByTitle(tagForm.getTitle());
+        Tag newTag = tagRepository.findByTitle(regTagForm.getTitle());
 
         assertTrue(learning.getTags().contains(newTag));
     }
@@ -285,16 +285,16 @@ class LearningControllerTest {
         Tag learningTag = tagRepository.findByTitle("test_Tag_1");
         // learning.getTags().add(learningTag);
 
-        TagForm tagForm = new TagForm();
-        tagForm.setTitle("test_Tag_1");
+        RegTagForm regTagForm = new RegTagForm();
+        regTagForm.setTitle("test_Tag_1");
 
         mockMvc.perform(post("/profile/learning/upload/" + learning.getId() + "/remove")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(tagForm))
+                .content(objectMapper.writeValueAsString(regTagForm))
                 .with(csrf()))
                 .andExpect(status().isOk());
 
-        Tag newTag = tagRepository.findByTitle(tagForm.getTitle());
+        Tag newTag = tagRepository.findByTitle(regTagForm.getTitle());
 
         assertNotNull(newTag);
         assertFalse(learning.getTags().contains(newTag));
@@ -312,16 +312,16 @@ class LearningControllerTest {
         Tag learningTag = tagRepository.findByTitle("test_Tag_1");
         // learning.getTags().add(learningTag);
 
-        TagForm tagForm = new TagForm();
-        tagForm.setTitle("test_Tag_3");
+        RegTagForm regTagForm = new RegTagForm();
+        regTagForm.setTitle("test_Tag_3");
 
         mockMvc.perform(post("/profile/learning/upload/" + learning.getId() + "/remove")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(tagForm))
+                .content(objectMapper.writeValueAsString(regTagForm))
                 .with(csrf()))
                 .andExpect(status().isBadRequest());
 
-        Tag newTag = tagRepository.findByTitle(tagForm.getTitle());
+        Tag newTag = tagRepository.findByTitle(regTagForm.getTitle());
 
         assertNull(newTag);
         assertTrue(learning.getTags().contains(learningTag));

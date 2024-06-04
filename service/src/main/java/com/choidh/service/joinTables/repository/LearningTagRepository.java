@@ -1,18 +1,28 @@
 package com.choidh.service.joinTables.repository;
 
 import com.choidh.service.joinTables.entity.LearningTagJoinTable;
-import com.choidh.service.tag.entity.Tag;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
+import java.util.Set;
 
 public interface LearningTagRepository extends JpaRepository<LearningTagJoinTable, Long> {
-    @Query(value = "delete from LearningTagJoinTable ltjt where ltjt.learning.id = :learningId and ltjt.tag.title = :tagTitle")
-    int deleteByLearningIdAndTagTitle(Long learningId, String tagTitle);
-
-    @Query(value = "select ltjt.tag " +
+    /**
+     * LearningTagJoinTable 목록 조회. By Learning Id
+     */
+    @Query(value = "select ltjt " +
             "from LearningTagJoinTable ltjt " +
             "where ltjt.learning.id = :learningId")
-    List<Tag> findAllByLearningId(Long learningId);
+    @EntityGraph(attributePaths = {"learning", "tag"}, type = EntityGraph.EntityGraphType.LOAD)
+    Set<LearningTagJoinTable> findListByLearningId(Long learningId);
+
+    /**
+     * LearningTagJoinTable 삭제. By LearningTagJoinTable Id
+     */
+    @Query(value = "delete from LearningTagJoinTable ltjt " +
+            "where ltjt.id = :learningTagJoinTableId ")
+    @Modifying
+    int deleteByLearningIdAndTagTitle(Long learningTagJoinTableId);
 }

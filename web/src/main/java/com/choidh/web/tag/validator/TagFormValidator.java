@@ -1,7 +1,7 @@
 package com.choidh.web.tag.validator;
 
 import com.choidh.service.excel.validator.IsValidator;
-import com.choidh.web.tag.vo.TagForm;
+import com.choidh.web.tag.vo.RegTagForm;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -9,15 +9,15 @@ import org.springframework.validation.Validator;
 public class TagFormValidator implements Validator {
     @Override
     public boolean supports(Class<?> aClass) {
-        return aClass.isAssignableFrom(TagForm.class);
+        return aClass.isAssignableFrom(RegTagForm.class);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        TagForm tagForm = (TagForm) target;
+        RegTagForm regTagForm = (RegTagForm) target;
 
-        if (tagForm.getTitle() == null || tagForm.getTitle().isEmpty()) {
-            errors.rejectValue("title", "wrong.title", new Object[]{tagForm.getTitle()}, "태그를 입력해주세요.");
+        if (regTagForm.getTitle() == null || regTagForm.getTitle().isEmpty()) {
+            errors.rejectValue("title", "wrong.title", new Object[]{regTagForm.getTitle()}, "태그를 입력해주세요.");
         }
 
     }

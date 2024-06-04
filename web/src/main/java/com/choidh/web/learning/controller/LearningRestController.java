@@ -6,7 +6,8 @@ import com.choidh.service.cart.service.CartService;
 import com.choidh.service.learning.service.LearningService;
 import com.choidh.service.tag.service.TagService;
 import com.choidh.web.common.annotation.CurrentAccount;
-import com.choidh.web.tag.vo.TagForm;
+import com.choidh.web.tag.vo.DelTagForm;
+import com.choidh.web.tag.vo.RegTagForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -51,9 +52,9 @@ public class LearningRestController {
 
     // 강의 태그 추가. API.
     @PostMapping("/profile/learning/upload/{id}/add")
-    public ResponseEntity postTagsForLearning(@CurrentAccount Account account, @PathVariable Long id, @RequestBody TagForm tagForm) {
+    public ResponseEntity postTagsForLearning(@CurrentAccount Account account, @PathVariable Long id, @RequestBody RegTagForm regTagForm) {
         try {
-            tagService.addTagsForLearning(tagForm.getTitle(), id);
+            tagService.addTagsForLearning(regTagForm.getTitle(), id);
 
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException exception) {
@@ -63,8 +64,8 @@ public class LearningRestController {
 
     // 강의 태그 삭제. API.
     @PostMapping("/profile/learning/upload/{id}/remove")
-    public ResponseEntity learningRemoveTags(@CurrentAccount Account account, @PathVariable Long id, @RequestBody TagForm tagForm) {
-        return tagService.removeTagsForLearning(tagForm.getTitle(), id) <= 0
+    public ResponseEntity learningRemoveTags(@CurrentAccount Account account, @PathVariable Long id, @RequestBody DelTagForm delTagForm) {
+        return tagService.removeTagsForLearning(delTagForm.getLearningTagJoinTableId()) <= 0
                 ? ResponseEntity.badRequest().build()
                 : ResponseEntity.ok().build();
     }

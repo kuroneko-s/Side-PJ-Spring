@@ -16,5 +16,5 @@ public interface TagService {
     void addTagsForLearning(String tagTitle, Long learningId);
 
     // 태그 삭제 For 강의
-    int removeTagsForLearning(String tagTitle, Long learningId);
+    int removeTagsForLearning(Long learningTagJoinTableId);
 }

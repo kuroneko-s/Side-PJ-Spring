@@ -65,7 +65,7 @@ public class TagServiceImpl implements TagService {
 
     // 태그 삭제 For 강의
     @Override
-    public int removeTagsForLearning(String tagTitle, Long learningId) {
-        return learningTagRepository.deleteByLearningIdAndTagTitle(learningId, tagTitle);
+    public int removeTagsForLearning(Long learningTagJoinTableId) {
+        return learningTagRepository.deleteByLearningIdAndTagTitle(learningTagJoinTableId);
     }
 }
