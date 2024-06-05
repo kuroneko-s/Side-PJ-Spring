@@ -1,7 +1,9 @@
 package com.choidh.service.purchaseHistory.service;
 
 import com.choidh.service.account.entity.Account;
+import com.choidh.service.account.service.AccountService;
 import com.choidh.service.learning.entity.Learning;
+import com.choidh.service.learning.service.LearningService;
 import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
 import com.choidh.service.purchaseHistory.entity.PurchaseStatus;
 import com.choidh.service.purchaseHistory.repository.PurchaseHistoryRepository;
@@ -21,6 +23,8 @@ import java.util.List;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PurchaseHistoryServiceImpl implements PurchaseHistoryService {
+    private final AccountService accountService;
+    private final LearningService learningService;
     private final PurchaseHistoryRepository purchaseHistoryRepository;
 
     /**
@@ -28,7 +32,10 @@ public class PurchaseHistoryServiceImpl implements PurchaseHistoryService {
      */
     @Override
     @Transactional
-    public PurchaseHistory regPurchaseHistory(Account account, Learning learning) {
+    public PurchaseHistory regPurchaseHistory(Long accountId, Long learningId) {
+        Account account = accountService.getAccountById(accountId);
+        Learning learning = learningService.getLearningById(learningId);
+
         PurchaseHistory purchaseHistory = purchaseHistoryRepository.save(PurchaseHistory.builder()
                 .account(account)
                 .learning(learning)
@@ -46,7 +53,10 @@ public class PurchaseHistoryServiceImpl implements PurchaseHistoryService {
      */
     @Override
     @Transactional
-    public void modPurchaseHistoryOfCancel(Account account, Learning learning) {
+    public void modPurchaseHistoryOfCancel(Long accountId, Long learningId) {
+        Account account = accountService.getAccountById(accountId);
+        Learning learning = learningService.getLearningById(learningId);
+
         PurchaseHistory purchaseHistory = purchaseHistoryRepository.findByAccountIdAndLearningId(account.getId(), learning.getId());
 
         if (purchaseHistory == null) {

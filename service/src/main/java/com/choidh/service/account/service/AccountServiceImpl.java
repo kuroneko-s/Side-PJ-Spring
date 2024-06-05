@@ -3,33 +3,42 @@ package com.choidh.service.account.service;
 
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.repository.AccountRepository;
+import com.choidh.service.account.vo.ModAccountVO;
 import com.choidh.service.account.vo.ModNotificationVO;
 import com.choidh.service.account.vo.ModPasswordVO;
-import com.choidh.service.account.vo.ModProfileVO;
 import com.choidh.service.account.vo.RegAccountVO;
+import com.choidh.service.cart.entity.Cart;
+import com.choidh.service.cart.service.CartService;
+import com.choidh.service.joinTables.entity.LearningCartJoinTable;
+import com.choidh.service.joinTables.service.LearningCartService;
 import com.choidh.service.mail.service.EmailService;
 import com.choidh.service.mail.vo.EmailForAuthenticationVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Set;
 
 import static com.choidh.service.common.AppConstant.getAccountNotFoundErrorMessage;
 
 @Slf4j
 @Service
 @Transactional(readOnly = true)
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AccountServiceImpl implements AccountService {
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
     private final AccountRepository accountRepository;
     private final EmailService emailService;
+    private final LearningCartService learningCartService;
+    private final CartService cartService;
 
     /**
-     * Get Account 단건 조회 By Id
+     * Account 단건 조회 By Id
      */
     @Override
     public Account getAccountById(Long accountId) {
@@ -41,25 +50,33 @@ public class AccountServiceImpl implements AccountService {
      * Account 단건 조회. By Id With Learning In Cart
      */
     @Override
-    public Account getAccountByIdWithCart(Long accountId) {
-        Account account = accountRepository.findAccountByIdWithLearning(accountId);
+    public Account getAccountByIdWithLearningInCart(Long accountId) {
+        // Account 단건 조회. By Id With LearningCartJoinTable
+        Account account = accountRepository.findAccountByIdWithLearningCart(accountId);
 
         if (account.getCart() == null) {
-            throw new IllegalArgumentException("우선 카트를 생성해주세요.");
+            Cart cart = cartService.regCart(accountId);
+            account.setCart(cart);
         }
+
+        // LearningCartJoinTable 목록 조회. By Cart Id
+        Set<LearningCartJoinTable> cartListWithLearningByCartId = learningCartService.getCartListWithLearningByCartId(account.getCart().getId());
+        // 조회 결과를 Account.Cart 에 덮어쓰기
+        account.getCart().setLearningCartJoinTables(cartListWithLearningByCartId);
 
         return account;
     }
 
     /**
-     * Get Account 단건 조회 By Id With PurchaseHistories Learning
+     * Account 단건 조회 By Id With PurchaseHistories Learning
      */
     @Override
     public Account getAccountByIdWithPurchaseHistories(Long accountId) {
         Account account = accountRepository.findAccountWithPurchaseHistories(accountId);
 
         if (account.getCart() == null) {
-            throw new IllegalArgumentException("우선 카트를 생성해주세요.");
+            Cart cart = cartService.regCart(accountId);
+            account.setCart(cart);
         }
 
         return account;
@@ -122,11 +139,11 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     @Transactional
-    public Account modAccount(ModProfileVO modProfileVO, Long accountId) {
+    public Account modAccount(ModAccountVO modAccountVO, Long accountId) {
         Account account = this.getAccountById(accountId);
 
-        if (modProfileVO.getNickname() != null && !modProfileVO.getNickname().isEmpty()) account.setNickname(modProfileVO.getNickname());
-        if (modProfileVO.getDescription() != null) account.setDescription(modProfileVO.getDescription());
+        if (modAccountVO.getNickname() != null && !modAccountVO.getNickname().isEmpty()) account.setNickname(modAccountVO.getNickname());
+        if (modAccountVO.getDescription() != null) account.setDescription(modAccountVO.getDescription());
 
         return account;
     }
@@ -138,13 +155,23 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public Account modPassword(ModPasswordVO modPasswordVO, Long accountId) {
         Account account = this.getAccountById(accountId);
+
+        System.out.println(passwordEncoder.matches(modPasswordVO.getNowPassword(), account.getPassword()));
+        System.out.println(modPasswordVO.getNewPassword().equals(modPasswordVO.getNewPasswordCheck()));
+
+        if (
+                !passwordEncoder.matches(modPasswordVO.getNowPassword(), account.getPassword())
+                        || !modPasswordVO.getNewPassword().equals(modPasswordVO.getNewPasswordCheck())
+        ) {
+            throw new IllegalArgumentException("패스워드가 일치하지 않음");
+        }
         account.setPassword(passwordEncoder.encode(modPasswordVO.getNewPassword()));
 
         return account;
     }
 
     /**
-     * mod 알림 설정 수정
+     * Mod 알림 설정 수정
      */
     @Override
     @Transactional

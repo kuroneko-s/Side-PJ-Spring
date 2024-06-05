@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,7 +24,7 @@ class AccountRepositoryTest extends AbstractRepositoryTestConfig {
 
     @Test
     @DisplayName("Account 단건 조회. By Id With Learning In Cart")
-    public void findAccountByIdWithLearning() throws Exception {
+    public void findAccountByIdWithLearningCart() throws Exception {
         Account account = createAccount("테스트냥이", "test@test.com");
         ProfessionalAccount professionalAccount = createProfessionalAccount(createAccount("테스트냥이2", "test2@test.com"));
         int count = 0;
@@ -42,7 +41,7 @@ class AccountRepositoryTest extends AbstractRepositoryTestConfig {
 
         theLine();
 
-        Account result = accountRepository.findAccountByIdWithLearning(account.getId());
+        Account result = accountRepository.findAccountByIdWithLearningCart(account.getId());
 
         persistClear();
 
@@ -54,7 +53,7 @@ class AccountRepositoryTest extends AbstractRepositoryTestConfig {
         theLine();
 
         for (LearningCartJoinTable learningCartJoinTable : result.getCart().getLearningCartJoinTables()) {
-            log.info(learningCartJoinTable.getLearning().getProfessionalAccount().toString());
+            assertNotNull(learningCartJoinTable);
         }
     }
 

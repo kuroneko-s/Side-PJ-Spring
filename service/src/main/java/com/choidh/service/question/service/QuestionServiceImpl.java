@@ -64,7 +64,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public boolean chkQuestionOwner(Long accountId, Long questionId) {
-        Account account = accountService.getAccountByIdWithCart(accountId);
+        Account account = accountService.getAccountByIdWithLearningInCart(accountId);
         Question question = this.getQuestionById(questionId);
 
         return account.getId().equals(question.getAccount().getId());

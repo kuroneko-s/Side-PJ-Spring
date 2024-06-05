@@ -1,7 +1,5 @@
 package com.choidh.service.purchaseHistory.service;
 
-import com.choidh.service.account.entity.Account;
-import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
 
 import java.util.List;
@@ -14,12 +12,12 @@ public interface PurchaseHistoryService {
     /**
      * Reg 구매이력 추가
      */
-    PurchaseHistory regPurchaseHistory(Account account, Learning learning);
+    PurchaseHistory regPurchaseHistory(Long accountId, Long learningId);
 
     /**
      * Mod 강의 수정 Of 취소
      */
-    void modPurchaseHistoryOfCancel(Account account, Learning learning);
+    void modPurchaseHistoryOfCancel(Long accountId, Long learningId);
 
     /**
      * 구매이력 목록조회 By accountId

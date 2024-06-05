@@ -7,15 +7,22 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
+import java.util.Optional;
+
 public interface AccountRepository extends JpaRepository<Account, Long>, QuerydslPredicateExecutor<Account> {
+    @EntityGraph(attributePaths = {"cart", "professionalAccount"})
+    Optional<Account> findById(Long id);
+
     /**
-     * Account 단건 조회. By Id With Learning In Cart
+     * Account 단건 조회. By Id With LearningCartJoinTable
      */
     @Query(value = "select a " +
             "from Account a " +
+            "left join fetch a.cart ac " +
+            "left join fetch ac.learningCartJoinTables " +
+            "left join fetch a.professionalAccount " +
             "where a.id = :accountId")
-     @EntityGraph(attributePaths = {"cart", "professionalAccount", "cart.learningCartJoinTables.learning"}, type = EntityGraph.EntityGraphType.LOAD)
-    Account findAccountByIdWithLearning(Long accountId);
+    Account findAccountByIdWithLearningCart(Long accountId);
 
     /**
      * 이메일 중복여부 확인

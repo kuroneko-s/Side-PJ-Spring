@@ -1,6 +1,6 @@
 package com.choidh.service;
 
-import com.choidh.service.account.entity.Account;
+import com.choidh.service.security.AccountUser;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.NameTokenizers;
 import org.springframework.boot.SpringApplication;
@@ -37,9 +37,9 @@ public class ServiceApplication {
                 return Optional.empty();
             }
 
-            Account account = (Account) authentication.getPrincipal();
+            AccountUser accountUser = (AccountUser) authentication.getPrincipal();
 
-            return Optional.of(account.getId().toString());
+            return Optional.of(accountUser.getAccount().getId().toString());
         };
     }
 

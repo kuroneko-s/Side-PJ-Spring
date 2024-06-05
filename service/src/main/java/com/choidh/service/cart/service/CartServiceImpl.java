@@ -8,8 +8,8 @@ import com.choidh.service.joinTables.entity.LearningCartJoinTable;
 import com.choidh.service.joinTables.service.LearningCartService;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.service.LearningService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,12 +19,11 @@ import java.util.List;
 @Slf4j
 @Service
 @Transactional(readOnly = true)
-@RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
-    private final CartRepository cartRepository;
-    private final LearningCartService learningCartService;
-    private final AccountService accountService;
-    private final LearningService learningService;
+    @Autowired private CartRepository cartRepository;
+    @Autowired private LearningCartService learningCartService;
+    @Autowired private AccountService accountService;
+    @Autowired private LearningService learningService;
 
     /**
      * 카트 생성
@@ -44,7 +43,7 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public void addCart(Long accountId, Long learningId) {
-        Account account = accountService.getAccountByIdWithCart(accountId);
+        Account account = accountService.getAccountByIdWithLearningInCart(accountId);
         Learning learning = learningService.getLearningById(learningId);
 
         LearningCartJoinTable learningCartJoinTable = new LearningCartJoinTable();

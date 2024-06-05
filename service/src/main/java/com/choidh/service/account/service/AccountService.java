@@ -3,10 +3,8 @@ package com.choidh.service.account.service;
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.vo.ModNotificationVO;
 import com.choidh.service.account.vo.ModPasswordVO;
-import com.choidh.service.account.vo.ModProfileVO;
+import com.choidh.service.account.vo.ModAccountVO;
 import com.choidh.service.account.vo.RegAccountVO;
-import com.choidh.service.kakao.vo.KakaoPayCancelResult;
-import com.choidh.service.kakao.vo.KakaoPaySuccessResult;
 import com.choidh.service.security.AccountUser;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -35,14 +33,14 @@ public interface AccountService {
     }
 
     /**
-     * Get Account 단건 조회 By Id
+     * Account 단건 조회 By Id
      */
     Account getAccountById(Long accountId);
 
     /**
-     * Get Account 단건 조회 By Id With Cart
+     * Account 단건 조회. By Id With Learning In Cart
      */
-    Account getAccountByIdWithCart(Long accountId);
+    Account getAccountByIdWithLearningInCart(Long accountId);
 
     /**
      * Get Account 단건 조회 By Id With PurchaseHistories
@@ -67,7 +65,7 @@ public interface AccountService {
     /**
      * Mod 프로필 수정
      */
-    Account modAccount(ModProfileVO modProfileVO, Long accountId);
+    Account modAccount(ModAccountVO modAccountVO, Long accountId);
 
     /**
      * Mod 패스워드 수정

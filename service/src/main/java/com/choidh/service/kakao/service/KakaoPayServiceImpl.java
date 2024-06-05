@@ -154,7 +154,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 
         // 구매 이력 등록.
         for (Learning learning : learningList) {
-            purchaseHistoryService.regPurchaseHistory(account, learning);
+            purchaseHistoryService.regPurchaseHistory(account.getId(), learning.getId());
         }
 
         return kakaoPaySuccessResult;
@@ -184,7 +184,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 
         // 구매 이력 취소 처리
         for (Learning learning : learningList) {
-            purchaseHistoryService.modPurchaseHistoryOfCancel(account, learning);
+            purchaseHistoryService.modPurchaseHistoryOfCancel(account.getId(), learning.getId());
         }
 
         return kakaoPayCancelResult;

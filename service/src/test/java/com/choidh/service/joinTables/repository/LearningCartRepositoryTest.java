@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -53,7 +54,7 @@ class LearningCartRepositoryTest extends AbstractRepositoryTestConfig {
 
         theLine();
 
-        List<LearningCartJoinTable> learningCartJoinTableList = learningCartRepository.findListWithLearningByCartId(account.getCart().getId());
+        Set<LearningCartJoinTable> learningCartJoinTableList = learningCartRepository.findListWithLearningByCartId(account.getCart().getId());
 
         assertEquals(learningCartJoinTableList.size(), 9);
         List<LearningCartJoinTable> resultList = savedList.stream().filter(learningCartJoinTable -> !learningCartJoinTableList.contains(learningCartJoinTable)).collect(Collectors.toList());
@@ -80,7 +81,7 @@ class LearningCartRepositoryTest extends AbstractRepositoryTestConfig {
 
         theLine();
 
-        List<LearningCartJoinTable> learningCartJoinTableList = learningCartRepository.findListWithLearningByCartId(account.getCart().getId());
+        Set<LearningCartJoinTable> learningCartJoinTableList = learningCartRepository.findListWithLearningByCartId(account.getCart().getId());
 
         assertEquals(learningCartJoinTableList.size(), 25);
     }

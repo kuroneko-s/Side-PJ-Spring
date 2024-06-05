@@ -4,7 +4,7 @@ import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.service.AccountService;
 import com.choidh.service.account.vo.ModNotificationVO;
 import com.choidh.service.account.vo.ModPasswordVO;
-import com.choidh.service.account.vo.ModProfileVO;
+import com.choidh.service.account.vo.ModAccountVO;
 import com.choidh.service.joinTables.entity.AccountTagJoinTable;
 import com.choidh.service.joinTables.service.AccountTagService;
 import com.choidh.service.learning.entity.Learning;
@@ -121,7 +121,7 @@ public class ProfileController {
             return CUSTOM_PROFILE;
         }
 
-        account = accountService.modAccount(modelMapper.map(profileUpdateForm, ModProfileVO.class), account.getId());
+        account = accountService.modAccount(modelMapper.map(profileUpdateForm, ModAccountVO.class), account.getId());
 
         attributes.addFlashAttribute("account", account);
         attributes.addFlashAttribute("message", "프로필이 수정되었습니다.");

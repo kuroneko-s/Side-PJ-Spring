@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
+import java.util.Set;
 
 public interface LearningCartRepository extends JpaRepository<LearningCartJoinTable, Long> {
     /**
@@ -26,5 +26,5 @@ public interface LearningCartRepository extends JpaRepository<LearningCartJoinTa
             "join fetch lcjt.learning " +
             "where lcjt.cart.id = :cartId")
     @EntityGraph(attributePaths = {"cart.account.professionalAccount"}, type = EntityGraph.EntityGraphType.LOAD)
-    List<LearningCartJoinTable> findListWithLearningByCartId(Long cartId);
+    Set<LearningCartJoinTable> findListWithLearningByCartId(Long cartId);
 }

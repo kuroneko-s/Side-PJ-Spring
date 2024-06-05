@@ -35,6 +35,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
@@ -153,7 +154,7 @@ public class LearningController {
     // 구매화면 이동 같음.
     @GetMapping("/learning/buy")
     public String getBuyView(@CurrentAccount Account account, Model model) {
-        List<LearningCartJoinTable> learningCartJoinTableList = learningCartService.getCartListWithLearningByCartId(account.getCart().getId());
+        Set<LearningCartJoinTable> learningCartJoinTableList = learningCartService.getCartListWithLearningByCartId(account.getCart().getId());
         List<Learning> learningList = learningCartJoinTableList.stream().map(LearningCartJoinTable::getLearning).collect(Collectors.toList());
 
         model.addAttribute("account", account);

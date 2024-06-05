@@ -28,7 +28,7 @@ public class CartController {
      */
     @GetMapping("/learning")
     public String getCartLearningView(@CurrentAccount Account account, Model model) {
-        account = accountService.getAccountByIdWithCart(account.getId());
+        account = accountService.getAccountByIdWithLearningInCart(account.getId());
         List<Learning> learningList = account.getCart().getLearningCartJoinTables().stream().map(LearningCartJoinTable::getLearning).collect(Collectors.toList());
 
         model.addAttribute("account", account);

@@ -7,6 +7,7 @@ import lombok.*;
 import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,5 +41,9 @@ public class Cart extends BaseEntity {
         if (learningCartJoinTable.getCart() == null) {
             learningCartJoinTable.setCart(this);
         }
+    }
+
+    public void setLearningCartJoinTables(Set<LearningCartJoinTable> learningCartJoinTables) {
+        this.learningCartJoinTables = Collections.unmodifiableSet(learningCartJoinTables);
     }
 }

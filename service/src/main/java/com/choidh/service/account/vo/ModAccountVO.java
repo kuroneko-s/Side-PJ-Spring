@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ModProfileVO {
+public class ModAccountVO {
     private String nickname;
 
     private String description;

@@ -9,7 +9,8 @@ import lombok.*;
 @AllArgsConstructor
 public class ModPasswordVO {
     private String nowPassword;
+
     private String newPassword;
+
     private String newPasswordCheck;
-    private String accountNickname;
 }
