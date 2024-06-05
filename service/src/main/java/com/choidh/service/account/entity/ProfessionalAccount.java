@@ -28,7 +28,7 @@ public class ProfessionalAccount extends BaseEntity {
     @Column(name = "professional_account_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     private Account account;
 
     @Name(name = "강사 이름")

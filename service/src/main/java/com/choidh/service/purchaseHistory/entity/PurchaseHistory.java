@@ -26,11 +26,11 @@ public class PurchaseHistory extends BaseEntity {
     @Column(name = "purchase_history_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "learning_id")
     private Learning learning;
 

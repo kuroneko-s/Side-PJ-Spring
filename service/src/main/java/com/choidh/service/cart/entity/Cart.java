@@ -23,7 +23,7 @@ public class Cart extends BaseEntity {
     @Column(name = "cart_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     private Account account;
 
     @OneToMany(mappedBy = "cart")

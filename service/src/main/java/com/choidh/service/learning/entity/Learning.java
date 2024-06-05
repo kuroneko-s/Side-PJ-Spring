@@ -64,7 +64,7 @@ public class Learning extends BaseEntity {
     @Name(name = "강의 평점")
     private float rating = 0;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @Name(name = "강의에 해당하는 파일들.", description = "AttachmentFile 의 Type 으로 구분.")
     private AttachmentGroup attachmentGroup;
 
@@ -84,7 +84,7 @@ public class Learning extends BaseEntity {
     @Name(name = "구매이력")
     private Set<PurchaseHistory> purchaseHistories = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "professional_account_id")
     @Name(name = "강의자")
     private ProfessionalAccount professionalAccount;
