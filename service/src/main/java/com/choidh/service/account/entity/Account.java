@@ -69,11 +69,11 @@ public class Account extends BaseEntity {
     @Name(name = "강의 관련 웹 알람 설정")
     private boolean learningWebNotification;
 
-    @OneToOne(mappedBy = "account")
+    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
     @Name(name = "업로더용 계정")
     private ProfessionalAccount professionalAccount = null;
 
-    @OneToOne(mappedBy = "account")
+    @OneToOne(mappedBy = "account", fetch = FetchType.LAZY)
     @Name(name = "장바구니 목록")
     private Cart cart;
 
