@@ -117,7 +117,7 @@ class AccountServiceImplTest extends AbstractServiceTestConfig {
     @Test
     @DisplayName("Reg Account 생성")
     public void regAccount() throws Exception {
-        Account account = accountService.regAccount(RegAccountVO.builder()
+        Account accountVO = accountService.regAccount(RegAccountVO.builder()
                 .nickname("sample")
                 .email("sample")
                 .password(passwordEncoder.encode("1234567890"))
@@ -126,10 +126,16 @@ class AccountServiceImplTest extends AbstractServiceTestConfig {
 
         theLine();
 
-        Optional<Account> byId = accountRepository.findById(account.getId());
+        Optional<Account> byId = accountRepository.findById(accountVO.getId());
         assertFalse(byId.isEmpty());
-        Account account1 = byId.get();
-        assertNotNull(account1);
+        Account account = byId.get();
+        assertNotNull(account);
+
+        assertNotNull(account.getCart());
+        assertNotNull(account.getTags());
+        assertNotNull(account.getReviews());
+        assertNotNull(account.getPurchaseHistories());
+        assertNotNull(account.getQuestions());
     }
 
     @Test
