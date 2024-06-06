@@ -35,13 +35,17 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Value("${download.path}")
     private String downloadPath;
 
-    // 신규 그룹 생성
+    /**
+     * AttachmentGroup 생성
+     */
     @Override
     public AttachmentGroup createAttachmentGroup() {
         return attachmentGroupRepository.save(new AttachmentGroup());
     }
 
-    // 파일 저장
+    /**
+     * 파일 저장
+     */
     @Override
     @Transactional
     public void saveFile(AttachmentGroup attachmentGroup, MultipartFile multipartFile, AttachmentFileType attachmentFileType) {
@@ -54,7 +58,12 @@ public class AttachmentServiceImpl implements AttachmentService {
         String fileName = groupSn + fileSn;
         String fileExtension = FileUtils.getFileExtension(multipartFile);
 
-        if (isNotImageFile(fileExtension)) throw new IllegalArgumentException("이미지 파일이 아닙니다.");
+        if (
+                attachmentFileType.equals(AttachmentFileType.BANNER) &&
+                isNotImageFile(fileExtension)
+        ) {
+            throw new IllegalArgumentException("이미지 파일이 아닙니다.");
+        }
 
         newAttachmentFile.setFileSize(multipartFile.getSize());
         newAttachmentFile.setOriginalFileName(multipartFile.getOriginalFilename());
@@ -65,13 +74,14 @@ public class AttachmentServiceImpl implements AttachmentService {
 
         // 파일 저장
         Resource resource = multipartFile.getResource();
+
+        // 위치 폴더 생성
+        FileUtils.createDir(downloadPath + filePath);
+
         try(
                 BufferedInputStream inputStream = new BufferedInputStream(resource.getInputStream());
                 BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(newAttachmentFile.getFullPath(downloadPath)), 1024 * 500)
         ){
-            // 위치 폴더 생성
-            FileUtils.createDir(filePath);
-
             // 파일 저장
             IOUtils.copy(inputStream, outputStream);
             outputStream.flush();
@@ -82,25 +92,33 @@ public class AttachmentServiceImpl implements AttachmentService {
         }
     }
 
-    // 파일 목록조회 By 그룹 ID 및 타입
+    /**
+     * 파일 목록조회 By 그룹 ID 및 타입
+     */
     @Override
     public List<AttachmentFile> getAttachmentFiles(Long attachmentGroupId, AttachmentFileType attachmentFileType) {
         return attachmentFileRepository.findAllByGroupAndType(attachmentGroupId, attachmentFileType);
     }
 
-    // 파일 갯수 조회
+    /**
+     * 파일 목록 카운트. By 그룹 ID 및 파일 타입
+     */
     @Override
     public int cntAttachmentFiles(Long attachmentGroupId, AttachmentFileType attachmentFileType) {
         return attachmentFileRepository.countByGroupAndType(attachmentGroupId, attachmentFileType);
     }
 
-    // 파일 단건조회 By 그룹 및 파일 ID
+    /**
+     * 파일 단건 조회 By 그룹 및 파일 ID
+     */
     @Override
     public AttachmentFile getAttachmentFileById(Long attachmentGroupId, Long attachmentFileId) {
         return attachmentFileRepository.findByGroupIdAndFileId(attachmentGroupId, attachmentFileId);
     }
 
-    // 파일 삭제
+    /**
+     * 파일 삭제(비활성화) By 그룹 및 파일 ID
+     */
     @Override
     public int delAttachmentFile(Long attachmentGroupId, Long attachmentFileId) {
         // 파일 정보 읽기
@@ -109,10 +127,13 @@ public class AttachmentServiceImpl implements AttachmentService {
         // 서버에서 해당 파일 삭제
         File file = new File(attachmentFile.getFullPath(downloadPath));
         try {
-            if (file.exists())
-                if (!file.delete())
+            if (file.exists()) {
+                if (!file.delete()) {
                     throw new FileCantDeleteException();
-            else throw new FileSystemNotFoundException();
+                }
+            } else {
+                throw new FileSystemNotFoundException();
+            }
         } catch (Exception exception) {
             log.error(exception.getMessage(), exception);
 

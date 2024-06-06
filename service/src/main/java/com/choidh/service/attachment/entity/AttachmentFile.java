@@ -48,6 +48,6 @@ public class AttachmentFile extends BaseDateEntity {
     }
 
     public String getFullPath(String basePath) {
-        return basePath + this.path + fileName + extension;
+        return basePath + this.path + fileName + "." + extension;
     }
 }
