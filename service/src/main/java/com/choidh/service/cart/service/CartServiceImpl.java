@@ -32,14 +32,24 @@ public class CartServiceImpl implements CartService {
     @Transactional
     public Cart regCart(Long accountId) {
         Account account = accountService.getAccountById(accountId);
-        Cart cart = cartRepository.save(Cart.builder()
+
+        return cartRepository.save(Cart.builder()
                 .account(account)
                 .learningCartJoinTables(new HashSet<>())
                 .build());
-        account.setCart(cart);
-        return cart;
     }
 
+    /**
+     * 카트 조회 By Account Id
+     */
+    @Override
+    public Cart getCart(Long accountId) {
+        return cartRepository.findByAccountIdWithLearningCartJoinTables(accountId);
+    }
+
+    /**
+     * 유저의 카트에 강의 추가.
+     */
     @Override
     @Transactional
     public void addCart(Long accountId, Long learningId) {
@@ -54,6 +64,11 @@ public class CartServiceImpl implements CartService {
         learningCartService.saveLearningCart(learningCartJoinTable);
     }
 
+
+
+    /**
+     * 카트에서 강의 삭제
+     */
     @Override
     @Transactional
     public void deleteCart(Cart cart, List<Learning> learningList) {

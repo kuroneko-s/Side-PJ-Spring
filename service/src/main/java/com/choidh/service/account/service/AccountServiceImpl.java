@@ -88,16 +88,21 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public Account regAccount(RegAccountVO regAccountVO) {
-        Account account = modelMapper.map(regAccountVO, Account.class);
+        Account accountVO = modelMapper.map(regAccountVO, Account.class);
 
-        account.setPassword(passwordEncoder.encode(account.getPassword()));
-        account.setChecked(false);
+        accountVO.setPassword(passwordEncoder.encode(accountVO.getPassword()));
+        accountVO.setChecked(false);
+
+        Account account = accountRepository.save(accountVO);
+
+        Cart cart = cartService.regCart(account.getId());
+        account.setCart(cart);
 
         // 메일 전송
         account.createTokenForEmailForAuthentication();
         emailService.sendEmailForAuthentication(EmailForAuthenticationVO.getInstance(account));
 
-        return accountRepository.save(account);
+        return account;
     }
 
     /**
