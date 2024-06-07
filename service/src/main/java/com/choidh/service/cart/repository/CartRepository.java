@@ -12,7 +12,7 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
             "from Cart c " +
             "join fetch c.account " +
             "left join fetch c.learningCartJoinTables lcjt " +
-            "join fetch lcjt.learning " +
-            "where c.account.id = :accuntId")
+            "left join fetch lcjt.learning " +
+            "where c.account.id = :accountId")
     Cart findByAccountIdWithLearningCartJoinTables(Long accountId);
 }

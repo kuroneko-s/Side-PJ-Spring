@@ -28,14 +28,13 @@ import static com.choidh.service.common.AppConstant.getAccountNotFoundErrorMessa
 @Slf4j
 @Service
 @Transactional(readOnly = true)
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AccountServiceImpl implements AccountService {
-    private final ModelMapper modelMapper;
-    private final PasswordEncoder passwordEncoder;
-    private final AccountRepository accountRepository;
-    private final EmailService emailService;
-    private final LearningCartService learningCartService;
-    private final CartService cartService;
+    @Autowired private ModelMapper modelMapper;
+    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private AccountRepository accountRepository;
+    @Autowired private EmailService emailService;
+    @Autowired private LearningCartService learningCartService;
+    @Autowired private CartService cartService;
 
     /**
      * Account 단건 조회 By Id

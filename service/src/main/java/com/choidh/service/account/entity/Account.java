@@ -5,6 +5,7 @@ import com.choidh.service.annotation.Name;
 import com.choidh.service.cart.entity.Cart;
 import com.choidh.service.common.entity.BaseEntity;
 import com.choidh.service.joinTables.entity.AccountTagJoinTable;
+import com.choidh.service.menu.entity.Menu;
 import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
 import com.choidh.service.question.entity.Question;
 import com.choidh.service.review.entity.Review;
@@ -92,6 +93,10 @@ public class Account extends BaseEntity {
     @OneToMany(mappedBy = "account")
     @Name(name = "구매 이력 목록")
     private Set<PurchaseHistory> purchaseHistories = new HashSet<>();
+
+    @OneToMany(mappedBy = "account")
+    @Name(name = "접근 가능 메뉴 목록")
+    private Set<Menu> menus = new HashSet<>();
 
     public void setReviews(Review review) {
         this.getReviews().add(review);
