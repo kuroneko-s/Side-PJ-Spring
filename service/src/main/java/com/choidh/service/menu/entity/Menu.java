@@ -1,12 +1,13 @@
 package com.choidh.service.menu.entity;
 
+import com.choidh.service.annotation.Name;
 import com.choidh.service.common.entity.BaseEntity;
-import com.choidh.service.joinTables.entity.AccountMenuJoinTable;
 import lombok.*;
 
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @Entity
 @EqualsAndHashCode(of = "id", callSuper = false)
@@ -21,6 +22,9 @@ public class Menu extends BaseEntity {
     @Column(name = "menu_id")
     private Long id;
 
-    @OneToMany(mappedBy = "menu")
-    private Set<AccountMenuJoinTable> accounts = new HashSet<>();
+    @Name(name = "이동 URL")
+    private String url;
+
+    @Name(name = "하위 메뉴인지 구분용")
+    private Integer level;
 }

@@ -1,0 +1,20 @@
+package com.choidh.service.menu.repository;
+
+import com.choidh.service.account.vo.AccountType;
+import com.choidh.service.menu.entity.MenuTypeJoinTable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
+
+public interface MenuTypeRepository extends JpaRepository<MenuTypeJoinTable, Long> {
+    /**
+     * MenuTypeService 목록 조회 By AccountType
+     */
+    @Query(value = "select mt " +
+            "from MenuTypeJoinTable mt " +
+            "join fetch mt.menu " +
+            "where mt.used = true " +
+            "and mt.accountType = :accountType")
+    List<MenuTypeJoinTable> findListByAccountType(AccountType accountType);
+}

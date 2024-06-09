@@ -19,6 +19,10 @@ public class AppConstant {
         return id + "에 해당하는 유저를 찾지 못하였습니다.";
     }
 
+    public static String getMenuNotFoundErrorMessage(Long id) {
+        return id + "에 해당하는 메뉴를 찾지 못하였습니다.";
+    }
+
     public static String getLearningNotFoundErrorMessage(Long id) {
         return id + "에 해당하는 강의가 존재하지 않습니다.";
     }
