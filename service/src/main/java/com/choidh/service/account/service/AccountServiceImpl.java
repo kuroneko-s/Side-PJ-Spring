@@ -3,17 +3,13 @@ package com.choidh.service.account.service;
 
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.repository.AccountRepository;
-import com.choidh.service.account.vo.ModAccountVO;
-import com.choidh.service.account.vo.ModNotificationVO;
-import com.choidh.service.account.vo.ModPasswordVO;
-import com.choidh.service.account.vo.RegAccountVO;
+import com.choidh.service.account.vo.*;
 import com.choidh.service.cart.entity.Cart;
 import com.choidh.service.cart.service.CartService;
 import com.choidh.service.joinTables.entity.LearningCartJoinTable;
 import com.choidh.service.joinTables.service.LearningCartService;
 import com.choidh.service.mail.service.EmailService;
 import com.choidh.service.mail.vo.EmailForAuthenticationVO;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +39,14 @@ public class AccountServiceImpl implements AccountService {
     public Account getAccountById(Long accountId) {
         return accountRepository.findById(accountId)
                 .orElseThrow(() -> new IllegalArgumentException(getAccountNotFoundErrorMessage(accountId)));
+    }
+
+    /**
+     * Account 단건 조회 By Id With Tags
+     */
+    @Override
+    public Account getAccountByIdWithTags(Long accountId) {
+        return accountRepository.findByIdWithTags(accountId);
     }
 
     /**
@@ -91,6 +95,7 @@ public class AccountServiceImpl implements AccountService {
 
         accountVO.setPassword(passwordEncoder.encode(accountVO.getPassword()));
         accountVO.setChecked(false);
+        accountVO.setAccountType(AccountType.USER);
 
         Account account = accountRepository.save(accountVO);
 

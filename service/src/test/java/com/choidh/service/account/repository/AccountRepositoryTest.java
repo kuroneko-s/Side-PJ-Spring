@@ -5,8 +5,11 @@ import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.entity.ProfessionalAccount;
 import com.choidh.service.cart.service.CartService;
 import com.choidh.service.config.WithAccount;
+import com.choidh.service.joinTables.entity.AccountTagJoinTable;
 import com.choidh.service.joinTables.entity.LearningCartJoinTable;
+import com.choidh.service.joinTables.service.AccountTagService;
 import com.choidh.service.learning.entity.Learning;
+import com.choidh.service.tag.vo.RegTagVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -21,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class AccountRepositoryTest extends AbstractRepositoryTestConfig {
     private final AccountRepository accountRepository;
     private final CartService cartService;
+    private final AccountTagService accountTagService;
 
     @Test
     @DisplayName("Account 단건 조회. By Id With Learning In Cart")
@@ -54,6 +58,25 @@ class AccountRepositoryTest extends AbstractRepositoryTestConfig {
 
         for (LearningCartJoinTable learningCartJoinTable : result.getCart().getLearningCartJoinTables()) {
             assertNotNull(learningCartJoinTable);
+        }
+    }
+
+    @Test
+    @DisplayName("Account 단건 조회 By Id With Tags")
+    public void findByIdWithTags() throws Exception {
+        Account account = createAccount("테스트냥이", "test@test.com");
+
+        accountTagService.regTag(RegTagVO.builder()
+                .title("sample 1")
+                .build(), account.getId());
+
+        theLine();
+
+        Account result = accountRepository.findByIdWithTags(account.getId());
+        assertNotNull(result);
+
+        for (AccountTagJoinTable tagJoinTable : result.getTags()) {
+            log.info(tagJoinTable.toString());
         }
     }
 

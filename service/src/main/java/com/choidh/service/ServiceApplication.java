@@ -33,8 +33,12 @@ public class ServiceApplication {
         return () -> {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-            if (authentication == null || !authentication.isAuthenticated()) {
-                return Optional.empty();
+            if (
+                    authentication == null
+                            || !authentication.isAuthenticated()
+                            || !(authentication.getPrincipal() instanceof AccountUser)
+            ) {
+                return Optional.of("anonymousUser");
             }
 
             AccountUser accountUser = (AccountUser) authentication.getPrincipal();

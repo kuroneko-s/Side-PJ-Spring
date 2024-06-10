@@ -85,24 +85,6 @@
 
     <script type="text/javascript">
         window.addEventListener("DOMContentLoaded", () => {
-            const enterEventHandler = (e) => {
-                let parentNode = e.target;
-                if (parentNode.classList.contains("navbar-menu-item-dropdown-details")) return false;
-
-                parentNode = e.target.classList.contains("navbar-menu-item-title") ? e.target.parentNode : parentNode;
-                parentNode.querySelector(".navbar-menu-item-dropdown-details").classList.remove("hide")
-            };
-            const leaveEventHandler = (e) => {
-                let parentNode = e.target;
-                if (parentNode.classList.contains("navbar-menu-item-dropdown-details")) return false;
-
-                parentNode = e.target.classList.contains("navbar-menu-item-title") ? e.target.parentNode : parentNode;
-                parentNode.querySelector(".navbar-menu-item-dropdown-details").classList.add("hide")
-            };
-
-            const profileMenu = document.getElementById("profile-menu");
-            profileMenu?.addEventListener("mouseenter", enterEventHandler);
-            profileMenu?.addEventListener("mouseleave", leaveEventHandler);
         })
     </script>
 </nav>

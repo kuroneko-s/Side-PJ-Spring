@@ -16,7 +16,7 @@
     <div class="register-container">
         <p class="register-title">회원가입</p>
 
-        <form th:classappend="${errors != null} ? 'was-validated form register-form needs-validation' : 'form register-form needs-validation'" action="#" th:object="${accountVO}" th:action="@{/register}" method="post" novalidate>
+        <form class="form register-form needs-validation" th:classappend="${errors != null} ? 'was-validated' : ''" action="#" th:object="${accountVO}" th:action="@{/register}" method="post" novalidate>
             <label for="nickname">별칭</label>
             <input type="text" id="nickname" th:field="*{nickname}" placeholder="흑우냥이" minlength="2" maxlength="20" required>
             <small class="register-form-help-message">※ 2자이상 20자이내로 입력해주세요.</small>

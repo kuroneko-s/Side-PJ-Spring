@@ -25,6 +25,15 @@ public interface AccountRepository extends JpaRepository<Account, Long>, Queryds
     Account findAccountByIdWithLearningCart(Long accountId);
 
     /**
+     * Account 단건 조회 By Id With Tags
+     */
+    @Query(value = "select a " +
+            "from Account a " +
+            "left join fetch a.tags " +
+            "where a.id = :accountId")
+    Account findByIdWithTags(Long accountId);
+
+    /**
      * 이메일 중복여부 확인
      */
     boolean existsByEmail(String email);

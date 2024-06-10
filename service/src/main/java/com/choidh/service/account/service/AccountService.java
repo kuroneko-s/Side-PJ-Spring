@@ -38,6 +38,11 @@ public interface AccountService {
     Account getAccountById(Long accountId);
 
     /**
+     * Account 단건 조회 By Id With Tags
+     */
+    Account getAccountByIdWithTags(Long accountId);
+
+    /**
      * Account 단건 조회. By Id With Learning In Cart
      */
     Account getAccountByIdWithLearningInCart(Long accountId);

@@ -13,8 +13,8 @@ import javax.validation.constraints.Pattern;
 public class AccountVO {
 
     @NotBlank
-    @Length(min = 2, max = 20)
-    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-zA-Z0-9_!@#$%-]{3,20}$")
+    @Length(min = 3, max = 20)
+    @Pattern(regexp = "^[ㄱ-ㅎ가-힣a-zA-Z0-9_!@#$%-]{3,20}$", message = "다시 입력해주세요. 3자이상이여야 합니다.")
     private String nickname;
 
     @NotBlank

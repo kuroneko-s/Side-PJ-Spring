@@ -1,12 +1,12 @@
 package com.choidh.web;
 
 import com.choidh.service.account.entity.Account;
+import com.choidh.service.account.service.AccountService;
 import com.choidh.service.attachment.entity.AttachmentFile;
 import com.choidh.service.event.service.EventService;
 import com.choidh.service.joinTables.entity.AccountTagJoinTable;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.service.LearningService;
-import com.choidh.service.menu.service.MenuTypeService;
 import com.choidh.service.tag.entity.Tag;
 import com.choidh.web.common.annotation.CurrentAccount;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MainController {
     private final LearningService learningService;
-    private final MenuTypeService menuTypeService;
+    private final AccountService accountService;
     private final EventService eventService;
 
     @GetMapping("/")
@@ -32,6 +32,8 @@ public class MainController {
         List<Learning> newLearningList;
 
         if (account != null) {
+            account = accountService.getAccountByIdWithTags(account.getId());
+
             // 기본 강의 목록 보여주는 목록 로딩
             Set<AccountTagJoinTable> tags = account.getTags();
             if (tags.isEmpty()) {
