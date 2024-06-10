@@ -20,6 +20,7 @@ public class MenuTypeJoinTable extends BaseDateEntity {
     @Column(name = "menu_type_id")
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     private AccountType accountType;
 
     @Name(name = "활성화 유무")

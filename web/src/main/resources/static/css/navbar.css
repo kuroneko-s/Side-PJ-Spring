@@ -90,6 +90,10 @@
     padding: 0.75rem 1rem;
 }
 
+.navbar-menu-item-dropdown:hover .navbar-menu-item-dropdown-details {
+    display: flex !important;
+}
+
 .navbar-menu-item-title {
     cursor: pointer;
 }

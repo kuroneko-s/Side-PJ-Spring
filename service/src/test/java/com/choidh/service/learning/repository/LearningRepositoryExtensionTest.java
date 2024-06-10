@@ -29,6 +29,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -227,6 +228,76 @@ public class LearningRepositoryExtensionTest {
         theLine();
 
         List<Learning> result = learningRepository.findTop12ByTagsOrderByRatingDesc(tagList);
+
+        assertFalse(result.isEmpty());
+        assertEquals(tagList.size(), 20);
+        assertEquals(result.size(), 12);
+    }
+
+    @Test
+    @DisplayName("Learning 목록 조회. Top 12 By Tags Order By 개설(openingDate) 일시 DESC.")
+    public void findTop12LearningListByTagsOrderByOpeningDate() throws Exception {
+        ProfessionalAccount professionalAccount = createProfessionalAccount(createAccount());
+        Set<Tag> tagList = new HashSet<>();
+
+        for (var i = 0; i < 60; i++) {
+            int floor = (int) Math.floor(Math.random() * 3);
+            Learning learning = createLearning(professionalAccount, "sample title " + floor);
+
+            // Tag 생성
+            Tag tag = tagService.regTag(RegTagVO.builder()
+                    .title("tag " + i)
+                    .build());
+
+            if (i % 3 == 0) tagList.add(tag);
+
+            LearningTagJoinTable learningTagJoinTable = LearningTagJoinTable.builder()
+                    .learning(learning)
+                    .tag(tag)
+                    .build();
+            learningTagRepository.save(learningTagJoinTable);
+
+            learning.setTags(learningTagJoinTable);
+        }
+
+        theLine();
+
+        List<Learning> result = learningRepository.findTop12LearningListByTagsOrderByOpeningDate(tagList);
+
+        assertFalse(result.isEmpty());
+        assertEquals(tagList.size(), 20);
+        assertEquals(result.size(), 12);
+    }
+
+    @Test
+    @DisplayName("Learning 목록 조회. Top 12 By Tags Order By Rating DESC.")
+    public void findTop12LearningListByTagsOrderByRating() throws Exception {
+        ProfessionalAccount professionalAccount = createProfessionalAccount(createAccount());
+        Set<Tag> tagList = new HashSet<>();
+
+        for (var i = 0; i < 60; i++) {
+            int floor = (int) Math.floor(Math.random() * 3);
+            Learning learning = createLearning(professionalAccount, "sample title " + floor);
+
+            // Tag 생성
+            Tag tag = tagService.regTag(RegTagVO.builder()
+                    .title("tag " + i)
+                    .build());
+
+            if (i % 3 == 0) tagList.add(tag);
+
+            LearningTagJoinTable learningTagJoinTable = LearningTagJoinTable.builder()
+                    .learning(learning)
+                    .tag(tag)
+                    .build();
+            learningTagRepository.save(learningTagJoinTable);
+
+            learning.setTags(learningTagJoinTable);
+        }
+
+        theLine();
+
+        List<Learning> result = learningRepository.findTop12LearningListByTagsOrderByRating(tagList);
 
         assertFalse(result.isEmpty());
         assertEquals(tagList.size(), 20);

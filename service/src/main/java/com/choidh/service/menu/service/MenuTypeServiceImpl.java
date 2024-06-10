@@ -38,6 +38,14 @@ public class MenuTypeServiceImpl implements MenuTypeService {
     }
 
     /**
+     * MenuTypeService 목록 조회
+     */
+    @Override
+    public List<MenuTypeJoinTable> getMenuTypeAll() {
+        return menuTypeRepository.findAll();
+    }
+
+    /**
      * MenuTypeService 목록 조회 By AccountType
      */
     @Override

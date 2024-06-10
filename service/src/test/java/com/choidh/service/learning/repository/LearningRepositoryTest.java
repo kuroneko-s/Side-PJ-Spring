@@ -106,13 +106,13 @@ class LearningRepositoryTest extends AbstractRepositoryTestConfig {
 
     @Test
     @DisplayName("Learning 목록조회 Limit 4. By Opening is true and OpningDate DESC 정렬")
-    public void findTop4ByOpeningOrderByOpeningDateDesc() throws Exception {
+    public void findTop12ByOpeningIsTrueOrderByOpeningDateDesc() throws Exception {
         Tag tag = tagService.regTag(RegTagVO.builder()
                 .title("tag 1")
                 .build());
 
         ProfessionalAccount professionalAccount = createProfessionalAccount(createAccount());
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 20; i++) {
             Learning learning = this.createLearning(professionalAccount);
 
             LearningTagJoinTable learningTagJoinTable = LearningTagJoinTable.builder()
@@ -127,9 +127,9 @@ class LearningRepositoryTest extends AbstractRepositoryTestConfig {
 
         theLine();
 
-        List<Learning> learningList = learningRepository.findTop4ByOpeningOrderByOpeningDateDesc(true);
+        List<Learning> learningList = learningRepository.findTop12ByOpeningIsTrueOrderByOpeningDateDesc();
 
-        assertEquals(learningList.size(), 4);
+        assertEquals(learningList.size(), 12);
         assertTrue(learningList.get(0).getOpeningDate().isAfter(learningList.get(1).getOpeningDate()));
     }
 

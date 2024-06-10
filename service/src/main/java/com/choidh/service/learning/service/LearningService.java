@@ -6,6 +6,7 @@ import com.choidh.service.attachment.entity.AttachmentFileType;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.vo.ModLearningVO;
 import com.choidh.service.learning.vo.RegLearningVO;
+import com.choidh.service.tag.entity.Tag;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,19 +15,29 @@ import java.util.Set;
 
 public interface LearningService {
     /**
-     * 강의 목록조회 By Account's Tags
+     * Learning 목록조회 By Account's Tags
      */
     List<Learning> getTop12LearningListByTag(Long accountId);
 
     /**
-     * 강의 목록조회 By 생성 일시
+     * Learning 목록 조회. Top 12 By 개설(openingDate) 일시. 개설 일시 정렬
      */
-    List<Learning> learningOrderByCreateLearning();
+    List<Learning> getTop12LearningListByOpeningDate();
 
     /**
-     * 강의 목록조회 By 평점
+     * Learning 목록 조회. Top 12 By Tags Order By 개설(openingDate) 일시 DESC.
      */
-    List<Learning> learningOrderByRating();
+    List<Learning> getTop12LearningListByTagsOrderByOpeningDate(Set<Tag> tags);
+
+    /**
+     * Learning 목록 조회. Top 12 By Tags Order By Rating DESC
+     */
+    List<Learning> getTop12LearningListByTagsOrderByRating(Set<Tag> tagSet);
+
+    /**
+     * Learning 목록 조회. 평점 정렬
+     */
+    List<Learning> getTop12LearningOrderByRating();
 
     /**
      * Reg 강의 생성

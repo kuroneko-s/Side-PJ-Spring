@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.List;
+import java.util.Set;
 
 import static com.choidh.service.learning.entity.QLearning.learning;
 
@@ -108,6 +109,35 @@ public class LearningRepositoryExtensionImpl extends QuerydslRepositorySupport i
                         learning.opening.isTrue(),
                         learning.tags.any().tag.in(accountTagList)
                 )
+                .orderBy(learning.rating.desc())
+                .limit(12)
+                .distinct()
+                .fetch();
+    }
+
+    /**
+     * Learning 목록 조회. Top 12 By Tags Order By 개설(openingDate) 일시 DESC.
+     */
+    @Override
+    public List<Learning> findTop12LearningListByTagsOrderByOpeningDate(Set<Tag> tags) {
+        return from(learning)
+                .where(learning.opening.isTrue(),
+                        learning.tags.any().tag.in(tags)
+                )
+                .orderBy(learning.openingDate.desc())
+                .limit(12)
+                .distinct()
+                .fetch();
+    }
+
+    /**
+     * Learning 목록 조회. Top 12 By Tags Order By Rating DESC
+     */
+    @Override
+    public List<Learning> findTop12LearningListByTagsOrderByRating(Set<Tag> tags) {
+        return from(learning)
+                .where(learning.opening.isTrue(),
+                        learning.tags.any().tag.in(tags))
                 .orderBy(learning.rating.desc())
                 .limit(12)
                 .distinct()

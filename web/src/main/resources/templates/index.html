@@ -127,7 +127,7 @@
         <p class="learning-main-title">신규 강의!</p>
 
         <!--강의가 존재할 경우-->
-        <div class="learning-item-container" th:if="${!learningOrderByDatetime.isEmpty()}" id="new-learning-item-container">
+        <div class="learning-item-container" th:if="${!newLearningList.isEmpty()}" id="new-learning-item-container">
             <div class="learning-item-wrapper" id="new-learning-item-wrapper">
                 <div class="learning-item" th:each="learning : ${learningList}">
                     <div class="learning-item-card">
@@ -169,7 +169,7 @@
         </div>
 
         <!-- 강의가 존재하지 않을 경우 -->
-        <div class="learning-item" th:if="${learningOrderByDatetime.isEmpty()}">
+        <div class="learning-item" th:if="${newLearningList.isEmpty()}">
             <div class="learning-item-card">
                 <img class="learning-item-card-image" src="/images/rogo.png" alt="anonymous"/>
                 <div class="learning-item-card-body">

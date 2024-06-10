@@ -1,6 +1,7 @@
 package com.choidh.web.common.config;
 
 
+import com.choidh.web.menu.interceptor.MenuInterceptor;
 import com.choidh.web.notification.interceptor.NotificationInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class WebConfig implements WebMvcConfigurer {
     private final NotificationInterceptor notificationInterceptor;
+    private final MenuInterceptor menuInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -30,5 +32,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(notificationInterceptor)
                 .excludePathPatterns(staticResourcesPath);
 
+        registry.addInterceptor(menuInterceptor)
+                .addPathPatterns("/**");
     }
 }

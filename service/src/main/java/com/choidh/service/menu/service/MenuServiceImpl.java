@@ -24,6 +24,9 @@ public class MenuServiceImpl implements MenuService {
                 Menu.builder()
                         .url(regMenuVO.getUrl())
                         .level(regMenuVO.getLevel())
+                        .name(regMenuVO.getName())
+                        .parentUrl(regMenuVO.getParentUrl())
+                        .menuOrder(regMenuVO.getMenuOrder())
                         .build()
         );
     }

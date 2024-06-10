@@ -20,6 +20,8 @@ public class Event extends BaseEntity {
     @Column(name = "event_id")
     private Long id;
 
+    private boolean used;
+
     @OneToOne
     @Name(name = "강의에 해당하는 파일들.", description = "AttachmentFile 의 Type 으로 구분.")
     private AttachmentGroup attachmentGroup;

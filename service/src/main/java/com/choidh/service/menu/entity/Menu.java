@@ -25,6 +25,15 @@ public class Menu extends BaseEntity {
     @Name(name = "이동 URL")
     private String url;
 
+    @Name(name = "메뉴 이름")
+    private String name;
+
+    @Name(name = "메뉴 순서")
+    private Integer menuOrder;
+
+    @Name(name = "상위 URL", description = "최상위 메뉴인 경우 ROOT")
+    private String parentUrl;
+
     @Name(name = "하위 메뉴인지 구분용")
     private Integer level;
 }

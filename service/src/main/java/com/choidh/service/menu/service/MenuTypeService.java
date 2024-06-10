@@ -13,6 +13,11 @@ public interface MenuTypeService {
     List<MenuTypeJoinTable> regMenuTypeJoinTable(RegMenuVO regMenuVO);
 
     /**
+     * MenuTypeService 목록 조회
+     */
+    List<MenuTypeJoinTable> getMenuTypeAll();
+
+    /**
      * MenuTypeService 목록 조회 By AccountType
      */
     List<MenuTypeJoinTable> getListByAccountType(AccountType accountType);

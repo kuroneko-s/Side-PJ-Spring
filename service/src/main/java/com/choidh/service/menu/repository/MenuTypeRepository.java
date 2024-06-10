@@ -13,8 +13,9 @@ public interface MenuTypeRepository extends JpaRepository<MenuTypeJoinTable, Lon
      */
     @Query(value = "select mt " +
             "from MenuTypeJoinTable mt " +
-            "join fetch mt.menu " +
+            "join fetch mt.menu m " +
             "where mt.used = true " +
-            "and mt.accountType = :accountType")
+            "and mt.accountType = :accountType " +
+            "order by m.level ASC, m.menuOrder ASC ")
     List<MenuTypeJoinTable> findListByAccountType(AccountType accountType);
 }

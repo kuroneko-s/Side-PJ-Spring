@@ -13,26 +13,15 @@
 
         <div class="navbar-menu-items">
             <ul class="navbar-menu-item-ul">
-                <li class="navbar-menu-item-dropdown navbar-mr pointer" id="learning-menu">
-                    <p class="navbar-menu-item-title">
-                        강의들
+                <li class="navbar-menu-item-dropdown navbar-mr pointer" th:each="mainMenu : ${mainMenuList}">
+                    <p class="navbar-menu-item-title" th:text="${mainMenu.name}">
+                        강의 이름
                     </p>
                     <div class="navbar-menu-item-dropdown-details hide">
-                        <a class="navbar-menu-item-dropdown-details-item" href="#" th:href="@{/all}">모든 강의</a>
-                        <a class="navbar-menu-item-dropdown-details-item" href="#" th:href="@{/web/all}">웹 개발</a>
-                        <a class="navbar-menu-item-dropdown-details-item" href="#" th:href="@{/algorithm/all}">알고리즘</a>
+                        <a class="navbar-menu-item-dropdown-details-item" href="#" th:each="subMenu : ${subMenuMap[mainMenu.url]}" th:href="@{subMenu.url}" th:text="${subMenu.name}">서브 강의 이름</a>
                     </div>
                 </li>
-                <li class="navbar-menu-item-dropdown navbar-mr pointer" id="community-menu">
-                    <p class="navbar-menu-item-title">
-                        커뮤니티
-                    </p>
-                    <div class="navbar-menu-item-dropdown-details hide">
-                        <a class="navbar-menu-item-dropdown-details-item" href="#" th:href="@{/all}">커뮤니티 1</a>
-                        <a class="navbar-menu-item-dropdown-details-item" href="#" th:href="@{/web/all}">커뮤니티 2</a>
-                        <a class="navbar-menu-item-dropdown-details-item" href="#" th:href="@{/algorithm/all}">커뮤니티 3</a>
-                    </div>
-                </li>
+
                 <li class="navbar-mr">
                     <a class="navbar-menu-item-title" href="#">로드맵</a>
                 </li>
@@ -110,14 +99,6 @@
                 parentNode = e.target.classList.contains("navbar-menu-item-title") ? e.target.parentNode : parentNode;
                 parentNode.querySelector(".navbar-menu-item-dropdown-details").classList.add("hide")
             };
-
-            const learningMenu = document.getElementById("learning-menu");
-            learningMenu.addEventListener("mouseenter", enterEventHandler);
-            learningMenu.addEventListener("mouseleave", leaveEventHandler);
-
-            const communityMenu = document.getElementById("community-menu");
-            communityMenu.addEventListener("mouseenter", enterEventHandler);
-            communityMenu.addEventListener("mouseleave", leaveEventHandler);
 
             const profileMenu = document.getElementById("profile-menu");
             profileMenu?.addEventListener("mouseenter", enterEventHandler);

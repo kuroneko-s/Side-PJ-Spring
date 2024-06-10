@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Transactional
 public interface LearningRepositoryExtension {
@@ -31,7 +32,17 @@ public interface LearningRepositoryExtension {
     Page<Learning> findByCategoryAndKeywordWithPageable(String keyword, String category, Pageable pageable);
 
     /**
-     * Learning 페이징. By Tag 목록.
+     * Learning 목록 조회. By Tag 목록.
      */
     List<Learning> findTop12ByTagsOrderByRatingDesc(List<Tag> accountTagList);
+
+    /**
+     * Learning 목록 조회. Top 12 By Tags Order By 개설(openingDate) 일시 DESC.
+     */
+    List<Learning> findTop12LearningListByTagsOrderByOpeningDate(Set<Tag> tags);
+
+    /**
+     * Learning 목록 조회. Top 12 By Tags Order By Rating DESC
+     */
+    List<Learning> findTop12LearningListByTagsOrderByRating(Set<Tag> tags);
 }

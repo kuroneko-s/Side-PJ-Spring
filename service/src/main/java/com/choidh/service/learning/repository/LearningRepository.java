@@ -4,7 +4,6 @@ import com.choidh.service.learning.entity.Learning;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,9 +30,9 @@ public interface LearningRepository extends JpaRepository<Learning, Long>, Query
     List<Learning> findListByLearningIdsWithTags(List<Learning> learningList);
 
     /**
-     * Learning 목록조회 Limit 4. By Opening is true and OpningDate DESC 정렬
+     * Learning 목록조회 Limit 12. By Opening is true and OpeningDate DESC 정렬
      */
-    List<Learning> findTop4ByOpeningOrderByOpeningDateDesc(boolean opening);
+    List<Learning> findTop12ByOpeningIsTrueOrderByOpeningDateDesc();
 
     /**
      * Learning 목록조회 Limit 12. By Opening is true and Rating DESC 정렬

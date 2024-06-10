@@ -47,7 +47,7 @@ public class LearningServiceImpl implements LearningService {
     private final AccountTagService accountTagService;
 
     /**
-     * 강의 목록조회 By Account's Tags
+     * Learning 목록 조회 By Account's Tags
      */
     @Override
     public List<Learning> getTop12LearningListByTag(Long accountId) {
@@ -57,19 +57,35 @@ public class LearningServiceImpl implements LearningService {
     }
 
     /**
-     * 강의 목록조회 By 생성 일시
+     * Learning 목록 조회. Top 12 By 개설(openingDate) 일시
      */
     @Override
-    public List<Learning> learningOrderByCreateLearning() {
-        List<Learning> learningList = learningRepository.findTop4ByOpeningOrderByOpeningDateDesc(true);
+    public List<Learning> getTop12LearningListByOpeningDate() {
+        List<Learning> learningList = learningRepository.findTop12ByOpeningIsTrueOrderByOpeningDateDesc();
         return learningRepository.findListByLearningIdsWithTags(learningList);
     }
 
     /**
-     * 강의 목록조회 By 평점
+     * Learning 목록 조회. Top 12 By Tags Order By 개설(openingDate) 일시 DESC.
      */
     @Override
-    public List<Learning> learningOrderByRating() {
+    public List<Learning> getTop12LearningListByTagsOrderByOpeningDate(Set<Tag> tags) {
+        return learningRepository.findTop12LearningListByTagsOrderByOpeningDate(tags);
+    }
+
+    /**
+     * Learning 목록 조회. Top 12 By Tags Order By Rating DESC
+     */
+    @Override
+    public List<Learning> getTop12LearningListByTagsOrderByRating(Set<Tag> tags) {
+        return learningRepository.findTop12LearningListByTagsOrderByRating(tags);
+    }
+
+    /**
+     * Learning 목록조회 By 평점
+     */
+    @Override
+    public List<Learning> getTop12LearningOrderByRating() {
         List<Learning> learningList = learningRepository.findTop12ByOpeningOrderByRatingDesc(true);
         return learningRepository.findListByLearningIdsWithTags(learningList);
     }
