@@ -18,7 +18,7 @@
                         강의 이름
                     </p>
                     <div class="navbar-menu-item-dropdown-details hide">
-                        <a class="navbar-menu-item-dropdown-details-item" href="#" th:each="subMenu : ${subMenuMap[mainMenu.url]}" th:href="@{subMenu.url}" th:text="${subMenu.name}">서브 강의 이름</a>
+                        <a class="navbar-menu-item-dropdown-details-item" href="#" th:each="subMenu : ${subMenuMap[mainMenu.url]}" th:href="@{${subMenu.url}}" th:text="${subMenu.name}">서브 강의 이름</a>
                     </div>
                 </li>
 
