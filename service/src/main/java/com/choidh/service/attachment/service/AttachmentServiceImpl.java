@@ -90,6 +90,8 @@ public class AttachmentServiceImpl implements AttachmentService {
             attachmentFileRepository.delete(newAttachmentFile);
             throw new FileNotSavedException(e);
         }
+
+        // TODO : 필요에 따라 서버 로컬 경로에 백업 파일 생성 여부 지정.
     }
 
     /**

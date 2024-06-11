@@ -168,6 +168,9 @@ public class Learning extends BaseEntity {
             }
             str.insert(insertTime, ',');
             insertTime -= 3;
+            if (insertTime <= 0) {
+                break;
+            }
         }
         return String.valueOf(str);
     }

@@ -43,8 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .mvcMatchers(accessibleUrl)
-                .permitAll()
+                .mvcMatchers(accessibleUrl).permitAll()
+                .mvcMatchers(HttpMethod.GET, "/learning/search/**").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/profile/**").permitAll()
                 .anyRequest().authenticated();
 
@@ -83,6 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring()
                 .mvcMatchers("/node_modules/**")
                 .mvcMatchers("/static/video/**")
+                .mvcMatchers("/uploadFiles/**")
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 }

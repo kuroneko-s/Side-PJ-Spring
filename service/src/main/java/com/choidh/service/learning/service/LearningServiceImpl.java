@@ -21,6 +21,8 @@ import com.choidh.service.tag.entity.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -260,6 +262,24 @@ public class LearningServiceImpl implements LearningService {
     @Override
     public List<Learning> getLearningListByIdList(List<Long> learningIdList) {
         return learningRepository.findLearningListByLearningIdList(learningIdList);
+    }
+
+    /**
+     * 강의 페이징 By Main Category
+     */
+    @Override
+    public Page<Learning> getLearningPagingByCategory(String category, Pageable pageable) {
+        category = category.equals("all") ? "" : category;
+        return learningRepository.findPagingByCategory(category, pageable);
+    }
+
+    /**
+     * 강의 페이징 By Main Category And Keyword
+     */
+    @Override
+    public Page<Learning> getPagingByCategoryAndKeyword(String category, String keyword, Pageable pageable) {
+        category = category.equals("all") ? "" : category;
+        return learningRepository.findPagingByCategoryAndKeyword(category, keyword, pageable);
     }
 
     private String updateVideoTitle(String title) {

@@ -10,6 +10,7 @@ import com.choidh.service.joinTables.entity.LearningCartJoinTable;
 import com.choidh.service.joinTables.service.LearningCartService;
 import com.choidh.service.joinTables.service.LearningTagService;
 import com.choidh.service.learning.entity.Learning;
+import com.choidh.service.learning.repository.LearningRepository;
 import com.choidh.service.learning.service.LearningService;
 import com.choidh.service.question.entity.Question;
 import com.choidh.service.question.service.QuestionService;
@@ -25,12 +26,15 @@ import com.choidh.web.review.vo.ReviewVO;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -39,6 +43,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
+@RequestMapping(value = "")
 @RequiredArgsConstructor
 public class LearningController {
     private final ModelMapper modelMapper;
@@ -50,8 +55,44 @@ public class LearningController {
     private final LearningCartService learningCartService;
     private final LearningTagService learningTagService;
 
+    private final LearningRepository learningRepository;
+
     @Value("${download.path}")
     private String downloadPath;
+
+    /**
+     * Get Learning 목록 View. By keyword Learning
+     */
+    @GetMapping("/learning/search/{keyword}")
+    public String getLearningListByKeywordView(@CurrentAccount Account account, Model model, @PathVariable("keyword") String mainCategory,
+                                               @RequestParam(name = "keyword", defaultValue = "", required = false) String subCategory,
+                                               @PageableDefault(size = 16, sort = "openingDate", direction = Sort.Direction.DESC) Pageable pageable){
+        if (account != null) model.addAttribute(account);
+
+        Page<Learning> pageableLearning = learningService.getLearningPagingByCategory(mainCategory, pageable);
+
+        model.addAttribute("mainCategory", mainCategory);
+        model.addAttribute("subCategory", subCategory);
+        model.addAttribute("paging", pageableLearning);
+        model.addAttribute("learningList", pageableLearning.getContent());
+
+        model.addAttribute("sortProperty", pageable.getSort().toString().contains("openLearning") ? "openLearning" : "rating");
+
+        return "menu/list";
+    }
+
+    /**
+     * Post Learning 페이징 API. By keyword Learning
+     */
+    @PostMapping("/learning/search/{keyword}")
+    @ResponseBody
+    public ResponseEntity postLearningListByKeyword(@PathVariable("keyword") String mainCategory,
+                                                    @RequestBody(required = false) String keyword,
+                                                    @PageableDefault(size = 16, sort = "openingDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<Learning> pageableLearning = learningService.getPagingByCategoryAndKeyword(mainCategory, keyword, pageable);
+
+        return ResponseEntity.ok(pageableLearning);
+    }
 
     // 강의 상세 페이지로 이동. (학습 버튼 클릭시 동작)
     @GetMapping("/learning/{id}/listen")

@@ -19,7 +19,7 @@ public class FileUtils {
         int month = now.getMonthValue();
         int dayOfMonth = now.getDayOfMonth();
 
-        return File.separator + year + File.separator + month + File.separator + dayOfMonth + File.separator;
+        return File.separator + "uploadFiles" + File.separator + year + File.separator + month + File.separator + dayOfMonth + File.separator;
     }
 
     public static void createDir(String path) {

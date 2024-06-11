@@ -3,6 +3,8 @@ package com.choidh.web;
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.service.AccountService;
 import com.choidh.service.attachment.entity.AttachmentFile;
+import com.choidh.service.attachment.entity.AttachmentFileType;
+import com.choidh.service.attachment.service.AttachmentService;
 import com.choidh.service.event.service.EventService;
 import com.choidh.service.joinTables.entity.AccountTagJoinTable;
 import com.choidh.service.learning.entity.Learning;
@@ -15,8 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -25,6 +26,7 @@ public class MainController {
     private final LearningService learningService;
     private final AccountService accountService;
     private final EventService eventService;
+    private final AttachmentService attachmentService;
 
     @GetMapping("/")
     public String indexGet(@CurrentAccount Account account, Model model) {
@@ -57,9 +59,43 @@ public class MainController {
         // 이벤트 이미지 및 목록 로딩
         List<AttachmentFile> eventFileList = eventService.getEventFileList();
 
+
+        // 강의 이미지 목록 조회
+        Map<Long, List<String>> learningImageMap = new HashMap<>();
+        for (Learning learning : learningList) {
+            List<AttachmentFile> attachmentFiles = attachmentService.getAttachmentFiles(learning.getAttachmentGroup().getId(), AttachmentFileType.BANNER);
+            if (attachmentFiles.size() != 1) {
+                throw new IllegalArgumentException();
+            }
+
+            List<String> valueList = learningImageMap.getOrDefault(learning.getId(), new ArrayList<>());
+
+            AttachmentFile attachmentFile = attachmentFiles.get(0);
+            valueList.add(attachmentFile.getFullPath(""));
+            valueList.add(attachmentFile.getOriginalFileName());
+            learningImageMap.put(learning.getId(), valueList);
+        }
+
+        Map<Long, List<String>> newLearningImageMap = new HashMap<>();
+        for (Learning learning : newLearningList) {
+            List<AttachmentFile> attachmentFiles = attachmentService.getAttachmentFiles(learning.getAttachmentGroup().getId(), AttachmentFileType.BANNER);
+            if (attachmentFiles.size() != 1) {
+                throw new IllegalArgumentException();
+            }
+
+            List<String> valueList = newLearningImageMap.getOrDefault(learning.getId(), new ArrayList<>());
+
+            AttachmentFile attachmentFile = attachmentFiles.get(0);
+            valueList.add(attachmentFile.getFullPath(""));
+            valueList.add(attachmentFile.getOriginalFileName());
+            newLearningImageMap.put(learning.getId(), valueList);
+        }
+
         model.addAttribute("eventFileList", eventFileList);
         model.addAttribute("learningList", learningList);
+        model.addAttribute("learningImageMap", learningImageMap);
         model.addAttribute("newLearningList", newLearningList);
+        model.addAttribute("newLearningImageMap", newLearningImageMap);
 
         return "index";
     }

@@ -24,7 +24,12 @@ public interface LearningRepositoryExtension {
     /**
      * Learning 페이징. By 카테고리
      */
-    Page<Learning> findByCategoryWithPageable(String category, Pageable pageable);
+    Page<Learning> findPagingByCategory(String mainCategory, Pageable pageable);
+
+    /**
+     * Learning 페이징. By 카테고리 And 키워드
+     */
+    Page<Learning> findPagingByCategoryAndKeyword(String mainCategory,String keyword, Pageable pageable);
 
     /**
      * Learning 페이징. By 카레고리, Keyword

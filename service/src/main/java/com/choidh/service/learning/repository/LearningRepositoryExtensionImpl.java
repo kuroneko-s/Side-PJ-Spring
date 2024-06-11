@@ -1,6 +1,7 @@
 package com.choidh.service.learning.repository;
 
 
+import com.choidh.service.common.StringUtils;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.tag.entity.Tag;
 import com.querydsl.core.types.Predicate;
@@ -13,6 +14,8 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import java.util.List;
 import java.util.Set;
 
+import static com.choidh.service.common.StringUtils.isNotNullAndEmpty;
+import static com.choidh.service.common.StringUtils.isNullOrEmpty;
 import static com.choidh.service.learning.entity.QLearning.learning;
 
 public class LearningRepositoryExtensionImpl extends QuerydslRepositorySupport implements LearningRepositoryExtension {
@@ -59,13 +62,49 @@ public class LearningRepositoryExtensionImpl extends QuerydslRepositorySupport i
     }
 
     /**
-     * Learning 페이징. By 카테고리
+     * Learning 페이징. By Main Category
      */
     @Override
-    public Page<Learning> findByCategoryWithPageable(String category, Pageable pageable) {
+    public Page<Learning> findPagingByCategory(String mainCategory, Pageable pageable) {
+        Predicate learningWhere = learning.opening.isTrue();
+
+        if (isNotNullAndEmpty(mainCategory)) {
+            learningWhere = learning.opening.isTrue().and(learning.mainCategory.containsIgnoreCase(mainCategory));
+        }
+
         JPQLQuery<Learning> query = from(learning)
-                .where(learning.opening.isTrue()
-                        .and(learning.mainCategory.containsIgnoreCase(category)));
+                .where(learningWhere);
+
+        List<Learning> learningList = query
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        return new PageImpl<>(learningList, pageable, query.fetchCount());
+    }
+
+    /**
+     * Learning 페이징. By 카테고리 And 키워드
+     */
+    @Override
+    public Page<Learning> findPagingByCategoryAndKeyword(String mainCategory, String keyword, Pageable pageable) {
+        Predicate learningWhere = learning.opening.isTrue();
+
+        if (isNotNullAndEmpty(keyword) && isNullOrEmpty(mainCategory)) {
+            learningWhere = learning.opening.isTrue()
+                    .and(learning.title.containsIgnoreCase(keyword).or(learning.tags.any().tag.title.containsIgnoreCase(keyword)));
+        }
+        else if (isNotNullAndEmpty(mainCategory) && isNullOrEmpty(keyword)) {
+            learningWhere = learning.opening.isTrue().and(learning.mainCategory.containsIgnoreCase(mainCategory));
+        }
+        else if (isNotNullAndEmpty(mainCategory) && isNotNullAndEmpty(keyword)) {
+            learningWhere = learning.opening.isTrue()
+                    .and(learning.title.containsIgnoreCase(keyword).or(learning.tags.any().tag.title.containsIgnoreCase(keyword)))
+                    .and(learning.mainCategory.containsIgnoreCase(mainCategory));
+        }
+
+        JPQLQuery<Learning> query = from(learning)
+                .where(learningWhere);
 
         List<Learning> learningList = query
                 .offset(pageable.getOffset())

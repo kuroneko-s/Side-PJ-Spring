@@ -4,7 +4,7 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Learning</title>
+    <title>커뮤니티</title>
     <div th:replace="fragment/fragment.html :: imports"></div>
 
     <script src="/js/ImageSlider.js"></script>
@@ -70,10 +70,9 @@
                 <div class="learning-item" th:each="learning : ${learningList}">
                     <div class="learning-item-card" th:data-learning-id="${learning.id}">
                         <a class="learning-item-card-anchor" th:href="@{'/learning/' + ${learning.id}}">
-                            <img class="learning-item-card-image" th:if="${learning.bannerBytes} != null" th:src="|data:image/*;base64,${learning.bannerBytes}|" th:alt="${learning.title}" />
-                            <img class="learning-item-card-image" th:if="${learning.bannerBytes} == null" src="/images/rogo.png" alt="기본 배너 이미지" />
+                            <img class="learning-item-card-image" th:src="${learningImageMap[learning.id][0]}" th:alt="${learningImageMap[learning.id][1]}" />
                             <div class="learning-item-card-body">
-                                <p class="learning-item-card-body-title" th:text="${learning.title}">Default Title</p>
+                                <p class="learning-item-card-body-title" th:text="${learning.title}"></p>
                                 <p class="learning-item-card-body-tags">
                                     <i class="fas fa-tasks"></i>
                                     <span th:each="tag : ${learning.tags}">
@@ -97,7 +96,7 @@
                                     <div th:if="${learning.priceComma().equals('free')}"><span></span>무료 강의</div>
                                 </div>
                                 <div class="learning-item-card-body-opening">
-                                    <div class="date-time" th:text="${learning.openLearning}"></div>
+                                    <div class="date-time" th:text="${learning.openingDate}"></div>
                                 </div>
                             </div>
                         </a>
@@ -129,13 +128,12 @@
         <!--강의가 존재할 경우-->
         <div class="learning-item-container" th:if="${!newLearningList.isEmpty()}" id="new-learning-item-container">
             <div class="learning-item-wrapper" id="new-learning-item-wrapper">
-                <div class="learning-item" th:each="learning : ${learningList}">
+                <div class="learning-item" th:each="learning : ${newLearningList}">
                     <div class="learning-item-card">
                         <a class="learning-item-card-anchor" th:href="@{'/learning/' + ${learning.id}}">
-                            <img class="learning-item-card-image" th:if="${learning.bannerBytes} != null" th:src="|data:image/*;base64,${learning.bannerBytes}|" th:alt="${learning.title}" />
-                            <img class="learning-item-card-image" th:if="${learning.bannerBytes} == null" src="/images/rogo.png" alt="기본 배너 이미지" />
+                            <img class="learning-item-card-image" th:src="${newLearningImageMap[learning.id][0]}" th:alt="${newLearningImageMap[learning.id][1]}" />
                             <div class="learning-item-card-body">
-                                <p class="learning-item-card-body-title" th:text="${learning.title}">Default Title</p>
+                                <p class="learning-item-card-body-title" th:text="${learning.title}"></p>
                                 <p class="learning-item-card-body-tags">
                                     <i class="fas fa-tasks"></i>
                                     <span th:each="tag : ${learning.tags}">
@@ -159,7 +157,7 @@
                                     <div th:if="${learning.priceComma().equals('free')}"><span></span>무료 강의</div>
                                 </div>
                                 <div class="learning-item-card-body-opening">
-                                    <div class="date-time" th:text="${learning.openLearning}"></div>
+                                    <div class="date-time" th:text="${learning.openingDate}"></div>
                                 </div>
                             </div>
                         </a>

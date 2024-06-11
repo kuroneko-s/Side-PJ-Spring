@@ -26,7 +26,7 @@ public interface LearningRepository extends JpaRepository<Learning, Long>, Query
     @Query(value = "select l " +
             "from Learning l " +
             "where l IN :learningList")
-    @EntityGraph(attributePaths = "tags", type = EntityGraph.EntityGraphType.LOAD)
+    @EntityGraph(attributePaths = {"tags", "attachmentGroup"}, type = EntityGraph.EntityGraphType.LOAD)
     List<Learning> findListByLearningIdsWithTags(List<Learning> learningList);
 
     /**

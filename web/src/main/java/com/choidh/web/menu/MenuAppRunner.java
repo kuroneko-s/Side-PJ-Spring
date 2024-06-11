@@ -20,13 +20,13 @@ public class MenuAppRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         List<MenuTypeJoinTable> menuTypeList = menuTypeService.getMenuTypeAll();
 
-        // /all(모든강의) -> /learning/all
-        // /web/all(웹 개발) -> /learning/web
-        // /algorithm/all(알고리즘) -> /learning/algorithm
+        // /all(모든강의) -> /learning/search/all
+        // /web/all(웹 개발) -> /learning/search/web
+        // /algorithm/all(알고리즘) -> /learning/search/algorithm
 
         if (menuTypeList.isEmpty()) {
             RegMenuVO regMenuVO = RegMenuVO.builder()
-                    .url("/learning")
+                    .url("/learning/search")
                     .name("강의")
                     .level(0)
                     .menuOrder(0)
@@ -40,11 +40,11 @@ public class MenuAppRunner implements ApplicationRunner {
             menuTypeService.regMenuTypeJoinTable(regMenuVO);
 
             regMenuVO = RegMenuVO.builder()
-                    .url("/learning/all")
+                    .url("/learning/search/all")
                     .name("모든 강의")
                     .level(1)
                     .menuOrder(1)
-                    .parentUrl("/learning")
+                    .parentUrl("/learning/search")
                     .accountTypeList(List.of(
                             AccountType.USER,
                             AccountType.ADMIN,
@@ -54,11 +54,11 @@ public class MenuAppRunner implements ApplicationRunner {
             menuTypeService.regMenuTypeJoinTable(regMenuVO);
 
             regMenuVO = RegMenuVO.builder()
-                    .url("/learning/web")
+                    .url("/learning/search/web")
                     .name("웹 개발")
                     .level(1)
                     .menuOrder(2)
-                    .parentUrl("/learning")
+                    .parentUrl("/learning/search")
                     .accountTypeList(List.of(
                             AccountType.USER,
                             AccountType.ADMIN,
@@ -68,11 +68,11 @@ public class MenuAppRunner implements ApplicationRunner {
             menuTypeService.regMenuTypeJoinTable(regMenuVO);
 
             regMenuVO = RegMenuVO.builder()
-                    .url("/learning/all")
+                    .url("/learning/search/all")
                     .name("알고리즘")
                     .level(1)
                     .menuOrder(3)
-                    .parentUrl("/learning")
+                    .parentUrl("/learning/search")
                     .accountTypeList(List.of(
                             AccountType.USER,
                             AccountType.ADMIN,

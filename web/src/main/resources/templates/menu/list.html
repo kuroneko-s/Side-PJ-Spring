@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <title>커뮤니티 | 검색</title>
+    <div th:replace="fragment/fragment.html :: imports"></div>
+
+    <link rel="stylesheet" href="/css/program.css"/>
+    <link rel="stylesheet" href="/css/menu-list.css"/>
+</head>
+
+<body class="container">
+    <header th:replace="fragment/navbar/navbar.html :: navbar"></header>
+
+    <section class="learning-search-container">
+        <!-- left menu start -->
+        <div class="learning-search-menu-container" id="learning-search-container">
+            <div class="learning-search-menu-accordion" th:each="mainMenu : ${mainMenuList}">
+                <p class="learning-search-menu-accordion-trigger" th:text="${mainMenu.name}"></p>
+
+                <div class="learning-search-menu-accordion-details hide">
+                    <a class="learning-search-menu-accordion-details-menu"
+                       th:each="subMenu : ${subMenuMap[mainMenu.url]}" th:href="@{${subMenu.url}}" th:text="${subMenu.name}">
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- left menu end -->
+
+        <!-- right content start -->
+        <div class="learning-contents-container">
+            <form class="form learning-contents-form" action="#" method="POST" id="learning-contents-form">
+                <input type="text" placeholder="강의 검색하기">
+                <button class="button" type="submit">검색</button>
+            </form>
+
+            <hr class="learning-contents-line"/>
+
+            <div class="learning-contents-wrapper-header">
+                <div class="learning-contents-wrapper-header-left">
+                    <a class="learning-contents-wrapper-header-left-title" th:href="@{/learning/search/${mainCategory}}" th:text="${mainCategory}"></a>
+                </div>
+
+                <div class="learning-contents-wrapper-header-right">
+                    <div class="learning-contents-wrapper-header-right-type-wrapper">
+                        <div class="learning-contents-wrapper-header-right-type-details">
+                            <i class="fas fa-list-ul" style="color: floralwhite"></i>
+                        </div>
+                        <div class="learning-contents-wrapper-header-right-type-cards active">
+                            <i class="fas fa-th" style="color: floralwhite"></i>
+                        </div>
+                    </div>
+
+                    <div class="learning-contents-wrapper-header-right-sort-wrapper">
+                        <input type="hidden" th:value="${subCategory}" id="beforeSubCategory">
+                        <label for="learning-contents-wrapper-header-right-sort"></label>
+                        <select id="learning-contents-wrapper-header-right-sort">
+                            <option value="openingDate">최신순</option>
+                            <option value="rating">평점순</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <main class="learning-contents-wrapper-body">
+                <div class="col-md-3 roof-start" th:each="learning : ${learningList.getContent()}">
+                    <a href="#" th:href="@{'/learning/' + ${learning.id}}">
+                        <div class="card mb-4 shadow-sm card-view">
+                            <img class="bd-placeholder-img card-img-top card-img" role="img" src="/images/rogo.png" alt="anonymous" />
+<!--                                 th:src="|data:image/*;base64,${learning.bannerBytes}|" th:if="${learning.bannerBytes} != null"-->
+                            <img class="banner-image card-img" src="/images/rogo.png" th:if="${learning.bannerBytes} == null"/>
+                            <div class="card-body">
+                                <p class="card-text card-title" th:text="${learning.title}">Default Title</p>
+                                <p class="card-text" id="card-tags">
+                                    <i class="fas fa-tasks"></i>
+                                    <span class="card-tag-box" th:each="tag : ${learning.tags}">
+                                        <span th:text="${tag.getTitle()}"></span>
+                                    </span>
+                                </p>
+                                <span class="card-text card-learning-rating" th:text="${learning.rating}" hidden="hidden">Default Ratings hidden</span>
+                                <p class="mb-1">
+                                    <span class="full-star star" th:each="num : ${#numbers.sequence(0, learning.getRating_int() - 1)}" th:if="${learning.getRating_int() > 0}"><i class="fas fa-star"></i></span><span class="half-star star" th:if="${learning.checkRating_boolean()}"><i class="fas fa-star-half-alt"></i></span><span class="empty-star star" th:each="num : ${#numbers.sequence(1, learning.emptyRating())}" th:if="${learning.emptyRating() > 0}"><i class="far fa-star"></i></span>
+                                    (<span th:text="${learning.rating}"></span>)
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div th:if="${!learning.price_comma().equals('free')}"><span class="card-price" th:text="${learning.price_comma()}"></span>원</div>
+                                    <div th:if="${learning.price_comma().equals('free')}"><span class="card-price"></span>무료 강의</div>
+                                    <div class="date-time" th:text="${learning.openLearning}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- pagination -->
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${!learningList.hasPrevious()}? disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
+                               th:href="@{${url}+'?keyword=' + ${keyword} + '&sort=' + ${sortProperty} + '&page=' + ${learningList.getNumber() - 1}}">
+                                Previous
+                            </a>
+                        </li>
+                        <li class="page-item" th:each="num : ${#numbers.sequence(0, learningList.getTotalPages() -1)}"
+                            th:classappend="${num == learningList.getNumber()}? active">
+                            <a class="page-link" th:href="@{${url}+'?keyword=' + ${keyword} + '&sort=' + ${sortProperty} + '&page=' + ${num}}"
+                               href="#" th:text="${num + 1}">1</a>
+                        </li>
+                        <li class="page-item" th:class="${!learningList.hasNext()}? disabled">
+                            <a class="page-link" href="#"
+                               th:href="@{${url}+'?keyword=' + ${keyword} + '&sort=' + ${sortProperty} + '&page=' + ${learningList.getNumber() + 1}}">
+                                Next
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </main>
+        </div>
+        <!-- right content start -->
+    </section>
+
+    <footer th:replace="fragment/footer/footer.html :: footer"></footer>
+
+    <script type="application/javascript">
+        window.addEventListener("DOMContentLoaded", () => {
+            const menuContainerEl = document.getElementById("learning-search-container");
+            menuContainerEl.addEventListener("click", e => {
+                let targetEl = e.target;
+
+                for (let i = 0; i < 3; i++) {
+                    if (targetEl.classList.contains("learning-search-menu-accordion")) {
+                        break;
+                    } else {
+                        targetEl = targetEl.parentNode;
+                    }
+                }
+
+                targetEl.querySelector(".learning-search-menu-accordion-details").classList.toggle("hide");
+            })
+
+            const pathName = window.location.pathname;
+            const targetEls = document.querySelectorAll("#learning-search-container .learning-search-menu-accordion");
+            if (pathName.includes("learning")) {
+                targetEls[0].querySelector(".learning-search-menu-accordion-details").classList.remove("hide");
+
+                const detailEls = targetEls[0].querySelectorAll(".learning-search-menu-accordion-details-menu");
+                if (pathName.includes("all")) {
+                    detailEls[0].classList.add("active");
+                } else if (pathName.includes("web")) {
+                    detailEls[1].classList.add("active");
+                } else if (pathName.includes("algorithm")) {
+                    detailEls[2].classList.add("active");
+                }
+            } else if (pathName.includes("community")) {
+                targetEls[1].querySelector(".learning-search-menu-accordion-details").classList.remove("hide");
+
+                const detailEls = targetEls[1].querySelectorAll(".learning-search-menu-accordion-details-menu");
+                if (pathName.includes("1")) {
+                    detailEls[0].classList.add("active");
+                } else if (pathName.includes("2")) {
+                    detailEls[1].classList.add("active");
+                } else if (pathName.includes("3")) {
+                    detailEls[2].classList.add("active");
+                }
+            }
+
+            moment.locale('ko');
+            $(".date-time").text(function (index, dateTime) {
+                return moment(dateTime, "YYYY-MM-DD'T'hh:mm").format("LL");
+            })
+
+            const searchFormEl = document.getElementById("learning-contents-form");
+            searchFormEl.addEventListener("submit", e => {
+                e.preventDefault();
+
+                drawContext(window.location.pathname, searchFormEl.querySelector("input").value);
+            });
+
+            const sortSelectBoxEl = document.getElementById("learning-contents-wrapper-header-right-sort");
+            sortSelectBoxEl.addEventListener("change", e => {
+                const url = `${window.location.pathname}?sort=${e.target.value},desc`;
+                const keyword = document.getElementById("beforeSubCategory").value;
+
+                drawContext(url, keyword);
+            });
+        })
+
+        function drawContext(url, keyword) {
+            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+            fetch(url, {
+                method: "POST",
+                body: keyword,
+                headers: {
+                    [csrfHeader]: csrfToken
+                }
+            })
+                .then(res => res.json())
+                .then(json => {
+                    console.log(json);
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+        }
+    </script>
+</body>
+</html>

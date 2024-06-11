@@ -171,7 +171,9 @@ public class ProfileController {
      */
     @GetMapping("/profile/notification")
     public String getNotificationView(@CurrentAccount Account account, Model model) {
-        Set<Learning> learningList = learningService.getLearningList(account.getId());
+        account = accountService.getAccountByIdWithPurchaseHistories(account.getId());
+        List<Learning> learningList = account.getPurchaseHistories().stream().map(PurchaseHistory::getLearning).collect(Collectors.toList());
+        // Set<Learning> learningList = learningService.getLearningList(account.getId());
         List<Notification> notificationList = notificationService.getNotificationListByType(
                 learningList.stream().map(Learning::getId).collect(Collectors.toList())
         );

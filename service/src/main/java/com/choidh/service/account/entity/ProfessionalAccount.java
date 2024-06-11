@@ -24,7 +24,7 @@ import java.util.Set;
 @BatchSize(size = 50)
 public class ProfessionalAccount extends BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "professional_account_id")
     private Long id;
 

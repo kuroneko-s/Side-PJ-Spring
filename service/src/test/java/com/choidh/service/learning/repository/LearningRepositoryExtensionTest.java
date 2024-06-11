@@ -160,14 +160,14 @@ public class LearningRepositoryExtensionTest {
 
     @Test
     @DisplayName("Learning 페이징. By 카테고리")
-    public void findByCategoryWithPageable() throws Exception {
+    public void findPagingByCategory() throws Exception {
         ProfessionalAccount professionalAccount = createProfessionalAccount(createAccount());
 
         for (var i = 0; i < 30; i++) {
             createLearning(professionalAccount);
         }
 
-        Page<Learning> resultList = learningRepository.findByCategoryWithPageable("자바", PageRequest.of(
+        Page<Learning> resultList = learningRepository.findPagingByCategory("자바", PageRequest.of(
                 0,
                 16,
                 Sort.by(Sort.Direction.DESC, "openingDate"))
@@ -175,6 +175,27 @@ public class LearningRepositoryExtensionTest {
 
         assertFalse(resultList.getContent().isEmpty());
         assertNotEquals(resultList.getContent().size(), 30);
+    }
+
+
+    @Test
+    @DisplayName("Learning 페이징. By 카테고리 And 키워드")
+    public void findPagingByCategoryAndKeyword() throws Exception {
+        ProfessionalAccount professionalAccount = createProfessionalAccount(createAccount());
+
+        for (var i = 0; i < 30; i++) {
+            createLearning(professionalAccount);
+        }
+
+        Page<Learning> resultList = learningRepository.findPagingByCategoryAndKeyword("자바", "노샘플", PageRequest.of(
+                0,
+                16,
+                Sort.by(Sort.Direction.DESC, "openingDate"))
+        );
+
+        assertTrue(resultList.getContent().isEmpty());
+        assertNotEquals(resultList.getContent().size(), 30);
+        assertEquals(resultList.getTotalElements(), 0);
     }
 
     @Test

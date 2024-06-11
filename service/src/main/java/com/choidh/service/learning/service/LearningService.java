@@ -7,6 +7,8 @@ import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.vo.ModLearningVO;
 import com.choidh.service.learning.vo.RegLearningVO;
 import com.choidh.service.tag.entity.Tag;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -76,4 +78,14 @@ public interface LearningService {
      * 강의 목록조회 By Id List
      */
     List<Learning> getLearningListByIdList(List<Long> learningIdList);
+
+    /**
+     * 강의 페이징 By Main Category
+     */
+    Page<Learning> getLearningPagingByCategory(String category, Pageable pageable);
+
+    /**
+     * 강의 페이징 By Main Category And Keyword
+     */
+    Page<Learning> getPagingByCategoryAndKeyword(String category, String keyword, Pageable pageable);
 }
