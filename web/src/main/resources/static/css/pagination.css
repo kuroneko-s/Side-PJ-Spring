@@ -1,0 +1,33 @@
+.pagination-container {
+    margin-top: 3rem;
+}
+
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    padding-left: 0;
+    list-style: none;
+    border-radius: .25rem;
+}
+
+.pagination-item {
+    padding: 0.45rem 0.65rem;
+    border: .5px solid rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+.pagination-item:not(.disabled):hover {
+    background-color: #efefef;
+}
+
+.pagination-item.disabled {
+    cursor: default;
+}
+
+.pagination-item.active {
+    background-color: #dcdcdc!important;
+}
+
+.pagination-item:not(:last-child) {
+    margin-right: .2rem;
+}

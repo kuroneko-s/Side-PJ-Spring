@@ -59,7 +59,6 @@ public class MainController {
         // 이벤트 이미지 및 목록 로딩
         List<AttachmentFile> eventFileList = eventService.getEventFileList();
 
-
         // 강의 이미지 목록 조회
         Map<Long, List<String>> learningImageMap = new HashMap<>();
         for (Learning learning : learningList) {

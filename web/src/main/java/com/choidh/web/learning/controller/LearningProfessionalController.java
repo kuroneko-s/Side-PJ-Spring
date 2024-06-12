@@ -91,14 +91,6 @@ public class LearningProfessionalController {
         return "learning/learning_list";
     }
 
-    // 강의 상세 페이지. 관리자 전용 페이지.
-    @GetMapping("/learning/{id}")
-    public String getLearningDetailView(@CurrentAccount Account account, Model model, @PathVariable Long id) {
-        learningService.getLearningDetail(model, account.getId(), id);
-
-        return "learning/main_learning";
-    }
-
     // 강의 영상 업로드 페이지
     @GetMapping("/profile/learning/upload/{id}")
     public String getVideoUpdateView(@CurrentAccount Account account, Model model, @PathVariable Long id) throws JsonProcessingException {

@@ -5,6 +5,8 @@ import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.entity.ProfessionalAccount;
 import com.choidh.service.account.repository.AccountRepository;
 import com.choidh.service.account.repository.ProfessionalAccountRepository;
+import com.choidh.service.account.service.AccountService;
+import com.choidh.service.attachment.entity.AttachmentFile;
 import com.choidh.service.attachment.entity.AttachmentFileType;
 import com.choidh.service.attachment.entity.AttachmentGroup;
 import com.choidh.service.attachment.service.AttachmentService;
@@ -12,6 +14,8 @@ import com.choidh.service.joinTables.entity.AccountTagJoinTable;
 import com.choidh.service.joinTables.service.AccountTagService;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.repository.LearningRepository;
+import com.choidh.service.learning.vo.LearningDetailVO;
+import com.choidh.service.learning.vo.LearningListVO;
 import com.choidh.service.learning.vo.ModLearningVO;
 import com.choidh.service.learning.vo.RegLearningVO;
 import com.choidh.service.notification.eventListener.vo.LearningClosedEvent;
@@ -30,8 +34,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.choidh.service.common.AppConstant.getLearningNotFoundErrorMessage;
@@ -47,6 +50,7 @@ public class LearningServiceImpl implements LearningService {
     private final ApplicationEventPublisher applicationEventPublisher;
     private final AttachmentService attachmentService;
     private final AccountTagService accountTagService;
+    private final AccountService accountService;
 
     /**
      * Learning 목록 조회 By Account's Tags
@@ -167,36 +171,14 @@ public class LearningServiceImpl implements LearningService {
     }
 
     @Override
-    public void getLearningDetail(Model model, Long accountId, Long learningId) {
-        // TODO : 쿼리문 날라가는거 반드시 확인해야함.
-
-        Account account = accountRepository.findAccountWithLearnings(accountId); // account 조회
-        ProfessionalAccount professionalAccount = professionalAccountRepository.findByAccountIdWithLearningList(accountId);
+    public LearningDetailVO getLearningDetail(Long accountId, Long learningId) {
+        Account account = accountService.getAccountById(accountId);
         Learning learning = learningRepository.findLearningDetailById(learningId);
 
-
-        // boolean contains = account.getLearnings().contains(learning);
-        // List<String> contentsTitle = learningService.getContentsTitle(learning);
-
-        // 필요없는 값들은 모두 처분해야함.
-
-        model.addAttribute("account", account);
-        model.addAttribute("learning", learning);
-//        model.addAttribute("learnings", professionalAccount.getLearningList().contains(learning));
-//        model.addAttribute("listenLearning", account.getListenLearning().contains(learning));
-//        model.addAttribute("countVideo", learning.getVideoCount());
-//        model.addAttribute("tags", learning.getTags().stream().map(Tag::getTitle).collect(Collectors.toList()));
-//        model.addAttribute("ratings", learning.getRating_int());
-//        model.addAttribute("halfrating", learning.checkRating_boolean());
-//        model.addAttribute("rating", learning.emptyRating());
-//        model.addAttribute("learningRating", learning.getRating());
-//        model.addAttribute("canOpen", learningService.checkOpenTimer(learning.isStartingLearning(), learning.isClosedLearning(), contains));
-//        model.addAttribute("canClose", learningService.checkCloseTimer(learning.isStartingLearning(), learning.isClosedLearning(), contains));
-//        model.addAttribute("canCloseTimer", learning.getCloseLearning() == null || learning.getCloseLearning().isBefore(LocalDateTime.now().minusMinutes(30)));
-//        model.addAttribute("canOpenTimer", learning.getOpenLearning() == null || learning.getOpenLearning().isBefore(LocalDateTime.now().minusMinutes(30)));
-//        model.addAttribute("contentsTitle", contentsTitle); // 영상들의 타이틀 리스트
-//        model.addAttribute("reviews", learning.getReviews());
-//        model.addAttribute("questions", learning.getQuestions());
+        return LearningDetailVO.builder()
+                .account(account)
+                .learning(learning)
+                .build();
     }
 
     // 강의 활성화
@@ -280,6 +262,49 @@ public class LearningServiceImpl implements LearningService {
     public Page<Learning> getPagingByCategoryAndKeyword(String category, String keyword, Pageable pageable) {
         category = category.equals("all") ? "" : category;
         return learningRepository.findPagingByCategoryAndKeyword(category, keyword, pageable);
+    }
+
+    /**
+     * Get Learning 목록. By View With keyword Learning
+     */
+    @Override
+    public LearningListVO getLearningListByViewWithKeyword(String mainCategory, String subCategory, Pageable pageable) {
+        // Learning 페이징
+        Page<Learning> learningPage = this.getLearningPagingByCategory(mainCategory, pageable);
+        List<Learning> learningList = learningPage.getContent();
+
+        // 강의 이미지 목록 조회
+        Map<Long, List<String>> learningImageMap = new HashMap<>();
+        for (Learning learning : learningList) {
+            List<AttachmentFile> attachmentFiles = attachmentService.getAttachmentFiles(learning.getAttachmentGroup().getId(), AttachmentFileType.BANNER);
+            if (attachmentFiles.size() != 1) {
+                throw new IllegalArgumentException();
+            }
+
+            List<String> valueList = learningImageMap.getOrDefault(learning.getId(), new ArrayList<>());
+
+            AttachmentFile attachmentFile = attachmentFiles.get(0);
+            valueList.add(attachmentFile.getFullPath(""));
+            valueList.add(attachmentFile.getOriginalFileName());
+            learningImageMap.put(learning.getId(), valueList);
+        }
+
+        String sortProperty = pageable.getSort().toString().contains("openingDate") ? "openingDate" : "rating";
+
+        // 페이지네이션 기본 url
+        String defaultButtonUrlBuilder = "/learning/search/" +
+                mainCategory +
+                "?keyword=" +
+                subCategory +
+                "&sort=" +
+                sortProperty +
+                ",desc&page=";
+
+        return LearningListVO.builder()
+                .learningPage(learningPage)
+                .learningImageMap(learningImageMap)
+                .paginationUrl(defaultButtonUrlBuilder)
+                .build();
     }
 
     private String updateVideoTitle(String title) {

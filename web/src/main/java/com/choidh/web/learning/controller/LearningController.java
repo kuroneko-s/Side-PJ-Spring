@@ -10,8 +10,9 @@ import com.choidh.service.joinTables.entity.LearningCartJoinTable;
 import com.choidh.service.joinTables.service.LearningCartService;
 import com.choidh.service.joinTables.service.LearningTagService;
 import com.choidh.service.learning.entity.Learning;
-import com.choidh.service.learning.repository.LearningRepository;
 import com.choidh.service.learning.service.LearningService;
+import com.choidh.service.learning.vo.LearningDetailVO;
+import com.choidh.service.learning.vo.LearningListVO;
 import com.choidh.service.question.entity.Question;
 import com.choidh.service.question.service.QuestionService;
 import com.choidh.service.question.vo.ModQuestionVO;
@@ -26,7 +27,6 @@ import com.choidh.web.review.vo.ReviewVO;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -38,8 +38,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -55,8 +54,6 @@ public class LearningController {
     private final LearningCartService learningCartService;
     private final LearningTagService learningTagService;
 
-    private final LearningRepository learningRepository;
-
     @Value("${download.path}")
     private String downloadPath;
 
@@ -69,14 +66,14 @@ public class LearningController {
                                                @PageableDefault(size = 16, sort = "openingDate", direction = Sort.Direction.DESC) Pageable pageable){
         if (account != null) model.addAttribute(account);
 
-        Page<Learning> pageableLearning = learningService.getLearningPagingByCategory(mainCategory, pageable);
+        LearningListVO learningListVO = learningService.getLearningListByViewWithKeyword(mainCategory, subCategory, pageable);
 
         model.addAttribute("mainCategory", mainCategory);
         model.addAttribute("subCategory", subCategory);
-        model.addAttribute("paging", pageableLearning);
-        model.addAttribute("learningList", pageableLearning.getContent());
-
-        model.addAttribute("sortProperty", pageable.getSort().toString().contains("openLearning") ? "openLearning" : "rating");
+        model.addAttribute("pageableLearning", learningListVO.getLearningPage());
+        model.addAttribute("learningList", learningListVO.getLearningPage().getContent());
+        model.addAttribute("learningImageMap", learningListVO.getLearningImageMap());
+        model.addAttribute("paginationUrl", learningListVO.getPaginationUrl());
 
         return "menu/list";
     }
@@ -89,9 +86,45 @@ public class LearningController {
     public ResponseEntity postLearningListByKeyword(@PathVariable("keyword") String mainCategory,
                                                     @RequestBody(required = false) String keyword,
                                                     @PageableDefault(size = 16, sort = "openingDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<Learning> pageableLearning = learningService.getPagingByCategoryAndKeyword(mainCategory, keyword, pageable);
+        LearningListVO learningListVO = learningService.getLearningListByViewWithKeyword(mainCategory, keyword, pageable);
 
-        return ResponseEntity.ok(pageableLearning);
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("mainCategory", mainCategory);
+        resultMap.put("subCategory", keyword);
+        resultMap.put("pageableLearning", learningListVO.getLearningPage());
+        resultMap.put("learningList", learningListVO.getLearningPage().getContent());
+        resultMap.put("learningImageMap", learningListVO.getLearningImageMap());
+        resultMap.put("paginationUrl", learningListVO.getPaginationUrl());
+
+        return ResponseEntity.ok(resultMap);
+    }
+
+    /**
+     * Get Learning 상세 View.
+     */
+    @GetMapping("/learning/{learningId}")
+    public String getLearningDetailView(@CurrentAccount Account account, Model model, @PathVariable Long learningId) {
+        LearningDetailVO learningDetail = learningService.getLearningDetail(account.getId(), learningId);
+
+        model.addAttribute("account", learningDetail.getAccount());
+        model.addAttribute("learning", learningDetail.getLearning());
+//        model.addAttribute("learnings", professionalAccount.getLearningList().contains(learning));
+//        model.addAttribute("listenLearning", account.getListenLearning().contains(learning));
+//        model.addAttribute("countVideo", learning.getVideoCount());
+//        model.addAttribute("tags", learning.getTags().stream().map(Tag::getTitle).collect(Collectors.toList()));
+//        model.addAttribute("ratings", learning.getRating_int());
+//        model.addAttribute("halfrating", learning.checkRating_boolean());
+//        model.addAttribute("rating", learning.emptyRating());
+//        model.addAttribute("learningRating", learning.getRating());
+//        model.addAttribute("canOpen", learningService.checkOpenTimer(learning.isStartingLearning(), learning.isClosedLearning(), contains));
+//        model.addAttribute("canClose", learningService.checkCloseTimer(learning.isStartingLearning(), learning.isClosedLearning(), contains));
+//        model.addAttribute("canCloseTimer", learning.getCloseLearning() == null || learning.getCloseLearning().isBefore(LocalDateTime.now().minusMinutes(30)));
+//        model.addAttribute("canOpenTimer", learning.getOpenLearning() == null || learning.getOpenLearning().isBefore(LocalDateTime.now().minusMinutes(30)));
+//        model.addAttribute("contentsTitle", contentsTitle); // 영상들의 타이틀 리스트
+//        model.addAttribute("reviews", learning.getReviews());
+//        model.addAttribute("questions", learning.getQuestions());
+
+        return "learning/main_learning";
     }
 
     // 강의 상세 페이지로 이동. (학습 버튼 클릭시 동작)

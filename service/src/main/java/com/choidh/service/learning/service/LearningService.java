@@ -4,6 +4,8 @@ package com.choidh.service.learning.service;
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.attachment.entity.AttachmentFileType;
 import com.choidh.service.learning.entity.Learning;
+import com.choidh.service.learning.vo.LearningDetailVO;
+import com.choidh.service.learning.vo.LearningListVO;
 import com.choidh.service.learning.vo.ModLearningVO;
 import com.choidh.service.learning.vo.RegLearningVO;
 import com.choidh.service.tag.entity.Tag;
@@ -65,7 +67,10 @@ public interface LearningService {
 
     Learning getLearningDetailForUpdate(Long learningId);
 
-    void getLearningDetail(Model model, Long accountId, Long learningId);
+    /**
+     * Get 강의 상세. By View
+     */
+    LearningDetailVO getLearningDetail(Long accountId, Long learningId);
 
     // 강의 활성화.
     void isOpeningLearning(Long accountId, Long learningId, boolean isOpening);
@@ -88,4 +93,9 @@ public interface LearningService {
      * 강의 페이징 By Main Category And Keyword
      */
     Page<Learning> getPagingByCategoryAndKeyword(String category, String keyword, Pageable pageable);
+
+    /**
+     * Get Learning 목록. By View With keyword Learning
+     */
+    LearningListVO getLearningListByViewWithKeyword(String mainCategory, String subCategory, Pageable pageable);
 }

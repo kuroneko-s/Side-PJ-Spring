@@ -12,6 +12,7 @@
 
     <link rel="stylesheet" href="/css/program.css"/>
     <link rel="stylesheet" href="/css/menu-list.css"/>
+    <link rel="stylesheet" href="/css/pagination.css"/>
 </head>
 
 <body class="container">
@@ -67,59 +68,61 @@
                 </div>
             </div>
 
-            <main class="learning-contents-wrapper-body">
-                <div class="col-md-3 roof-start" th:each="learning : ${learningList.getContent()}">
-                    <a href="#" th:href="@{'/learning/' + ${learning.id}}">
-                        <div class="card mb-4 shadow-sm card-view">
-                            <img class="bd-placeholder-img card-img-top card-img" role="img" src="/images/rogo.png" alt="anonymous" />
-<!--                                 th:src="|data:image/*;base64,${learning.bannerBytes}|" th:if="${learning.bannerBytes} != null"-->
-                            <img class="banner-image card-img" src="/images/rogo.png" th:if="${learning.bannerBytes} == null"/>
-                            <div class="card-body">
-                                <p class="card-text card-title" th:text="${learning.title}">Default Title</p>
-                                <p class="card-text" id="card-tags">
+            <div class="learning-contents-body-wrapper">
+                <div class="learning-contents-body-card-wrapper">
+                    <div class="learning-contents-body-card" th:each="learning : ${learningList}">
+                        <a href="#" th:href="@{'/learning/' + ${learning.id}}">
+                            <img class="learning-contents-body-card-image" th:src="${learningImageMap[learning.id][0]}" th:alt="${learningImageMap[learning.id][1]}" />
+                            <div class="learning-contents-body-card-description-wrapper">
+                                <p class="learning-contents-body-card-description-title" th:text="${learning.title}">Default Title</p>
+                                <p class="learning-contents-body-card-description-tag-wrapper">
                                     <i class="fas fa-tasks"></i>
-                                    <span class="card-tag-box" th:each="tag : ${learning.tags}">
+                                    <span th:each="tag : ${learning.tags}">
                                         <span th:text="${tag.getTitle()}"></span>
                                     </span>
                                 </p>
-                                <span class="card-text card-learning-rating" th:text="${learning.rating}" hidden="hidden">Default Ratings hidden</span>
-                                <p class="mb-1">
-                                    <span class="full-star star" th:each="num : ${#numbers.sequence(0, learning.getRating_int() - 1)}" th:if="${learning.getRating_int() > 0}"><i class="fas fa-star"></i></span><span class="half-star star" th:if="${learning.checkRating_boolean()}"><i class="fas fa-star-half-alt"></i></span><span class="empty-star star" th:each="num : ${#numbers.sequence(1, learning.emptyRating())}" th:if="${learning.emptyRating() > 0}"><i class="far fa-star"></i></span>
-                                    (<span th:text="${learning.rating}"></span>)
+                                <p class="learning-contents-body-card-description-rating">
+                                    <span class="full-star star" th:each="num : ${#numbers.sequence(0, learning.getRatingInt() - 1)}" th:if="${learning.getRatingInt() > 0}">
+                                        <i class="fas fa-star"></i>
+                                    </span>
+                                    <span class="half-star star" th:if="${learning.checkRatingBoolean()}">
+                                        <i class="fas fa-star-half-alt"></i>
+                                    </span>
+                                    <span class="empty-star star" th:each="num : ${#numbers.sequence(1, learning.emptyRating())}" th:if="${learning.emptyRating() > 0}">
+                                        <i class="far fa-star"></i>
+                                    </span>
+                                    <span class="learning-contents-body-card-description-rating-number">(<span th:text="${learning.rating}"></span>)</span>
                                 </p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div th:if="${!learning.price_comma().equals('free')}"><span class="card-price" th:text="${learning.price_comma()}"></span>원</div>
-                                    <div th:if="${learning.price_comma().equals('free')}"><span class="card-price"></span>무료 강의</div>
-                                    <div class="date-time" th:text="${learning.openLearning}"></div>
+                                <div class="learning-contents-body-card-description-price">
+                                    <div th:if="${!learning.priceComma().equals('free')}"><span th:text="${learning.priceComma()}"></span>원</div>
+                                    <div th:if="${learning.priceComma().equals('free')}"><span></span>무료 강의</div>
                                 </div>
+                                <div class="learning-contents-body-card-description-opening date-time" th:text="${learning.openingDate}"></div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
+                    </div>
                 </div>
 
                 <!-- pagination -->
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item" th:classappend="${!learningList.hasPrevious()}? disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
-                               th:href="@{${url}+'?keyword=' + ${keyword} + '&sort=' + ${sortProperty} + '&page=' + ${learningList.getNumber() - 1}}">
-                                Previous
-                            </a>
-                        </li>
-                        <li class="page-item" th:each="num : ${#numbers.sequence(0, learningList.getTotalPages() -1)}"
-                            th:classappend="${num == learningList.getNumber()}? active">
-                            <a class="page-link" th:href="@{${url}+'?keyword=' + ${keyword} + '&sort=' + ${sortProperty} + '&page=' + ${num}}"
-                               href="#" th:text="${num + 1}">1</a>
-                        </li>
-                        <li class="page-item" th:class="${!learningList.hasNext()}? disabled">
-                            <a class="page-link" href="#"
-                               th:href="@{${url}+'?keyword=' + ${keyword} + '&sort=' + ${sortProperty} + '&page=' + ${learningList.getNumber() + 1}}">
-                                Next
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </main>
+                <section class="pagination-container">
+                    <div class="pagination-wrapper">
+                        <a class="pagination-item" th:classappend="${!pageableLearning.hasPrevious()}? disabled"
+                           href="#" th:href="@{${paginationUrl} + ${pageableLearning.getNumber() - 1}}">
+                            Previous
+                        </a>
+
+                        <a class="pagination-item" href="#" th:href="@{${paginationUrl} + ${num}}" th:text="${num + 1}"
+                           th:classappend="${num == pageableLearning.getNumber()}? active"
+                           th:each="num : ${#numbers.sequence(0, pageableLearning.getTotalPages() -1)}">
+                        </a>
+
+                        <a class="pagination-item" th:classappend="${!pageableLearning.hasNext()}? disabled"
+                           href="#" th:href="@{${paginationUrl} + ${pageableLearning.getNumber() + 1}}">
+                            Next
+                        </a>
+                    </div>
+                </section>
+            </div>
         </div>
         <!-- right content start -->
     </section>

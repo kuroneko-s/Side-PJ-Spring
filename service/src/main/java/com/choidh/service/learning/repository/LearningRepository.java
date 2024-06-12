@@ -44,6 +44,8 @@ public interface LearningRepository extends JpaRepository<Learning, Long>, Query
      */
     @Query(value = "select l " +
             "from Learning l " +
+            "join fetch l.professionalAccount " +
+            "join fetch l.attachmentGroup " +
             "where l.id = :learningId")
     @EntityGraph(attributePaths = {"noticesList", "carts", "purchaseHistories", "reviews", "questions", "tags"}, type = EntityGraph.EntityGraphType.LOAD)
     Learning findLearningDetailById(Long learningId);

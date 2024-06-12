@@ -4,6 +4,8 @@ import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.entity.ProfessionalAccount;
 import com.choidh.service.account.repository.AccountRepository;
 import com.choidh.service.account.repository.ProfessionalAccountRepository;
+import com.choidh.service.attachment.entity.AttachmentGroup;
+import com.choidh.service.attachment.service.AttachmentService;
 import com.choidh.service.cart.entity.Cart;
 import com.choidh.service.cart.service.CartService;
 import com.choidh.service.learning.entity.Learning;
@@ -30,6 +32,7 @@ public abstract class AbstractRepositoryTestConfig {
     @Autowired protected LearningRepository learningRepository;
     @Autowired protected ProfessionalAccountRepository professionalAccountRepository;
     @Autowired protected CartService cartService;
+    @Autowired protected AttachmentService attachmentService;
 
     protected Account createAccount() {
         Account account = new Account();
@@ -74,6 +77,8 @@ public abstract class AbstractRepositoryTestConfig {
     }
 
     protected Learning createLearning(ProfessionalAccount professionalAccount) {
+        AttachmentGroup attachmentGroup = attachmentService.createAttachmentGroup();
+
         Learning learning = Learning.builder()
                 .title("샘플 강의 1")
                 .simpleSubscription("간단한 강의 설명")
@@ -84,7 +89,7 @@ public abstract class AbstractRepositoryTestConfig {
                 .rating((int) Math.floor(Math.random() * 5) + 1)
                 .opening(true)
                 .openingDate(LocalDateTime.now())
-                .attachmentGroup(null)
+                .attachmentGroup(attachmentGroup)
                 .professionalAccount(professionalAccount)
                 .tags(new HashSet<>())
                 .questions(new HashSet<>())
