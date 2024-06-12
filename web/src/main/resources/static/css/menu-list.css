@@ -239,6 +239,10 @@
     letter-spacing: -2px;
 }
 
+.learning-contents-body-card-description-rating .star {
+    color: #FDCC11;
+}
+
 .learning-contents-body-card-description-rating-number {
     letter-spacing: 0;
     opacity: .5;
