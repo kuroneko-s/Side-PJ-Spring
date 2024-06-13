@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -98,12 +97,5 @@ public class MainController {
         model.addAttribute("pageTitle", "커뮤니티 | 홈");
 
         return "home/index";
-    }
-
-    @PostMapping("/")
-    public String indexPost(@CurrentAccount Account account, Model model) {
-        if (account != null) model.addAttribute(account);
-
-        return "index";
     }
 }
