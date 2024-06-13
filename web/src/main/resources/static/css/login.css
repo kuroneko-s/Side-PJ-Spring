@@ -1,7 +1,6 @@
 .login-container {
-    position: fixed;
-    top: calc(50% - 170px);
-    left: calc(50% - 240px);
+    position: relative;
+    height: 78.5vh;
 
     display: flex;
     flex-direction: column;

@@ -1,0 +1,62 @@
+<link rel="stylesheet" href="/css/login.css"/>
+<main class="login-container">
+    <p class="login-title">로그인</p>
+
+    <!-- toast message start -->
+    <div class="login-toast-message-container" id="login-toast-message-container" th:if="${param.error}">
+        <div class="login-toast-message">
+            <p th:if="${param.error.toString().equals('username')}">옳바르지 않은 이메일과 패스워드입니다.</p>
+            <p th:if="${param.error.toString().equals('bad_credentials')}">이메일과 패스워드를 다시 입력해주세요.</p>
+            <p th:if="${param.error.toString().equals('email_credentials_expired')}">이메일 인증이 완료되지 않았습니다. <a href="#" th:href="@{/registerSuccess}">이메일 인증 화면</a></p>
+            <p th:if="${param.error.toString().equals('true')}">이메일과 패스워드를 다시 입력해주세요.</p>
+            <button type="button" class="login-toast-message-close-button" id="login-toast-message-close-button">
+                <span>&times;</span>
+            </button>
+        </div>
+    </div>
+    <!-- toast message end -->
+
+    <form class="form login-form needs-validation" action="#" th:action="@{/login}" method="post" novalidate>
+        <label for="email">이메일</label>
+        <input id="email" type="email" name="username" placeholder="sample@gmail.com" required>
+        <small class="invalid-feedback">이메일을 다시 입력해주세요.</small>
+
+        <label for="password">패스워드</label>
+        <input id="password" type="password" name="password" required
+               pattern="^[a-zA-Z0-9_!@#$]{10,14}$">
+        <small class="login-form-help-message">
+            패스워드가 기억나지 않는다면, <a href="#" th:href="@{/findAccount}">계정찾기</a>를 클릭해주세요.
+        </small>
+        <small class="invalid-feedback">패스워드를 다시 입력해주세요.</small>
+
+        <div class="login-check-wrapper">
+            <div class="login-check-remember-me">
+                <input type="checkbox" class="" id="rememberMe" name="rememberMe" checked>
+                <label for="rememberMe">로그인 유지</label>
+            </div>
+        </div>
+
+        <button type="submit" class="button login-form-button">로그인</button>
+    </form>
+
+    <div th:replace="fragment/fragment.html :: form-validation"></div>
+</main>
+
+<script type="text/javascript">
+    window.addEventListener("DOMContentLoaded", () => {
+        // toast message button click event
+        document.getElementById("login-toast-message-close-button")?.addEventListener("click", () => {
+            document.getElementById("login-toast-message-container").classList.add("hide");
+        });
+
+        const emailEl = document.getElementById("email");
+        emailEl.addEventListener("input", function() {
+            const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!pattern.test(emailEl.value)) {
+                emailEl.setCustomValidity("Please enter a valid email address.");
+            } else {
+                emailEl.setCustomValidity("");
+            }
+        });
+    })
+</script>

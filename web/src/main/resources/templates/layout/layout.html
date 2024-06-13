@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
     <title th:text="${pageTitle}">Title</title>
 
     <script src="https://kit.fontawesome.com/d460620ffc.js" crossorigin="anonymous"></script>
@@ -14,6 +17,7 @@
     <script src="/node_modules/moment/min/moment-with-locales.min.js"></script>
     <script src="/node_modules/jdenticon/dist/jdenticon.min.js"></script>
 
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&display=swap"/>
     <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/node_modules/tooltipster/dist/css/tooltipster.bundle.min.css"/>

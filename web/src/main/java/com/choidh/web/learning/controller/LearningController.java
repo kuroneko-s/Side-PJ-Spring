@@ -74,8 +74,9 @@ public class LearningController {
         model.addAttribute("learningList", learningListVO.getLearningPage().getContent());
         model.addAttribute("learningImageMap", learningListVO.getLearningImageMap());
         model.addAttribute("paginationUrl", learningListVO.getPaginationUrl());
+        model.addAttribute("pageTitle", "커뮤니티 | 검색");
 
-        return "menu/list";
+        return "learningList/index";
     }
 
     /**

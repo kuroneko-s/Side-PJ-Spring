@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/layout.html :: head">
+    <title>Blank</title>
+</head>
+
+<section>
+    <link rel="stylesheet" href="/css/menu-list.css"/>
+    <link rel="stylesheet" href="/css/pagination.css"/>
+</section>
+
+<body class="container">
+    <div th:replace="layout/layout.html :: body(pageContent='learningList/learningListContents')"></div>
+</body>
+
+</html>
