@@ -1,0 +1,123 @@
+.login-container {
+    position: relative;
+    height: 78.5vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-title {
+    margin-bottom: 2rem;
+
+    font-size: 3rem;
+    font-weight: 700;
+    text-align: center;
+    color: rgba(53, 53, 53, 0.85);
+}
+
+.login-toast-message-container {
+    width: 40rem;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-toast-message {
+    max-height: 72px;
+    width: auto;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    padding: .75rem 1.25rem;
+
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: .25rem;
+
+    color: #721c24;
+}
+
+.login-toast-message-close-button {
+    font-size: 1.25rem;
+}
+
+.login-toast-message p {
+    margin-right: .75rem;
+}
+
+.login-form {
+    width: 40rem;
+
+    justify-content: flex-start!important;
+    align-items: normal!important;
+    flex-direction: column;
+}
+
+.login-form label {
+    margin-bottom: 0.25rem;
+    margin-top: 0.75rem;
+}
+
+.login-form input {
+
+}
+
+.login-form.was-validated input:invalid {
+    border-color: var(--warning-text-color);
+    padding-right: calc(1.5em + .75rem);
+
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23dc3545' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(.375em + .1875rem) center;
+    background-size: calc(.75em + .375rem) calc(.75em + .375rem);
+}
+
+.login-form-help-message {
+    opacity: .7;
+    margin-top: 0.5rem;
+}
+
+.login-form-help-message a:hover {
+    color: darkgray;
+}
+
+.login-check-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.login-check-remember-me {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+    margin-top: 1rem;
+}
+
+.login-check-remember-me input {
+    margin-right: .5rem;
+}
+
+.login-check-remember-me label {
+    margin: 0;
+    user-select: none;
+}
+
+.login-form-button {
+    margin-top: 1.25rem;
+}
+
+.login-btn-font{
+    font-size: 1.25rem;
+    font-weight: 500;
+}

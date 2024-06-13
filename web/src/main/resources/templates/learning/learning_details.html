@@ -4,28 +4,37 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="'강의 | '+ ${learning.title}"></title>
     <div th:replace="fragment/fragment.html :: imports"></div>
+
     <link rel="stylesheet" href="/css/main-learning.css">
 </head>
 
 <body class="container">
-<div th:replace="fragment/navbar/navbar.html :: navbar"></div>
+    <div th:replace="fragment/navbar/navbar.html :: navbar"></div>
+
     <div class="jumbotron p-4 text-white rounded bg-dark mt-md-1 d-flex">
         <div class="px-0 d-flex pr-lg-4 pl-lg-4 col-md-9 inner-box">
-            <img class="banner-image" th:src="|data:image/*;base64,${learning.bannerBytes}|" th:if="${learning.bannerBytes} != null"/>
-            <img class="banner-image" src="/images/rogo.png" th:if="${learning.bannerBytes} == null"/>
-            <div class="ml-md-5 banner-box" th:if="${countVideo > 0}">
+            <img class="banner-image" th:src="${bannerImage.getFullPath('')}" th:alt="${bannerImage.originalFileName}" />
+            <div class="ml-md-5 banner-box" th:if="${videoFileList.size() > 0}">
                 <p class="font-italic banner-title" th:text="${learning.title}">default Title</p>
                 <div class="d-flex rating-star">
-                    <span th:each="num : ${#numbers.sequence(1, ratings)}" th:if="${ratings} != 0"><i class="fas fa-star"></i></span>
-                    <span th:if="${halfrating}"><i class="fas fa-star-half-alt"></i></span>
-                    <span th:each="num : ${#numbers.sequence(1, rating)}"><i class="far fa-star"></i></span>
-                    (<span th:text="${learningRating}"></span>)
+                    <span th:each="num : ${#numbers.sequence(1, learning.getRatingInt())}" th:if="${learning.getRatingInt() > 0}">
+                        <i class="fas fa-star"></i>
+                    </span>
+                    <span th:if="${learning.checkRatingBoolean}">
+                        <i class="fas fa-star-half-alt"></i>
+                    </span>
+                    <span th:each="num : ${#numbers.sequence(1, learning.emptyRating())}" th:if="${learning.emptyRating() > 0}">
+                        <i class="far fa-star"></i>
+                    </span>
+                    (<span th:text="${learning.rating}"></span>)
                 </div>
-                <p class="lead banner-tags mt-md-2 mb-md-3" th:text="${#strings.listJoin(tags, ', ')}">default tags</p>
+                <span th:each="tag : ${learning.tags}">
+                    <span th:text="${tag.getTitle()}"></span>
+                </span>
                 <p class="lead banner-count mt-md-4 mb-md-1">
-                    총 강의 수: <span th:text="${countVideo}">default count</span>
+                    총 강의 수: <span th:text="${videoFileList.size()}"></span>
                 </p>
                 <p class="lead">
                     <div class="progress">
@@ -34,33 +43,36 @@
                     </div>
                 </p>
             </div>
-            <div class="ml-md-5 banner-box" th:if="${countVideo <= 0}">
+            <div class="ml-md-5 banner-box" th:if="${videoFileList.size() <= 0}">
                 <p class="font-italic banner-title">영상을 등록해주시기 바랍니다.</p>
             </div>
         </div>
 
-        <div class="col-md-3" th:if="${listenLearning || learnings}">
+        <!-- 현재 유저가 해당 강의를 구매했을 경우 동작 -->
+        <div class="col-md-3" th:if="${nowListening}">
             <form class="banner-form" action="#" th:action="@{'/learning/' + ${learning.id} + '/listen'}" method="get">
                 <button class="banner-form-btn btn-success btn" type="submit">학습하기</button>
             </form>
-            <form class="banner-form mt-md-3" action="#" th:action="@{'/profile/learning/update/' + ${learning.id}}" method="get"
-            th:if="${learnings}">
-                <button class="banner-form-btn btn-info btn" type="submit">편집하기</button>
-            </form>
-            <form class="banner-form mt-md-3" action="#" th:action="@{'/profile/learning/start/' + ${learning.id}}" method="get"
-                  th:if="${canOpen && canOpenTimer}">
-                <button class="banner-form-btn btn-info btn" th:if="${canOpenTimer}" type="submit">강의 공개하기</button>
-            </form>
-            <form class="banner-form mt-md-3" action="#" th:action="@{'/profile/learning/close/' + ${learning.id}}" method="get"
-                  th:if="${canClose && canCloseTimer}">
-                <button class="banner-form-btn btn-info btn" th:if="${canCloseTimer}" type="submit">강의 닫기</button>
-            </form>
-            <small th:if="${!canOpenTimer || !canCloseTimer}">공개&닫기 버튼은 생성뒤부터 30분마다 사용이 가능합니다.</small>
+<!--            현재 유저가 해당 강의를 만든 본인인 경우 동작 -->
+<!--            <form class="banner-form mt-md-3" action="#" th:action="@{'/profile/learning/update/' + ${learning.id}}" method="get"-->
+<!--            th:if="${learnings}">-->
+<!--                <button class="banner-form-btn btn-info btn" type="submit">편집하기</button>-->
+<!--            </form>-->
+<!--            <form class="banner-form mt-md-3" action="#" th:action="@{'/profile/learning/start/' + ${learning.id}}" method="get"-->
+<!--                  th:if="${canOpen && canOpenTimer}">-->
+<!--                <button class="banner-form-btn btn-info btn" th:if="${canOpenTimer}" type="submit">강의 공개하기</button>-->
+<!--            </form>-->
+<!--            <form class="banner-form mt-md-3" action="#" th:action="@{'/profile/learning/close/' + ${learning.id}}" method="get"-->
+<!--                  th:if="${canClose && canCloseTimer}">-->
+<!--                <button class="banner-form-btn btn-info btn" th:if="${canCloseTimer}" type="submit">강의 닫기</button>-->
+<!--            </form>-->
+<!--            <small th:if="${!canOpenTimer || !canCloseTimer}">공개&닫기 버튼은 생성뒤부터 30분마다 사용이 가능합니다.</small>-->
         </div>
     </div>
     <!--banner-->
 
-    <div class="col-md-2 course-floating" th:if="${!listenLearning && !learnings}">
+    <!-- 현재 유저가 강의를 구매하지 않았을 경우 동작 -->
+    <div class="col-md-2 course-floating" th:if="${!nowListening}">
         <div class="course-floating-price mt-4 mb-4">
             110,000원
         </div>
@@ -72,7 +84,7 @@
             장바구니
         </button>
         <div class="mt-md-4 mb-md-4">
-            <p><i class="far fa-id-badge"></i>  교육자 : <span th:text="${learning.lecturerName}">default lecturerName</span></p>
+            <p><i class="far fa-id-badge"></i>  교육자 : <span th:text="${professionalAccount.name}"></span></p>
 <!--            <p><i class="fas fa-align-left"></i>  강의 레벨 : <span th:text="${learning.lecturerName}">default lecturerName</span></p>-->
         </div>
 <!--        <div>-->
@@ -100,26 +112,29 @@
     </div>
     <!--floating box-->
 
-    <div class="col-md-8 ml-md-5" th:if="${!listenLearning && !learnings}">
+    <!-- 강의 설명글 start -->
+    <div class="col-md-8 ml-md-5" th:if="${!nowListening}">
         <div hidden="hidden" id="value" th:text="${learning.subscription}"></div>
         <div id="textValue"></div>
     </div>
-    <!--강의 설명글-->
+    <!-- 강의 설명글 end -->
 
-    <div class="col-md-8 ml-md-5" th:if="${listenLearning || learnings}">
+    <!-- 강의 관련 질문글 start -->
+    <div class="col-md-8 ml-md-5" th:if="${nowListening}">
         <p class="learning-update-info-title">질문 내용</p>
 
         <div class="mt-2 main-learning-question d-flex" th:each="question: ${questions}">
             <div class="d-flex flex-column justify-content-between main-learning-question-body">
                 <p class="main-learning-question-name">
-                    질의자: <span th:text="${question.s_name}"></span>
+                    질의자: <span th:text="${question.account.nickname}"></span>
                 </p>
                 <p class="main-learning-question-title">
-                    제목: <span th:text="${question.s_title}"></span>
+                    제목: <span th:text="${question.title}"></span>
                 </p>
             </div>
             <div class="d-flex align-items-center justify-content-center">
-                <form action="#" th:action="@{'/learning/question/' + ${learning.id}}">
+                <form action="#" th:action="@{'/question/' + ${question.id}}">
+<!--                <form action="#" th:action="@{'/learning/question/' + ${learning.id}}">-->
                     <button class="btn btn-secondary" type="submit">
                         질문 이동
                     </button>
@@ -127,39 +142,40 @@
             </div>
         </div>
     </div>
-    <!--강의에 대한 질문글-->
+    <!-- 강의 관련 질문글 end -->
+
     <div class="mt-md-5 d-flex align-content-start" style=" width: 50%">
         <hr style="width: 100%"/>
     </div>
 
     <div class="learning-uploader-info mt-lg-5 ml-md-5 pl-md-3">
-        <p class="learning-uploader-info-title">강의 제공자 : <span th:text="${learning.lecturerName}"></span></p>
-        <div hidden="hidden" id="lectureDescription" th:text="${learning.lecturerDescription}"></div>
+        <p class="learning-uploader-info-title">강의 제공자 : <span th:text="${professionalAccount.name}"></span></p>
+        <div hidden="hidden" id="lectureDescription" th:text="${professionalAccount.description}"></div>
         <p id="lectureDescriptionValue"></p>
     </div>
 
     <div class="learning-update-info mt-lg-5 ml-md-5 pl-md-3">
         <p class="learning-update-info-title">공개 일자</p>
         <p>
-            <span class="date-time" th:text="${learning.openLearning}">Date Time</span>
-            (마지막 업데이트 날짜 : <span class="date-time" th:text="${learning.updateLearning}"></span>)
+            <span class="date-time" th:text="${learning.openingDate}">Date Time</span>
+            (마지막 업데이트 날짜 : <span class="date-time" th:text="${learning.updatedAt}"></span>)
         </p>
     </div>
 
-    <div class="mt-md-5 d-flex align-content-start" style=" width: 50%" th:if="${contentsTitle.size() > 0}">
-        <hr style="width: 100%"/>
-    </div>
+<!--    <div class="mt-md-5 d-flex align-content-start" style=" width: 50%" th:if="${contentsTitle.size() > 0}">-->
+<!--        <hr style="width: 100%"/>-->
+<!--    </div>-->
 
     <!--목차-->
-    <div class="mt-lg-5 ml-md-5 pl-md-3 learning-content" th:if="${contentsTitle.size() > 0}">
-        <p class="learning-content-title">목차</p>
+<!--    <div class="mt-lg-5 ml-md-5 pl-md-3 learning-content" th:if="${contentsTitle.size() > 0}">-->
+<!--        <p class="learning-content-title">목차</p>-->
 
-        <ul class="list-group">
-            <li class="list-group-item" th:each="content : ${contentsTitle}">
-                <p th:text="${content}"></p>
-            </li>
-        </ul>
-    </div>
+<!--        <ul class="list-group">-->
+<!--            <li class="list-group-item" th:each="content : ${contentsTitle}">-->
+<!--                <p th:text="${content}"></p>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </div>-->
 
     <div class="mt-md-5 d-flex align-content-start" style=" width: 50%">
         <hr style="width: 100%"/>
@@ -191,38 +207,38 @@
     </div>
 
     <div th:replace="fragment/footer/footer.html :: footer"></div>
+
     <script type="application/javascript">
-        moment.locale('ko');
-        $(".date-time").text(function (index, dateTime) {
-            return moment(dateTime, "YYYY-MM-DD'T'hh:mm").format("LLL");
+        window.addEventListener("DOMContentLoaded", () => {
+            moment.locale('ko');
+            $(".date-time").text(function (index, dateTime) {
+                return moment(dateTime, "YYYY-MM-DD'T'hh:mm").format("LLL");
+            })
+
+            let value = document.getElementById('value').textContent;
+            value = $.parseHTML(value);
+            $('#textValue').append(value);
+
+            let comment = document.getElementById('comment').textContent;
+            comment = $.parseHTML(comment);
+            $('#commentValue').append(comment);
+
+            let lectureValue = document.getElementById('lectureDescription').textContent;
+            lectureValue = $.parseHTML(lectureValue);
+            $('#lectureDescriptionValue').append(lectureValue);
+
+            $(function () {
+                $('[data-toggle="popover"]').popover()
+            })
+
+            // 장바구니
+            $('.cart-btn').on('click', function() {
+                $.ajax({
+                    url: '/learning/[[${learning.id}]]/cart/add',
+                    dataType: 'JSON'
+                });
+            })
         })
-    </script>
-    <script type="application/javascript">
-        var value = document.getElementById('value').textContent;
-        value = $.parseHTML(value);
-        $('#textValue').append(value);
-
-        var comment = document.getElementById('comment').textContent;
-        comment = $.parseHTML(comment);
-        $('#commentValue').append(comment);
-
-        var lectureValue = document.getElementById('lectureDescription').textContent;
-        lectureValue = $.parseHTML(lectureValue);
-        $('#lectureDescriptionValue').append(lectureValue);
-    </script>
-    <!--장바구니-->
-    <script>
-        $(function () {
-            $('[data-toggle="popover"]').popover()
-        })
-
-        $('.cart-btn').on('click', function() {
-            $.ajax({
-                url: '/learning/[[${learning.id}]]/cart/add',
-                dataType: 'JSON'
-            });
-        })
-
     </script>
 </body>
 
