@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/layout.html :: head">
+    <title>Blank</title>
+</head>
+
+<section>
+    <script src="/js/ImageSlider.js"></script>
+    <script src="/js/CardSlider.js"></script>
+
+    <link rel="stylesheet" href="/css/index.css"/>
+</section>
+
+<body class="container">
+    <div th:replace="layout/layout.html :: body(pageContent='home/homeContents')"></div>
+</body>
+
+</html>
