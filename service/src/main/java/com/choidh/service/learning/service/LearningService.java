@@ -4,14 +4,10 @@ package com.choidh.service.learning.service;
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.attachment.entity.AttachmentFileType;
 import com.choidh.service.learning.entity.Learning;
-import com.choidh.service.learning.vo.LearningDetailVO;
-import com.choidh.service.learning.vo.LearningListVO;
-import com.choidh.service.learning.vo.ModLearningVO;
-import com.choidh.service.learning.vo.RegLearningVO;
+import com.choidh.service.learning.vo.*;
 import com.choidh.service.tag.entity.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -87,7 +83,7 @@ public interface LearningService {
     /**
      * 강의 페이징 By Main Category
      */
-    Page<Learning> getLearningPagingByCategory(String category, Pageable pageable);
+    Page<Learning> getPagingByCategory(String category, Pageable pageable);
 
     /**
      * 강의 페이징 By Main Category And Keyword
@@ -98,4 +94,9 @@ public interface LearningService {
      * Get Learning 목록. By View With keyword Learning
      */
     LearningListVO getLearningListByViewWithKeyword(String mainCategory, String subCategory, Pageable pageable);
+
+    /**
+     * Get Learning 목록. By View With keyword Learning Of API
+     */
+    LearningListAPIVO getLearningListByViewWithKeywordOfAPI(String mainCategory, String subCategory, Pageable pageable);
 }

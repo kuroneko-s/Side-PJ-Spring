@@ -37,7 +37,7 @@
 
   <!-- 검색 start -->
   <div class="search-container">
-    <form class="form search-container-form" action="#" th:action="@{/search/learning}" method="get">
+    <form class="form search-container-form" action="#" method="GET" id="main-search-bar">
       <input type="text" placeholder="무엇을 학습하고 싶으신가요?" name="keyword" />
       <button class="button" type="submit">검색</button>
     </form>
@@ -178,6 +178,19 @@
       moment.locale('ko');
       $(".date-time").text(function (index, dateTime) {
         return moment(dateTime, "YYYY-MM-DD'T'hh:mm").format("LL");
+      })
+
+      document.getElementById('main-search-bar').addEventListener("submit", e => {
+        const targetEl = e.target;
+        const inputEl = targetEl.querySelector("input");
+        const value = inputEl.value;
+
+        if (value.length <= 0) {
+          e.preventDefault();
+          return false;
+        }
+
+        targetEl.action = '/learning/search/all?keyword=' + value;
       })
     })
   </script>

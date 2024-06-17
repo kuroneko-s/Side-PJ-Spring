@@ -3,21 +3,19 @@ package com.choidh.service.learning.service;
 
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.entity.ProfessionalAccount;
-import com.choidh.service.account.repository.AccountRepository;
 import com.choidh.service.account.repository.ProfessionalAccountRepository;
 import com.choidh.service.account.service.AccountService;
 import com.choidh.service.attachment.entity.AttachmentFile;
 import com.choidh.service.attachment.entity.AttachmentFileType;
 import com.choidh.service.attachment.entity.AttachmentGroup;
 import com.choidh.service.attachment.service.AttachmentService;
+import com.choidh.service.common.StringUtils;
 import com.choidh.service.joinTables.entity.AccountTagJoinTable;
+import com.choidh.service.joinTables.entity.LearningTagJoinTable;
 import com.choidh.service.joinTables.service.AccountTagService;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.repository.LearningRepository;
-import com.choidh.service.learning.vo.LearningDetailVO;
-import com.choidh.service.learning.vo.LearningListVO;
-import com.choidh.service.learning.vo.ModLearningVO;
-import com.choidh.service.learning.vo.RegLearningVO;
+import com.choidh.service.learning.vo.*;
 import com.choidh.service.notification.eventListener.vo.LearningClosedEvent;
 import com.choidh.service.notification.eventListener.vo.LearningCreateEvent;
 import com.choidh.service.notification.eventListener.vo.LearningUpdateEvent;
@@ -277,7 +275,7 @@ public class LearningServiceImpl implements LearningService {
      * 강의 페이징 By Main Category
      */
     @Override
-    public Page<Learning> getLearningPagingByCategory(String category, Pageable pageable) {
+    public Page<Learning> getPagingByCategory(String category, Pageable pageable) {
         category = category.equals("all") ? "" : category;
         return learningRepository.findPagingByCategory(category, pageable);
     }
@@ -297,7 +295,13 @@ public class LearningServiceImpl implements LearningService {
     @Override
     public LearningListVO getLearningListByViewWithKeyword(String mainCategory, String subCategory, Pageable pageable) {
         // Learning 페이징
-        Page<Learning> learningPage = this.getLearningPagingByCategory(mainCategory, pageable);
+        Page<Learning> learningPage;
+        if (StringUtils.isNullOrEmpty(subCategory)) {
+            learningPage = this.getPagingByCategory(mainCategory, pageable);
+        } else {
+            learningPage = this.getPagingByCategoryAndKeyword(mainCategory, subCategory, pageable);
+        }
+
         List<Learning> learningList = learningPage.getContent();
 
         // 강의 이미지 목록 조회
@@ -334,25 +338,71 @@ public class LearningServiceImpl implements LearningService {
                 .build();
     }
 
-    private String updateVideoTitle(String title) {
-        String regExp = "[a-zA-Zㄱ-ㅎ가-힣ㅏ-ㅣ\\s_](.mp3|.mp4|mkv)";
-        String regExpNot = "[0-9]+(.)[0-9]+";
-        String number = title.replaceAll(regExp, "").trim();
-        String notNumber = title.replaceAll(regExpNot, "").trim();
-        int i = number.indexOf("-");
-        int strIndex = number.indexOf(notNumber.charAt(0));
+    /**
+     * Get Learning 목록. By View With keyword Learning Of API
+     */
+    @Override
+    public LearningListAPIVO getLearningListByViewWithKeywordOfAPI(String mainCategory, String subCategory, Pageable pageable) {
+        // Learning 페이징
+        Page<Learning> learningPage;
+        if (StringUtils.isNullOrEmpty(subCategory)) {
+            learningPage = this.getPagingByCategory(mainCategory, pageable);
+        } else {
+            learningPage = this.getPagingByCategoryAndKeyword(mainCategory, subCategory, pageable);
+        }
 
-        String f = number.substring(0, i); //앞
-        String e = number.substring(i + 1, strIndex); //뒤
-        String newf = "";
-        String newe = "";
+        List<Learning> learningList = learningPage.getContent();
 
-        if (f.length() <= 1) newf = 0 + f;
-        else newf = f;
+        // 강의 이미지 목록 조회
+        List<LearningAPIVO> resultList = new ArrayList<>();
+        for (Learning learning : learningList) {
+            List<AttachmentFile> attachmentFiles = attachmentService.getAttachmentFiles(learning.getAttachmentGroup().getId(), AttachmentFileType.BANNER);
+            if (attachmentFiles.size() != 1) {
+                throw new IllegalArgumentException();
+            }
 
-        if (e.length() <= 1) newe = 0 + e;
-        else newe = e;
+            AttachmentFile attachmentFile = attachmentFiles.get(0);
 
-        return newf + "-" + newe + notNumber;
+            Set<String> tagList = new HashSet<>();
+            for (LearningTagJoinTable learningTagJoinTable : learning.getTags()) {
+                tagList.add(learningTagJoinTable.getTag().getTitle());
+            }
+
+            resultList.add(
+                    LearningAPIVO.builder()
+                            .learningId(learning.getId())
+                            .imageSrc(attachmentFile.getFullPath(""))
+                            .imageName(attachmentFile.getOriginalFileName())
+                            .title(learning.getTitle())
+                            .tagTitleList(tagList)
+                            .rating(learning.getRating())
+                            .price(learning.getPrice())
+                            .openingDate(learning.getOpeningDate())
+                            .build()
+            );
+        }
+
+        String sortProperty = pageable.getSort().toString().contains("openingDate") ? "openingDate" : "rating";
+
+        // 페이지네이션 기본 url
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("/learning/search/");
+        stringBuilder.append(mainCategory);
+        if (StringUtils.isNotNullAndEmpty(subCategory)) {
+            stringBuilder.append("?keyword=");
+            stringBuilder.append(subCategory);
+        }
+        stringBuilder.append("&sort=");
+        stringBuilder.append(sortProperty);
+        stringBuilder.append(",desc&page=");
+
+        return LearningListAPIVO.builder()
+                .learningList(resultList)
+                .paginationUrl(stringBuilder.toString())
+                .hasPrevious(learningPage.hasPrevious())
+                .hasNext(learningPage.hasNext())
+                .number(learningPage.getNumber())
+                .totalPages(learningPage.getTotalPages())
+                .build();
     }
 }

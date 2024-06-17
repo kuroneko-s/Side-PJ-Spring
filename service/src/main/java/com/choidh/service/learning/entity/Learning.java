@@ -11,6 +11,7 @@ import com.choidh.service.notice.entity.Notice;
 import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
 import com.choidh.service.question.entity.Question;
 import com.choidh.service.review.entity.Review;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 

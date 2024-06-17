@@ -44,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .mvcMatchers(accessibleUrl).permitAll()
-                .mvcMatchers(HttpMethod.GET, "/learning/search/**").permitAll()
+                .mvcMatchers("/learning/search/**").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/profile/**").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/learning/{id}").access("@webSecurity.checkLearningId(#id)")
                 .anyRequest().authenticated();

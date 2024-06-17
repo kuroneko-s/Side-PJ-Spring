@@ -60,7 +60,7 @@
             </div>
 
             <div class="navbar-menu-items">
-                <form class="form navbar-mr" action="#" th:action="@{/search/learning}" method="GET">
+                <form class="form navbar-mr" action="#" method="GET" id="global-search-bar">
                     <input name="keyword" type="text" placeholder="강의 검색하기" />
                 </form>
 
@@ -121,5 +121,23 @@
             </div>
         </div>
     </footer>
+
+    <script type="text/javascript">
+        window.addEventListener("DOMContentLoaded", () => {
+            const globalSearchBarEl = document.getElementById("global-search-bar");
+            globalSearchBarEl.addEventListener("submit", e => {
+                const targetEl = e.target;
+                const inputEl = targetEl.querySelector("input");
+                const value = inputEl.value;
+
+                if (value.length <= 0) {
+                    e.preventDefault();
+                    return false;
+                }
+
+                targetEl.action = '/learning/search/all?keyword=' + value;
+            })
+        })
+    </script>
 </body>
 </html>

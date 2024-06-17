@@ -12,6 +12,7 @@ import com.choidh.service.joinTables.service.LearningTagService;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.service.LearningService;
 import com.choidh.service.learning.vo.LearningDetailVO;
+import com.choidh.service.learning.vo.LearningListAPIVO;
 import com.choidh.service.learning.vo.LearningListVO;
 import com.choidh.service.question.entity.Question;
 import com.choidh.service.question.service.QuestionService;
@@ -24,6 +25,8 @@ import com.choidh.web.common.annotation.CurrentAccount;
 import com.choidh.web.kakao.vo.KakaoPayForm;
 import com.choidh.web.question.vo.QuestionForm;
 import com.choidh.web.review.vo.ReviewVO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,8 +67,6 @@ public class LearningController {
     public String getLearningListByKeywordView(@CurrentAccount Account account, Model model, @PathVariable("keyword") String mainCategory,
                                                @RequestParam(name = "keyword", defaultValue = "", required = false) String subCategory,
                                                @PageableDefault(size = 16, sort = "openingDate", direction = Sort.Direction.DESC) Pageable pageable){
-        if (account != null) model.addAttribute(account);
-
         LearningListVO learningListVO = learningService.getLearningListByViewWithKeyword(mainCategory, subCategory, pageable);
 
         model.addAttribute("mainCategory", mainCategory);
@@ -86,18 +87,10 @@ public class LearningController {
     @ResponseBody
     public ResponseEntity postLearningListByKeyword(@PathVariable("keyword") String mainCategory,
                                                     @RequestBody(required = false) String keyword,
-                                                    @PageableDefault(size = 16, sort = "openingDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        LearningListVO learningListVO = learningService.getLearningListByViewWithKeyword(mainCategory, keyword, pageable);
+                                                    @PageableDefault(size = 16, sort = "openingDate", direction = Sort.Direction.DESC) Pageable pageable) throws JsonProcessingException {
+        LearningListAPIVO learningListAPIVO = learningService.getLearningListByViewWithKeywordOfAPI(mainCategory, keyword, pageable);
 
-        Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put("mainCategory", mainCategory);
-        resultMap.put("subCategory", keyword);
-        resultMap.put("pageableLearning", learningListVO.getLearningPage());
-        resultMap.put("learningList", learningListVO.getLearningPage().getContent());
-        resultMap.put("learningImageMap", learningListVO.getLearningImageMap());
-        resultMap.put("paginationUrl", learningListVO.getPaginationUrl());
-
-        return ResponseEntity.ok(resultMap);
+        return ResponseEntity.ok().body(learningListAPIVO);
     }
 
     /**

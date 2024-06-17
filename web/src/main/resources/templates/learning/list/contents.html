@@ -1,3 +1,6 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
 <main class="learning-search-container">
   <!-- left menu start -->
   <div class="learning-search-menu-container" id="learning-search-container">
@@ -15,8 +18,8 @@
 
   <!-- right content start -->
   <div class="learning-contents-container">
-    <form class="form learning-contents-form" action="#" method="POST" id="learning-contents-form">
-      <input type="text" placeholder="강의 검색하기">
+    <form class="form learning-contents-form" action="#" method="GET" id="learning-contents-form">
+      <input type="text" name="keyword" placeholder="강의 검색하기">
       <button class="button" type="submit">검색</button>
     </form>
 
@@ -29,12 +32,12 @@
 
       <div class="learning-contents-wrapper-header-right">
         <div class="learning-contents-wrapper-header-right-type-wrapper">
-          <div class="learning-contents-wrapper-header-right-type-details">
-            <i class="fas fa-list-ul" style="color: floralwhite"></i>
-          </div>
-          <div class="learning-contents-wrapper-header-right-type-cards active">
-            <i class="fas fa-th" style="color: floralwhite"></i>
-          </div>
+<!--          <div class="learning-contents-wrapper-header-right-type-details">-->
+<!--            <i class="fas fa-list-ul" style="color: floralwhite"></i>-->
+<!--          </div>-->
+<!--          <div class="learning-contents-wrapper-header-right-type-cards active">-->
+<!--            <i class="fas fa-th" style="color: floralwhite"></i>-->
+<!--          </div>-->
         </div>
 
         <div class="learning-contents-wrapper-header-right-sort-wrapper">
@@ -49,7 +52,7 @@
     </div>
 
     <div class="learning-contents-body-wrapper">
-      <div class="learning-contents-body-card-wrapper">
+      <div class="learning-contents-body-card-wrapper" id="learning-contents-body-card-wrapper">
         <div class="learning-contents-body-card" th:each="learning : ${learningList}">
           <a href="#" th:href="@{'/learning/' + ${learning.id}}">
             <img class="learning-contents-body-card-image" th:src="${learningImageMap[learning.id][0]}" th:alt="${learningImageMap[learning.id][1]}" />
@@ -109,6 +112,13 @@
 
 <script type="application/javascript">
   window.addEventListener("DOMContentLoaded", () => {
+    if (window.location.search.includes("sort")) {
+      const params = new URLSearchParams(window.location.search);
+      const sort = params.get("sort");
+      const sortEl = document.getElementById("learning-contents-wrapper-header-right-sort");
+      sortEl.value = sort;
+    }
+
     const menuContainerEl = document.getElementById("learning-search-container");
     menuContainerEl.addEventListener("click", e => {
       let targetEl = e.target;
@@ -157,14 +167,23 @@
 
     const searchFormEl = document.getElementById("learning-contents-form");
     searchFormEl.addEventListener("submit", e => {
-      e.preventDefault();
+      const targetEl = e.target;
+      const inputEl = targetEl.querySelector("input");
+      const value = inputEl.value;
 
-      drawContext(window.location.pathname, searchFormEl.querySelector("input").value);
+      const sortValue = document.getElementById("learning-contents-wrapper-header-right-sort").value;
+      if (value == null || value.length <= 0) {
+        targetEl.action = window.location.pathname + "?sort=" + sortValue + ",desc";
+      } else {
+        targetEl.action = window.location.pathname + '?keyword=' + value + "&sort=" + sortValue + ",desc";
+      }
+
+      // drawContext(window.location.pathname, searchFormEl.querySelector("input").value);
     });
 
     const sortSelectBoxEl = document.getElementById("learning-contents-wrapper-header-right-sort");
     sortSelectBoxEl.addEventListener("change", e => {
-      const url = `${window.location.pathname}?sort=${e.target.value},desc`;
+      const url = window.location.pathname + "?sort=" + e.target.value + ",desc"
       const keyword = document.getElementById("beforeSubCategory").value;
 
       drawContext(url, keyword);
@@ -191,3 +210,5 @@
             })
   }
 </script>
+
+</html>
