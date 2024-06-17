@@ -1,0 +1,241 @@
+.learning-detail-container {
+    position: relative;
+
+    margin-top: .25rem;
+}
+
+.learning-detail-banner-container {
+    display: flex;
+    justify-content: center;
+    align-items: start;
+
+    width: 100%;
+    height: 280px;
+
+    padding: 1.25rem;
+    border-radius: 4px;
+
+    color: white;
+    background-color: #343a40;
+}
+
+.learning-detail-banner-container img {
+    width: auto;
+    height: 100%
+}
+
+.learning-detail-banner-title-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    width: 35%;
+    height: 100%;
+
+    padding: 2rem 0;
+    margin-left: 1rem;
+}
+
+.learning-detail-banner-title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; /* 최대 줄 수 설정 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.learning-detail-banner-rating {
+    letter-spacing: -2px;
+}
+
+.learning-detail-banner-rating .star {
+    color: #FDCC11;
+}
+
+.learning-detail-banner-rating-number {
+    letter-spacing: 0;
+    opacity: .8;
+    font-weight: 600;
+}
+
+.learning-detail-banner-professional-wrapper {
+    margin: 1rem 0;
+}
+
+
+.learning-detail-banner-listener-wrapper {
+
+}
+
+.learning-detail-banner-progress {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    padding: .25rem .5rem;
+    border-radius: 4px;
+    background-color: white;
+    color: black;
+
+    letter-spacing: 5px;
+}
+
+.learning-detail-banner-progress span {
+    z-index: 9;
+}
+
+.learning-detail-banner-progress-now {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 15%;
+    height: 100%;
+    background-color: var(--green);
+    border-radius: 2px;
+
+    z-index: 2;
+}
+
+.learning-detail-contents-container {
+    width: 100%;
+    height: fit-content;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+
+    margin-top: 2rem;
+}
+
+.learning-detail-contents-left-container {
+    flex: 8;
+
+    padding-right: 5rem;
+}
+
+.learning-detail-contents-left-container hr {
+    border-top: rgba(128, 128, 128, 0.3) 1px solid;
+}
+
+.learning-detail-contents-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.learning-detail-contents-question-wrapper {
+    display: block;
+}
+
+.learning-detail-contents-question-wrapper .learning-detail-contents-description {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+
+    margin-bottom: 1.5rem;
+}
+
+.learning-detail-contents-button {
+    padding: .5rem .75rem;
+    color: white !important;
+    background-color: var(--green);
+    border: var(--green) 1px solid;
+    border-radius: 2px;
+}
+
+.learning-detail-contents-button:hover {
+    background-color: var(--event-green);
+    border: var(--event-green-border) 1px solid;
+}
+
+.learning-detail-contents-review-contents {
+    display: flex;
+}
+
+.learning-detail-contents-review-profile-wrapper {
+    flex: 1;
+}
+
+.learning-detail-contents-review-profile-info-nickname {
+    font-weight: 600;
+}
+
+.learning-detail-contents-review-profile-info-datetime {
+    font-size: .9rem;
+    opacity: .9;
+}
+
+.learning-detail-contents-review-rating-wrapper {
+    flex: 9;
+}
+
+.learning-detail-contents-review-image svg {
+    width: 25px;
+    height: 25px;
+
+    border-radius: 12px;
+    border: none;
+}
+
+.learning-detail-contents-right-container {
+    flex: 2;
+}
+
+.learning-detail-floating-container {
+    position: sticky;
+    top: 35px;
+    height: 170px;
+    width: 100%;
+}
+
+.learning-detail-floating-box {
+    width: 100%;
+    padding: .5rem;
+    border-radius: 4px;
+
+    background-color: whitesmoke;
+}
+
+.learning-detail-floating-box-price {
+    text-align: end;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.learning-detail-floating-box-button {
+    width: 100%;
+    height: 2.5rem;
+    margin-bottom: .4rem;
+
+    color: #fff;
+    background-color: var(--green);
+    border-color: var(--green-border);
+    border-radius: 2px;
+
+    text-align: center;
+}
+
+.learning-detail-floating-box-button:hover {
+    background-color: var(--event-green);
+    border-color: var(--event-green-border);
+}
+
+.learning-detail-floating-box-button.blue {
+    color: #fff;
+    background-color: var(--skyblue);
+    border-color: var(--skyblue);
+}
+
+.learning-detail-floating-box-button.blue:hover {
+    color: #fff;
+    background-color: var(--event-skyblue);
+    border-color: var(--event-skyblue);
+}

@@ -73,6 +73,12 @@ a:hover {
 :root {
     --hover-text-color: #737373;
     --warning-text-color: #dc3545;
+    --green: #28a745;
+    --green-border: #28a745;
+    --event-green: #218838;
+    --event-green-border: #1e7e34;
+    --skyblue: #17a2b8;
+    --event-skyblue: #138496;
 }
 
 .container{
@@ -88,6 +94,21 @@ a:hover {
 
 .pointer {
     cursor: pointer;
+}
+
+.text-overflow {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.text-overflow-two {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; /* 최대 줄 수 설정 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
 }
 
 /* form start */
@@ -114,15 +135,15 @@ a:hover {
     display: block;
     /*width: 100%;*/
     color: #fff;
-    background-color: #28a745;
-    border-color: #28a745;
+    background-color: var(--green);
+    border-color: var(--green-border);
     text-align: center;
 }
 
 .form .button:hover {
     color: #fff;
-    background-color: #218838;
-    border-color: #1e7e34;
+    background-color: var(--event-green);
+    border-color: var(--event-green-border);
 }
 /* form end */
 

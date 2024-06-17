@@ -1,6 +1,7 @@
 package com.choidh.web.common.config;
 
 
+import com.choidh.web.common.interceptor.CommonInterceptor;
 import com.choidh.web.menu.interceptor.MenuInterceptor;
 import com.choidh.web.notification.interceptor.NotificationInterceptor;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 public class WebConfig implements WebMvcConfigurer {
     private final NotificationInterceptor notificationInterceptor;
     private final MenuInterceptor menuInterceptor;
+    private final CommonInterceptor commonInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
@@ -33,6 +35,9 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns(staticResourcesPath);
 
         registry.addInterceptor(menuInterceptor)
+                .addPathPatterns("/**");
+
+        registry.addInterceptor(commonInterceptor)
                 .addPathPatterns("/**");
     }
 }

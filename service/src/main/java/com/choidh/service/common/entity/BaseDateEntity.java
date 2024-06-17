@@ -1,5 +1,6 @@
 package com.choidh.service.common.entity;
 
+import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.AbstractAuditable_;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
  * {@link AbstractAuditable_} 관련 기능 클래스
  */
 
+@Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseDateEntity implements Serializable {

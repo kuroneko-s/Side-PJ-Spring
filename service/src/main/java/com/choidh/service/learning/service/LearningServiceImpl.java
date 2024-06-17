@@ -21,6 +21,7 @@ import com.choidh.service.learning.vo.RegLearningVO;
 import com.choidh.service.notification.eventListener.vo.LearningClosedEvent;
 import com.choidh.service.notification.eventListener.vo.LearningCreateEvent;
 import com.choidh.service.notification.eventListener.vo.LearningUpdateEvent;
+import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
 import com.choidh.service.tag.entity.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +31,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
@@ -45,7 +45,6 @@ import static com.choidh.service.common.AppConstant.getLearningNotFoundErrorMess
 @RequiredArgsConstructor
 public class LearningServiceImpl implements LearningService {
     private final LearningRepository learningRepository;
-    private final AccountRepository accountRepository;
     private final ProfessionalAccountRepository professionalAccountRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
     private final AttachmentService attachmentService;
@@ -172,12 +171,40 @@ public class LearningServiceImpl implements LearningService {
 
     @Override
     public LearningDetailVO getLearningDetail(Long accountId, Long learningId) {
-        Account account = accountService.getAccountById(accountId);
         Learning learning = learningRepository.findLearningDetailById(learningId);
+        boolean nowListening = false;
 
+        if (accountId != -1) {
+            Account account = accountService.getAccountByIdWithPurchaseHistories(accountId);
+
+            for (PurchaseHistory purchaseHistory : account.getPurchaseHistories()) {
+                Learning historyLearning = purchaseHistory.getLearning();
+
+                if (historyLearning.getId().equals(learningId)) {
+                    nowListening = true;
+                    break;
+                }
+            }
+        }
+
+        AttachmentGroup attachmentGroup = learning.getAttachmentGroup();
+        List<AttachmentFile> bannerImageList = attachmentService.getAttachmentFiles(attachmentGroup.getId(), AttachmentFileType.BANNER);
+
+        if (bannerImageList.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+
+        List<AttachmentFile> videoFileList = attachmentService.getAttachmentFiles(attachmentGroup.getId(), AttachmentFileType.VIDEO);
+
+        // Question 쪽에서 Account fetch 할 수 있도록 확인 필요
         return LearningDetailVO.builder()
-                .account(account)
                 .learning(learning)
+                .professionalAccount(learning.getProfessionalAccount())
+                .question(learning.getQuestions())
+                .reviews(learning.getReviews())
+                .bannerImage(bannerImageList.get(0))
+                .videoFilesList(videoFileList)
+                .nowListening(nowListening)
                 .build();
     }
 

@@ -17,13 +17,13 @@
 
 .profile-bar-menu.active {
     color: #fff;
-    background-color: #28a745;
-    border-color: #28a745;
+    background-color: var(--green);
+    border-color: var(--green-border);
 }
 
 .profile-bar-menu.active:hover {
-    background-color: #218838;
-    border-color: #1e7e34;
+    background-color: var(--event-green);
+    border-color: var(--event-green-border);
 }
 
 .profile-bar-menu-accordion {
@@ -58,11 +58,11 @@
 
 .profile-bar-menu-accordion-details-menu.active {
     color: #fff;
-    background-color: #28a745;
-    border-color: #28a745;
+    background-color: var(--green);
+    border-color: var(--green-border);
 }
 
 .profile-bar-menu-accordion-details-menu.active:hover {
-    background-color: #218838;
-    border-color: #1e7e34;
+    background-color: var(--event-green);
+    border-color: var(--event-green-border);
 }

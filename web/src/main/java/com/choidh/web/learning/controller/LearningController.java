@@ -76,7 +76,7 @@ public class LearningController {
         model.addAttribute("paginationUrl", learningListVO.getPaginationUrl());
         model.addAttribute("pageTitle", "커뮤니티 | 검색");
 
-        return "learningList/index";
+        return "learning/list/index";
     }
 
     /**
@@ -105,27 +105,20 @@ public class LearningController {
      */
     @GetMapping("/learning/{learningId}")
     public String getLearningDetailView(@CurrentAccount Account account, Model model, @PathVariable Long learningId) {
-        LearningDetailVO learningDetail = learningService.getLearningDetail(account.getId(), learningId);
+        LearningDetailVO learningDetail = learningService.getLearningDetail(account != null ? account.getId() : -1, learningId);
+        Learning learning = learningDetail.getLearning();
 
-        model.addAttribute("account", learningDetail.getAccount());
-        model.addAttribute("learning", learningDetail.getLearning());
-//        model.addAttribute("learnings", professionalAccount.getLearningList().contains(learning));
-//        model.addAttribute("listenLearning", account.getListenLearning().contains(learning));
-//        model.addAttribute("countVideo", learning.getVideoCount());
-//        model.addAttribute("tags", learning.getTags().stream().map(Tag::getTitle).collect(Collectors.toList()));
-//        model.addAttribute("ratings", learning.getRating_int());
-//        model.addAttribute("halfrating", learning.checkRating_boolean());
-//        model.addAttribute("rating", learning.emptyRating());
-//        model.addAttribute("learningRating", learning.getRating());
-//        model.addAttribute("canOpen", learningService.checkOpenTimer(learning.isStartingLearning(), learning.isClosedLearning(), contains));
-//        model.addAttribute("canClose", learningService.checkCloseTimer(learning.isStartingLearning(), learning.isClosedLearning(), contains));
-//        model.addAttribute("canCloseTimer", learning.getCloseLearning() == null || learning.getCloseLearning().isBefore(LocalDateTime.now().minusMinutes(30)));
-//        model.addAttribute("canOpenTimer", learning.getOpenLearning() == null || learning.getOpenLearning().isBefore(LocalDateTime.now().minusMinutes(30)));
-//        model.addAttribute("contentsTitle", contentsTitle); // 영상들의 타이틀 리스트
-//        model.addAttribute("reviews", learning.getReviews());
-//        model.addAttribute("questions", learning.getQuestions());
+        model.addAttribute("learning", learning);
+        model.addAttribute("professionalAccount", learningDetail.getProfessionalAccount());
+        model.addAttribute("questions", learningDetail.getQuestion());
+        model.addAttribute("reviews", learningDetail.getReviews());
+        model.addAttribute("bannerImage", learningDetail.getBannerImage());
+        model.addAttribute("videoFileList", learningDetail.getVideoFilesList());
+        model.addAttribute("nowListening", learningDetail.isNowListening());
 
-        return "learning/main_learning";
+        model.addAttribute("pageTitle", "커뮤니티 | " + learning.getTitle());
+
+        return "learning/detail/index";
     }
 
     // 강의 상세 페이지로 이동. (학습 버튼 클릭시 동작)

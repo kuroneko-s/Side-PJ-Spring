@@ -46,6 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers(accessibleUrl).permitAll()
                 .mvcMatchers(HttpMethod.GET, "/learning/search/**").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/profile/**").permitAll()
+                .mvcMatchers(HttpMethod.GET, "/learning/{id}").access("@webSecurity.checkLearningId(#id)")
                 .anyRequest().authenticated();
 
         http.formLogin()

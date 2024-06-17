@@ -1,3 +1,6 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <main>
   <div th:replace="fragment/flushAlter/flushAlter.html :: flushAlter"></div>
 
@@ -60,19 +63,19 @@
                 <p class="learning-item-card-body-tags">
                   <i class="fas fa-tasks"></i>
                   <span th:each="tag : ${learning.tags}">
-                                          <span th:text="${tag.getTitle()}"></span>
-                                      </span>
+                      <span th:text="${tag.getTitle()}"></span>
+                  </span>
                 </p>
                 <p class="learning-item-card-body-rating">
-                                      <span class="full-star star" th:each="num : ${#numbers.sequence(0, learning.getRatingInt() - 1)}" th:if="${learning.getRatingInt() > 0}">
-                                          <i class="fas fa-star"></i>
-                                      </span>
+                  <span class="full-star star" th:each="num : ${#numbers.sequence(0, learning.getRatingInt() - 1)}" th:if="${learning.getRatingInt() > 0}">
+                      <i class="fas fa-star"></i>
+                  </span>
                   <span class="half-star star" th:if="${learning.checkRatingBoolean()}">
-                                          <i class="fas fa-star-half-alt"></i>
-                                      </span>
+                      <i class="fas fa-star-half-alt"></i>
+                  </span>
                   <span class="empty-star star" th:each="num : ${#numbers.sequence(1, learning.emptyRating())}" th:if="${learning.emptyRating() > 0}">
-                                          <i class="far fa-star"></i>
-                                      </span>
+                      <i class="far fa-star"></i>
+                  </span>
                   <span class="learning-item-card-body-rating-number">(<span th:text="${learning.rating}"></span>)</span>
                 </p>
                 <div class="learning-item-card-body-price">
@@ -179,3 +182,4 @@
     })
   </script>
 </main>
+</html>

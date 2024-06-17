@@ -14,6 +14,8 @@ import com.choidh.service.common.StringUtils;
 import com.choidh.service.common.exception.FileNotSavedException;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.repository.LearningRepository;
+import com.choidh.service.question.service.QuestionService;
+import com.choidh.service.question.vo.RegQuestionVO;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,6 +50,8 @@ public class LearningAppRunner implements ApplicationRunner {
     private AttachmentService attachmentService;
     @Autowired
     private AttachmentFileRepository attachmentFileRepository;
+    @Autowired
+    private QuestionService questionService;
 
     @Value("${download.path}")
     private String downloadPath;
@@ -146,6 +150,18 @@ public class LearningAppRunner implements ApplicationRunner {
 
                 Learning learning = createLearning(professionalAccount);
                 learning.setAttachmentGroup(attachmentGroup);
+
+                RegQuestionVO regQuestionVO = RegQuestionVO.builder()
+                        .title("이거 어디까지 올라가는거에요 ?")
+                        .description("이거 어디까지 올라가는거에요 ?")
+                        .build();
+                questionService.regQuestion(regQuestionVO, account.getId(), learning.getId());
+
+                regQuestionVO = RegQuestionVO.builder()
+                        .title("이거 어디까지 올라가는거에요 ?2")
+                        .description("이거 어디까지 올라가는거에요 ?2")
+                        .build();
+                questionService.regQuestion(regQuestionVO, account.getId(), learning.getId());
 
                 createFile(attachmentGroup);
             }
