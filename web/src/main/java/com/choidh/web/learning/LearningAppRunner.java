@@ -164,6 +164,8 @@ public class LearningAppRunner implements ApplicationRunner {
                 questionService.regQuestion(regQuestionVO, account.getId(), learning.getId());
 
                 createFile(attachmentGroup);
+                createVideoFile1(attachmentGroup);
+                createVideoFile2(attachmentGroup);
             }
         }
     }
@@ -187,6 +189,78 @@ public class LearningAppRunner implements ApplicationRunner {
         newAttachmentFile.setPath(filePath);
         newAttachmentFile.setExtension(fileExtension);
         newAttachmentFile.setAttachmentFileType(AttachmentFileType.BANNER);
+
+        // 위치 폴더 생성
+        FileUtils.createDir(downloadPath + filePath);
+        try(
+                BufferedInputStream inputStream = new BufferedInputStream(resource.getInputStream());
+                BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(newAttachmentFile.getFullPath(downloadPath)), 1024 * 500)
+        ){
+            // 파일 저장
+            IOUtils.copy(inputStream, outputStream);
+            outputStream.flush();
+        } catch (IOException e) {
+            // 로컬에 파일 저장에 실패했을 경우 기존 DB 정보도 삭제.
+            attachmentFileRepository.delete(newAttachmentFile);
+            throw new FileNotSavedException(e);
+        }
+    }
+
+    private void createVideoFile1(AttachmentGroup attachmentGroup) throws IOException {
+        Resource resource = new PathResource(Path.of("/Users/kuroneko/Documents/PJ-java/web/src/main/resources/static/sampleData/video/test_movie_2.mov"));
+        File file = resource.getFile();
+
+        AttachmentFile beforeAttachmentFile = new AttachmentFile(attachmentGroup);
+        AttachmentFile newAttachmentFile = attachmentFileRepository.save(beforeAttachmentFile);
+        String groupSn = StringUtils.padLeftUsingFormat(attachmentGroup.getId().toString(), 7, '0');
+        String fileSn = StringUtils.padLeftUsingFormat(newAttachmentFile.getId().toString(), 7, '0');
+
+        String filePath = FileUtils.getFilePath();
+        String fileName = groupSn + fileSn;
+        String fileExtension = "mov";
+
+        newAttachmentFile.setFileSize(file.length());
+        newAttachmentFile.setOriginalFileName(resource.getFilename());
+        newAttachmentFile.setFileName(fileName);
+        newAttachmentFile.setPath(filePath);
+        newAttachmentFile.setExtension(fileExtension);
+        newAttachmentFile.setAttachmentFileType(AttachmentFileType.VIDEO);
+
+        // 위치 폴더 생성
+        FileUtils.createDir(downloadPath + filePath);
+        try(
+                BufferedInputStream inputStream = new BufferedInputStream(resource.getInputStream());
+                BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(newAttachmentFile.getFullPath(downloadPath)), 1024 * 500)
+        ){
+            // 파일 저장
+            IOUtils.copy(inputStream, outputStream);
+            outputStream.flush();
+        } catch (IOException e) {
+            // 로컬에 파일 저장에 실패했을 경우 기존 DB 정보도 삭제.
+            attachmentFileRepository.delete(newAttachmentFile);
+            throw new FileNotSavedException(e);
+        }
+    }
+
+    private void createVideoFile2(AttachmentGroup attachmentGroup) throws IOException {
+        Resource resource = new PathResource(Path.of("/Users/kuroneko/Documents/PJ-java/web/src/main/resources/static/sampleData/video/test_movie_3.mov"));
+        File file = resource.getFile();
+
+        AttachmentFile beforeAttachmentFile = new AttachmentFile(attachmentGroup);
+        AttachmentFile newAttachmentFile = attachmentFileRepository.save(beforeAttachmentFile);
+        String groupSn = StringUtils.padLeftUsingFormat(attachmentGroup.getId().toString(), 7, '0');
+        String fileSn = StringUtils.padLeftUsingFormat(newAttachmentFile.getId().toString(), 7, '0');
+
+        String filePath = FileUtils.getFilePath();
+        String fileName = groupSn + fileSn;
+        String fileExtension = "mov";
+
+        newAttachmentFile.setFileSize(file.length());
+        newAttachmentFile.setOriginalFileName(resource.getFilename());
+        newAttachmentFile.setFileName(fileName);
+        newAttachmentFile.setPath(filePath);
+        newAttachmentFile.setExtension(fileExtension);
+        newAttachmentFile.setAttachmentFileType(AttachmentFileType.VIDEO);
 
         // 위치 폴더 생성
         FileUtils.createDir(downloadPath + filePath);

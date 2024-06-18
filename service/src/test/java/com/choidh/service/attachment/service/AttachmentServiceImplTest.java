@@ -246,7 +246,7 @@ class AttachmentServiceImplTest extends AbstractServiceTestConfig {
         theLine();
 
         AttachmentFile attachmentFile = attachmentFiles.get(0);
-        AttachmentFile result = attachmentService.getAttachmentFileById(attachmentGroup.getId(), attachmentFile.getId());
+        AttachmentFile result = attachmentService.getAttachmentFileById(attachmentFile.getId());
         assertNotNull(result);
         assertEquals(attachmentFile, result);
     }
@@ -272,13 +272,13 @@ class AttachmentServiceImplTest extends AbstractServiceTestConfig {
         theLine();
 
         AttachmentFile attachmentFile = attachmentFiles.get(0);
-        int i = attachmentService.delAttachmentFile(attachmentGroup.getId(), attachmentFile.getId());
+        int i = attachmentService.delAttachmentFile(attachmentFile.getId());
         assertEquals(i, 1);
         assertFalse(attachmentFile.isDelete());
 
         theLine();
 
-        AttachmentFile result = attachmentService.getAttachmentFileById(attachmentGroup.getId(), attachmentFile.getId());
+        AttachmentFile result = attachmentService.getAttachmentFileById(attachmentFile.getId());
         assertTrue(result.isDelete());
 
         String fileFullPath = result.getFullPath(downloadPath);

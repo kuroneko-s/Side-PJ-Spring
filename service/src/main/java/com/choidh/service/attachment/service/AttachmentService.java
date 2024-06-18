@@ -31,10 +31,10 @@ public interface AttachmentService {
     /**
      * 파일 단건 조회 By 그룹 및 파일 ID
      */
-    AttachmentFile getAttachmentFileById(Long attachmentGroupId, Long attachmentFileId);
+    AttachmentFile getAttachmentFileById(Long attachmentFileId);
 
     /**
      * 파일 삭제(비활성화) By 그룹 및 파일 ID
      */
-    int delAttachmentFile(Long attachmentGroupId, Long attachmentFileId);
+    int delAttachmentFile(Long attachmentFileId);
 }

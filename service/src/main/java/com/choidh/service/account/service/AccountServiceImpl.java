@@ -10,6 +10,7 @@ import com.choidh.service.joinTables.entity.LearningCartJoinTable;
 import com.choidh.service.joinTables.service.LearningCartService;
 import com.choidh.service.mail.service.EmailService;
 import com.choidh.service.mail.vo.EmailForAuthenticationVO;
+import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -200,5 +201,28 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account getAccountForProfile(Long accountId) {
         return accountRepository.findAccountForProfile(accountId);
+    }
+
+    /**
+     * Chk 해당 강의를 수강중인 학생인지 검증
+     */
+    @Override
+    public boolean chkAccountHasLearning(Long accountId, Long learningId) {
+        // 해당 유저가 구매이력에 해당 강의를 가지고 있는지 검증
+        boolean checker = false;
+        Account account = this.getAccountByIdWithPurchaseHistories(accountId);
+
+        for (PurchaseHistory purchaseHistory : account.getPurchaseHistories()) {
+            if (purchaseHistory.getLearning().getId().equals(learningId)) {
+                checker = true;
+                break;
+            }
+        }
+
+//        if (!checker) {
+//            return ResponseEntity.badRequest().build();
+//        }
+
+        return checker;
     }
 }

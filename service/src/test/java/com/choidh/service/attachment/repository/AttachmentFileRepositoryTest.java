@@ -80,7 +80,7 @@ class AttachmentFileRepositoryTest extends AbstractRepositoryTestConfig {
 
     @Test
     @DisplayName("파일 단건 조회 By 그룹 및 파일 ID")
-    public void findByGroupIdAndFileId() throws Exception {
+    public void findByFileId() throws Exception {
         AttachmentGroup attachmentGroup = this.createAttachmentGroup();
         Long targetId = -1L;
         AttachmentFile target = null;
@@ -95,14 +95,14 @@ class AttachmentFileRepositoryTest extends AbstractRepositoryTestConfig {
 
         theLine();
 
-        AttachmentFile result = attachmentFileRepository.findByGroupIdAndFileId(attachmentGroup.getId(), targetId);
+        AttachmentFile result = attachmentFileRepository.findByFileId(targetId);
 
         assertEquals(target, result);
     }
 
     @Test
     @DisplayName("파일 삭제(비활성화) By 그룹 및 파일 ID")
-    public void deleteByGroupIdAndFileId() throws Exception {
+    public void deleteByFileId() throws Exception {
         AttachmentGroup attachmentGroup = this.createAttachmentGroup();
         AttachmentFile target = null;
 
@@ -113,11 +113,11 @@ class AttachmentFileRepositoryTest extends AbstractRepositoryTestConfig {
 
         theLine();
 
-        int updateResult = attachmentFileRepository.deleteByGroupIdAndFileId(attachmentGroup.getId(), target.getId());
+        int updateResult = attachmentFileRepository.deleteByFileId(target.getId());
 
         assertEquals(updateResult, 1);
 
-        AttachmentFile attachmentFile = attachmentFileRepository.findByGroupIdAndFileId(attachmentGroup.getId(), target.getId());
+        AttachmentFile attachmentFile = attachmentFileRepository.findByFileId(target.getId());
 
         assertTrue(attachmentFile.isDelete());
         assertEquals(target, attachmentFile);

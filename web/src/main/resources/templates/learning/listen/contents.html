@@ -1,0 +1,89 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<main class="learning-listen-container">
+    <div class="learning-listen-left-container">
+        <ul class="learning-listen-title-item-wrapper" id="learning-listen-title-item-wrapper">
+            <li class="learning-listen-title-item" th:each="title : ${titleSet}" th:classappend="${title.equals(playingVideo)}? active">
+                <p th:text="${title}" th:data-src-id="${videoFileIdMap[title.toString()]}"></p>
+            </li>
+        </ul>
+
+        <div>
+            <button class="learning-listen-title-button" type="button" id="questionPopupButton">강의 질문하기</button>
+            <button class="learning-listen-title-button" type="button" id="reviewPopupButton">강의 평가 작성하기</button>
+        </div>
+    </div>
+
+    <div class="learning-listen-right-container" id="learning-listen-right-container">
+        <label class="learning-listen-right-title" for="learning-listen-right-player" th:text="${learning.title} + ' / ' + ${playingVideo}"></label>
+        <video id="learning-listen-right-player" class="learning-listen-right-player" controls controlsList="nodownload">
+            <source th:src="${videoSrc}" src="#" type="video/mp4">
+        </video>
+    </div>
+</main>
+
+<script type="application/javascript">
+    window.addEventListener("DOMContentLoaded", () => {
+        window.name = "listenPage";
+        $('.video-body').bind('contextmenu',function() { return false; });
+
+        // TODO : 질문이랑 후기 작성하는 페이지 수정 해줘야함
+
+        // 강의 질문하기 버튼 팝업 클릭 이벤트
+        document.getElementById("questionPopupButton")?.addEventListener("click", e => {
+            const popupX = (window.screen.width / 2) - (1100 / 2);
+            const popupY= (window.screen.height / 2) - (700 / 2);
+            window.open("/question/" + [[${learning.id}]], "question", `width=1100, height=700, left=${popupX},screenX=${popupX}, top=${popupX}, screenY=${popupY} `);
+        })
+
+        // 강의 평가하기 버튼 팝업 클릭 이벤트
+        document.getElementById("reviewPopupButton")?.addEventListener("click", e => {
+            const popupX = (window.screen.width / 2) - (1100 / 2);
+            const popupY= (window.screen.height / 2) - (700 / 2);
+            window.open("/review/" + [[${learning.id}]], "review", `width=1100, height=700, left=${popupX},screenX=${popupX}, top=${popupX}, screenY=${popupY} `);
+        })
+
+        // 목차 클릭 이벤트
+        document.getElementById("learning-listen-title-item-wrapper").addEventListener("click", e => {
+            let targetEl = e.target;
+
+            if (targetEl.classList.contains("learning-listen-title-item") || targetEl.classList.contains("learning-listen-title-item-wrapper")) {
+                targetEl = targetEl.querySelector("p");
+            }
+
+            console.log(targetEl.dataset.srcId);
+
+            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+            const videoEl = document.getElementById("learning-listen-right-player");
+            const sourceEl = videoEl.querySelector("source");
+            const videoTitleEl = document.querySelector("#learning-listen-right-container label");
+            const itemWrapperEl = document.getElementById("learning-listen-title-item-wrapper");
+
+            fetch(window.location.pathname, {
+                method: "POST",
+                body: targetEl.dataset.srcId,
+                headers: {
+                    [csrfHeader]: csrfToken,
+                    "Content-Type": "application/json"
+                }
+            }).then(res => {
+                return res.text()
+            })
+                .then(text => {
+                    console.log(text);
+                    sourceEl.src = text;
+                    videoEl.load();
+                    videoTitleEl.textContent = e.target.textContent;
+
+                    itemWrapperEl.querySelectorAll(".active").forEach(el => el.classList.remove("active"));
+                    targetEl.parentNode.classList.add("active");
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+        })
+    })
+</script>
+</html>

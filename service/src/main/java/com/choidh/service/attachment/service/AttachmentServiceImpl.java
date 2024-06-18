@@ -114,17 +114,17 @@ public class AttachmentServiceImpl implements AttachmentService {
      * 파일 단건 조회 By 그룹 및 파일 ID
      */
     @Override
-    public AttachmentFile getAttachmentFileById(Long attachmentGroupId, Long attachmentFileId) {
-        return attachmentFileRepository.findByGroupIdAndFileId(attachmentGroupId, attachmentFileId);
+    public AttachmentFile getAttachmentFileById(Long attachmentFileId) {
+        return attachmentFileRepository.findByFileId(attachmentFileId);
     }
 
     /**
      * 파일 삭제(비활성화) By 그룹 및 파일 ID
      */
     @Override
-    public int delAttachmentFile(Long attachmentGroupId, Long attachmentFileId) {
+    public int delAttachmentFile(Long attachmentFileId) {
         // 파일 정보 읽기
-        AttachmentFile attachmentFile = attachmentFileRepository.findByGroupIdAndFileId(attachmentGroupId, attachmentFileId);
+        AttachmentFile attachmentFile = attachmentFileRepository.findByFileId(attachmentFileId);
 
         // 서버에서 해당 파일 삭제
         File file = new File(attachmentFile.getFullPath(downloadPath));
@@ -146,6 +146,6 @@ public class AttachmentServiceImpl implements AttachmentService {
         // attachmentFileRepository.deleteByGroupIdAndFileId(attachmentGroupId, attachmentFileId);
 
         // 파일 관련 DB 컬럼 비활성화.
-        return attachmentFileRepository.deleteByGroupIdAndFileId(attachmentGroupId, attachmentFileId);
+        return attachmentFileRepository.deleteByFileId(attachmentFileId);
     }
 }

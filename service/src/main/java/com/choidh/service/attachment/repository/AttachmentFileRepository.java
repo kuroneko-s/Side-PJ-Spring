@@ -24,19 +24,17 @@ public interface AttachmentFileRepository extends JpaRepository<AttachmentFile, 
      */
     @Query(value = "select file " +
             "from AttachmentFile file " +
-            "where file.attachmentGroup.id = :attachmentGroupId " +
-            "and file.id = :attachmentFileId")
-    AttachmentFile findByGroupIdAndFileId(Long attachmentGroupId, Long attachmentFileId);
+            "where file.id = :attachmentFileId")
+    AttachmentFile findByFileId(Long attachmentFileId);
 
     /**
      * 파일 삭제(비활성화) By 그룹 및 파일 ID
      */
     @Query(value = "update from AttachmentFile file " +
             "set file.isDelete = true " +
-            "where file.attachmentGroup.id = :attachmentGroupId " +
-            "and file.id = :attachmentFileId")
+            "where file.id = :attachmentFileId")
     @Modifying
-    int deleteByGroupIdAndFileId(Long attachmentGroupId, Long attachmentFileId);
+    int deleteByFileId(Long attachmentFileId);
 
     /**
      * 파일 목록 카운트. By 그룹 ID 및 파일 타입

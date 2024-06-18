@@ -2,6 +2,7 @@ package com.choidh.web.learning.controller;
 
 
 import com.choidh.service.account.entity.Account;
+import com.choidh.service.account.service.AccountService;
 import com.choidh.service.attachment.entity.AttachmentFile;
 import com.choidh.service.attachment.entity.AttachmentFileType;
 import com.choidh.service.attachment.service.AttachmentService;
@@ -14,6 +15,8 @@ import com.choidh.service.learning.service.LearningService;
 import com.choidh.service.learning.vo.LearningDetailVO;
 import com.choidh.service.learning.vo.LearningListAPIVO;
 import com.choidh.service.learning.vo.LearningListVO;
+import com.choidh.service.learning.vo.LearningListenVO;
+import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
 import com.choidh.service.question.entity.Question;
 import com.choidh.service.question.service.QuestionService;
 import com.choidh.service.question.vo.ModQuestionVO;
@@ -26,7 +29,6 @@ import com.choidh.web.kakao.vo.KakaoPayForm;
 import com.choidh.web.question.vo.QuestionForm;
 import com.choidh.web.review.vo.ReviewVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,6 +43,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.net.URLEncoder;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -56,6 +59,7 @@ public class LearningController {
     private final CartService cartService;
     private final LearningCartService learningCartService;
     private final LearningTagService learningTagService;
+    private final AccountService accountService;
 
     @Value("${download.path}")
     private String downloadPath;
@@ -114,59 +118,44 @@ public class LearningController {
         return "learning/detail/index";
     }
 
-    // 강의 상세 페이지로 이동. (학습 버튼 클릭시 동작)
-    @GetMapping("/learning/{id}/listen")
-    public String getLearningView(@CurrentAccount Account account, Model model, @PathVariable Long id) {
-        Learning learning = learningService.getLearningById(id);
-        List<AttachmentFile> attachmentFiles = attachmentService.getAttachmentFiles(learning.getAttachmentGroup().getId(), AttachmentFileType.VIDEO);
-        List<String> contentsTitle = attachmentFiles.stream().map(AttachmentFile::getOriginalFileName).sorted().collect(Collectors.toList());
-
-        model.addAttribute("account", account);
-        model.addAttribute("learning", learning);
-        model.addAttribute("contentsList", attachmentFiles.stream().map(AttachmentFile::getOriginalFileName).sorted().collect(Collectors.toList()));
-        model.addAttribute("now", contentsTitle.get(0));
-
-        return "learning/listen_learning";
-    }
-
-    // 영상 재생하기인가 ?
-    @GetMapping("/learning/listen/{learningId}/{fileId}")
-    public String getPlayLearningVideoView(@CurrentAccount Account account, Model model, @PathVariable("learningId") Long learningId,
-                                           @PathVariable("fileId") Long fileId, RedirectAttributes attributes) {
-        Learning learning = learningService.getLearningById(learningId);
-        List<AttachmentFile> attachmentFiles = attachmentService.getAttachmentFiles(learning.getAttachmentGroup().getId(), AttachmentFileType.VIDEO);
-        List<String> contentsTitle = attachmentFiles.stream().map(AttachmentFile::getOriginalFileName).sorted().collect(Collectors.toList());
-        AttachmentFile attachmentFile = attachmentService.getAttachmentFileById(learning.getAttachmentGroup().getId(), fileId);
-
-        model.addAttribute("account", account);
-        model.addAttribute("learning", learning);
-        model.addAttribute("contentsList", contentsTitle);
-        model.addAttribute("now", attachmentFile.getOriginalFileName());
-        model.addAttribute("videoPath", attachmentFile.getFullPath(downloadPath));
-
-        return "learning/listen_learning";
-    }
-
-    // 강의 페이지에서 질의하기 팝업 보여주는거 같은데...
-    @GetMapping("/question/{id}")
-    public String getQuestionView(@CurrentAccount Account account, Model model, @PathVariable Long id){
-        Learning learning = learningService.getLearningById(id);
+    /**
+     * 강의 학습 페이지로 이동. (학습 버튼 클릭시 동작)
+     */
+    @GetMapping("/learning/listen/{learningId}")
+    public String getLearningListenView(@CurrentAccount Account account, Model model, @PathVariable Long learningId) {
+        LearningListenVO learningListen = learningService.getLearningListen(account.getId(), learningId);
+        Learning learning = learningListen.getLearning();
 
         model.addAttribute("learning", learning);
-        model.addAttribute("account", account);
-        model.addAttribute(new QuestionForm());
+        model.addAttribute("titleSet", learningListen.getVideoTitleSet());
+        model.addAttribute("videoSrc", learningListen.getVideoSrc());
+        model.addAttribute("videoFileIdMap", learningListen.getVideoFileIdMap());
+        model.addAttribute("playingVideo", learningListen.getPlayingVideo());
 
-        return "question";
+        model.addAttribute("pageTitle", "커뮤니티 | " + learning.getTitle());
+
+        return "learning/listen/index";
     }
 
-    // 질의 글 등록
-    @PostMapping("/question/{id}")
-    public String saveQuestionPopup(@CurrentAccount Account account, RedirectAttributes attributes, @PathVariable Long id, QuestionForm questionForm){
-        questionService.regQuestion(modelMapper.map(questionForm, RegQuestionVO.class), account.getId(), id);
+    /**
+     * 강의 학습 페이지. 영상 경로 조회. API
+     */
+    @PostMapping("/learning/listen/{learningId}")
+    @ResponseBody
+    public ResponseEntity getPlayLearningVideoView(@CurrentAccount Account account, @PathVariable("learningId") Long learningId,
+                                                   @RequestBody String fileId) {
+        if (account == null) {
+            return ResponseEntity.badRequest().build();
+        }
 
-        attributes.addFlashAttribute("account", account);
+        try {
+            accountService.chkAccountHasLearning(account.getId(), learningId);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
 
-        return "redirect:/learning/" + id;
+        AttachmentFile attachmentFile = attachmentService.getAttachmentFileById(Long.parseLong(fileId));
+        return ResponseEntity.ok(attachmentFile.getFullPath(""));
     }
 
     /**

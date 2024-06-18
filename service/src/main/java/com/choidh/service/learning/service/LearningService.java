@@ -68,6 +68,11 @@ public interface LearningService {
      */
     LearningDetailVO getLearningDetail(Long accountId, Long learningId);
 
+    /**
+     * 강의 학습 페이지 상세. By View
+     */
+    LearningListenVO getLearningListen(Long accountId, Long learningId);
+
     // 강의 활성화.
     void isOpeningLearning(Long accountId, Long learningId, boolean isOpening);
 

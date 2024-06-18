@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
+import java.rmi.AccessException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -167,6 +168,9 @@ public class LearningServiceImpl implements LearningService {
         return learningRepository.findByIdWithTags(learningId);
     }
 
+    /**
+     * Get 강의 상세. By View
+     */
     @Override
     public LearningDetailVO getLearningDetail(Long accountId, Long learningId) {
         Learning learning = learningRepository.findLearningDetailById(learningId);
@@ -206,6 +210,44 @@ public class LearningServiceImpl implements LearningService {
                 .build();
     }
 
+    /**
+     * 강의 학습 페이지 상세. By View
+     */
+    @Override
+    public LearningListenVO getLearningListen(Long accountId, Long learningId) {
+        // 해당 유저가 구매이력에 해당 강의를 가지고 있는지 검증
+        accountService.chkAccountHasLearning(accountId, learningId);
+
+        Learning learning = this.getLearningById(learningId);
+        AttachmentGroup attachmentGroup = learning.getAttachmentGroup();
+
+        // 해당 강의 조회해서 비디오 파일들 가져오기
+        List<AttachmentFile> attachmentFiles = attachmentService.getAttachmentFiles(attachmentGroup.getId(), AttachmentFileType.VIDEO);
+
+        if (attachmentFiles.isEmpty()) {
+            throw new IllegalArgumentException("접근할 영상이 없음.");
+        }
+
+        // 비디오 타이틀을 목록화해서 보여줘야함
+        Map<String, Long> videoFileIdMap = new HashMap<>();
+        Set<String> videoTitleSet = new HashSet<>();
+
+        for (AttachmentFile attachmentFile : attachmentFiles) {
+            String originalFileName = attachmentFile.getOriginalFileName();
+            videoTitleSet.add(originalFileName);
+            videoFileIdMap.put(originalFileName, attachmentFile.getId());
+        }
+
+        AttachmentFile attachmentFile = attachmentFiles.get(0);
+        return LearningListenVO.builder()
+                .learning(learning)
+                .videoSrc(attachmentFile.getFullPath(""))
+                .videoTitleSet(videoTitleSet)
+                .videoFileIdMap(videoFileIdMap)
+                .playingVideo(attachmentFile.getOriginalFileName())
+                .build();
+    }
+
     // 강의 활성화
     @Override
     @Transactional
@@ -238,7 +280,7 @@ public class LearningServiceImpl implements LearningService {
 
         for (Long fileId : fileIdList) {
             // 파일 삭제.
-            if (attachmentService.delAttachmentFile(attachmentGroupId, fileId) <= 0) {
+            if (attachmentService.delAttachmentFile(fileId) <= 0) {
                 throw new EntityNotFoundException("AttachmentGroup Id is " + attachmentGroupId + "AttachmentFile Id is " + fileId);
             }
         }

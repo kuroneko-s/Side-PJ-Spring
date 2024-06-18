@@ -88,7 +88,7 @@ public class LearningProfessionalController {
         model.addAttribute("account", account);
         model.addAttribute("learningList", learningList);
 
-        return "learning/learning_list";
+        return "profile/learning/list/learning_list";
     }
 
     // 강의 영상 업로드 페이지
@@ -102,7 +102,7 @@ public class LearningProfessionalController {
         model.addAttribute("tags", tagList);
         model.addAttribute("whiteList", objectMapper.writeValueAsString(tagList));
 
-        return "learning/learning_upload";
+        return "profile/learning/upload/learning_upload";
     }
 
     // 강의 편집 페이지. 관리자 전용.

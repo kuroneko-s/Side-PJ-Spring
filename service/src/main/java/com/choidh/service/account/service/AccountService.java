@@ -86,4 +86,9 @@ public interface AccountService {
      * GET 유저 단건 조회 For 프로필 화면용
      */
     Account getAccountForProfile(Long accountId);
+
+    /**
+     * Chk 해당 강의를 수강중인 학생인지 검증
+     */
+    boolean chkAccountHasLearning(Long accountId, Long learningId);
 }

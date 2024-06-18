@@ -94,7 +94,7 @@
             <!-- 영상 목차 start -->
             <div class="learning-detail-contents-video-wrapper" th:if="${videoFileList.size() > 0}">
                 <p class="learning-detail-contents-title">목차</p>
-                <p class="learning-detail-contents-description" th:each="file : ${videoFileList}" th:text="${fild.originalFileName}"></p>
+                <p class="learning-detail-contents-description" th:each="file : ${videoFileList}" th:text="${file.originalFileName}"></p>
                 <hr />
             </div>
             <!-- 영상 목차 end -->
@@ -124,14 +124,14 @@
         <!-- Floating Box start -->
         <div class="learning-detail-contents-right-container">
             <div class="learning-detail-floating-container">
-                <div class="learning-detail-floating-box" th:if="${nowListening}">
-                    <form action="#" th:action="@{'/learning/' + ${learning.id} + '/listen'}" method="get">
+                <div class="learning-detail-floating-box" th:if="${!nowListening}">
+                    <form action="#" th:action="@{'/learning/listen/' + ${learning.id}}" method="GET">
                         <button class="learning-detail-floating-box-button" type="submit">학습하기</button>
                     </form>
                 </div>
 
                 <!-- 현재 유저가 강의를 구매하지 않았을 경우 동작 -->
-                <div class="learning-detail-floating-box" th:if="${!nowListening}">
+                <div class="learning-detail-floating-box" th:if="${nowListening}">
                     <div class="learning-detail-floating-box-price">
                         110,000원
                     </div>
@@ -166,17 +166,19 @@
         })
 
         const shortDateTimeEl = document.querySelector(".date-time-short");
-        const formattedDate = new Intl.DateTimeFormat('ko-KR', {
-            year: '2-digit',
-            month: '2-digit',
-            day: '2-digit',
-        }).format(new Date(shortDateTimeEl.textContent));
-        const finalDate = formattedDate.replace(/\. /g, '').replace(/(\d{2})(\d{2})(\d{2})/, '$1년 $2월 $3일');
-        shortDateTimeEl.textContent = finalDate.replace("\.", "");
+        if (shortDateTimeEl !== null) {
+            const formattedDate = new Intl.DateTimeFormat('ko-KR', {
+                year: '2-digit',
+                month: '2-digit',
+                day: '2-digit',
+            }).format(new Date(shortDateTimeEl?.textContent));
+            const finalDate = formattedDate.replace(/\. /g, '').replace(/(\d{2})(\d{2})(\d{2})/, '$1년 $2월 $3일');
+            shortDateTimeEl.textContent = finalDate.replace("\.", "");
+        }
 
         // 장바구니 Click Event
         const cartButtonEl = document.getElementById("cart-button");
-        cartButtonEl.addEventListener("click", e => {
+        cartButtonEl?.addEventListener("click", e => {
             const targetId = e.target.dataset.learningId;
             fetch('/learning/' + targetId + '/cart/add', {
                 method: "GET",

@@ -13,7 +13,7 @@ public class AppConstant {
     public static final String KAKAO_PAY_FAIL_REDIRECT_URL = "/kakaoPaySuccessFail"; // 카카오 페이 실패시 리다이렉트 주소
 
     // 페이지 URL 관련
-    public static final String CREATE_LEARNING = "learning/create_learning";
+    public static final String CREATE_LEARNING = "profile/learning/create/create_learning";
 
     public static String getAccountNotFoundErrorMessage(Long id) {
         return id + "에 해당하는 유저를 찾지 못하였습니다.";
