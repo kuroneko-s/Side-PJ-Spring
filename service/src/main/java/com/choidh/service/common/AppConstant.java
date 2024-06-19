@@ -38,4 +38,8 @@ public class AppConstant {
     public static boolean isNotImageFile(String extension) {
         return !extension.equals("jpg") && !extension.equals("png") && !extension.equals("jpeg");
     }
+
+    public static String getTitle(String pageName) {
+        return "커뮤니티 | " + pageName;
+    }
 }

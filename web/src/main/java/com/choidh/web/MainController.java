@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.choidh.service.common.AppConstant.getTitle;
+
 @Controller
 @RequiredArgsConstructor
 public class MainController {
@@ -94,7 +96,7 @@ public class MainController {
         model.addAttribute("learningImageMap", learningImageMap);
         model.addAttribute("newLearningList", newLearningList);
         model.addAttribute("newLearningImageMap", newLearningImageMap);
-        model.addAttribute("pageTitle", "커뮤니티 | 홈");
+        model.addAttribute("pageTitle", getTitle("홈"));
 
         return "home/index";
     }

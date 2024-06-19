@@ -1,0 +1,189 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<main class="learning-detail-container">
+    <!-- banner start -->
+    <div class="learning-detail-banner-container">
+        <img th:src="${bannerImage.getFullPath('')}" th:alt="${bannerImage.originalFileName}" />
+        <div class="learning-detail-banner-title-wrapper">
+            <p class="learning-detail-banner-title" th:text="${learning.title}"></p>
+            <div>
+                <p class="learning-detail-banner-rating">
+                  <span class="full-star star" th:each="num : ${#numbers.sequence(0, learning.getRatingInt() - 1)}" th:if="${learning.getRatingInt() > 0}">
+                      <i class="fas fa-star"></i>
+                  </span>
+                  <span class="half-star star" th:if="${learning.checkRatingBoolean()}">
+                      <i class="fas fa-star-half-alt"></i>
+                  </span>
+                  <span class="empty-star star" th:each="num : ${#numbers.sequence(1, learning.emptyRating())}" th:if="${learning.emptyRating() > 0}">
+                      <i class="far fa-star"></i>
+                  </span>
+                  <span class="learning-detail-banner-rating-number">(<span th:text="${learning.rating}"></span>)</span>
+                </p>
+
+                <span th:each="tag : ${learning.tags}">
+                    <span th:text="${tag.getTitle()}"></span>
+                </span>
+
+                <p class="learning-detail-banner-professional-wrapper">
+                    <i class="far fa-id-badge"></i>  교육자 : <span th:text="${professionalAccount.name}"></span>
+                </p>
+
+                <div class="learning-detail-banner-listener-wrapper">
+                    <div class="learning-detail-banner-progress">
+                        <div class="learning-detail-banner-progress-now" id="learning-detail-banner-progress-now"></div>
+                        <span>0/</span>
+                        <span th:text="${videoFileList.size()}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- banner end -->
+
+    <div class="learning-detail-contents-container">
+        <div class="learning-detail-contents-left-container">
+            <!-- 강의 설명글 start -->
+            <div class="learning-detail-contents-subscription-wrapper">
+                <p class="learning-detail-contents-title">강의 소개</p>
+                <p class="learning-detail-contents-description" th:text="${learning.subscription}"></p>
+                <hr />
+            </div>
+            <!-- 강의 설명글 end -->
+
+            <!-- 강의 제공자 start -->
+            <div class="learning-detail-contents-professional-wrapper">
+                <p class="learning-detail-contents-title">강의 제공자 : <span th:text="${professionalAccount.name}"></span></p>
+                <p class="learning-detail-contents-description" th:text="${professionalAccount.description}"></p>
+                <hr/>
+            </div>
+            <!-- 강의 제공자 end -->
+
+            <!-- 강의 질문 start -->
+            <div class="learning-detail-contents-question-wrapper">
+                <p class="learning-detail-contents-title">질문 내용</p>
+
+                <div class="learning-detail-contents-description" th:each="question: ${questions}">
+                    <p>
+                        제목: <span class="text-overflow" th:text="${question.title}"></span>
+                    </p>
+                    <p>
+                        질의자: <span class="text-overflow" th:text="${question.account.nickname}"></span>
+                    </p>
+                    <a class="learning-detail-contents-button" href="#" th:href="@{'/question/' + ${question.id}}">
+                        <!--th:action="@{'/learning/question/' + ${learning.id}}"-->
+                        질문 이동
+                    </a>
+                </div>
+                <a type="button" class="learning-detail-contents-button" href="#">더보기</a>
+                <hr />
+            </div>
+            <!-- 강의 질문 end -->
+
+            <!-- 공개 일자 start -->
+            <div class="learning-detail-contents-opening-wrapper">
+                <p class="learning-detail-contents-title">공개 일자</p>
+                <p>
+                    <span class="date-time" th:text="${learning.openingDate}">Date Time</span>
+                    (마지막 업데이트 날짜 : <span class="date-time" th:text="${learning.updatedAt}"></span>)
+                </p>
+                <hr />
+            </div>
+            <!-- 공개 일자 end -->
+
+            <!-- 영상 목차 start -->
+            <div class="learning-detail-contents-video-wrapper" th:if="${videoFileList.size() > 0}">
+                <p class="learning-detail-contents-title">목차</p>
+                <p class="learning-detail-contents-description" th:each="file : ${videoFileList}" th:text="${file.originalFileName}"></p>
+                <hr />
+            </div>
+            <!-- 영상 목차 end -->
+
+            <!-- 강의 후기 start -->
+            <div class="learning-detail-contents-review-wrapper" th:if="${reviews.size() > 0}">
+                <p class="learning-detail-contents-title">강의 후기</p>
+                <div class="learning-detail-contents-review-contents" th:each="review : ${reviews}">
+                    <div class="learning-detail-contents-review-profile-wrapper">
+                        <svg th:data-jdenticon-value="${review.account.nickname}" th:width="25" th:height="25"></svg>
+                        <div class="learning-detail-contents-review-profile-info">
+                            <p class="learning-detail-contents-review-profile-info-nickname" th:text="${review.account.nickname}"></p>
+                            <p class="learning-detail-contents-review-profile-info-datetime date-time-short" th:text="${review.createTime}"></p>
+                        </div>
+                    </div>
+                    <div class="learning-detail-contents-review-rating-wrapper">
+                        <p>
+                            평점 : <span th:text="${review.rating}"></span>
+                        </p>
+                        <p th:text="${review.description}"></p>
+                    </div>
+                </div>
+            </div>
+            <!-- 강의 후기 start -->
+        </div>
+
+        <!-- Floating Box start -->
+        <div class="learning-detail-contents-right-container">
+            <div class="learning-detail-floating-container">
+                <div class="learning-detail-floating-box" th:if="${!nowListening}">
+                    <form action="#" th:action="@{'/learning/listen/' + ${learning.id}}" method="GET">
+                        <button class="learning-detail-floating-box-button" type="submit">학습하기</button>
+                    </form>
+                </div>
+
+                <!-- 현재 유저가 강의를 구매하지 않았을 경우 동작 -->
+                <div class="learning-detail-floating-box" th:if="${nowListening}">
+                    <div class="learning-detail-floating-box-price">
+                        110,000원
+                    </div>
+                    <form action="#" th:action="@{'/learning/' + ${learning.id} + '/buy'}" method="GET">
+                        <button class="learning-detail-floating-box-button" type="submit">구매하기</button>
+                    </form>
+                    <button type="button" class="learning-detail-floating-box-button blue" id="cart-button" th:data-learning-id="${learning.id}">
+                        장바구니
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Floating Box end -->
+    </div>
+</main>
+
+<script type="application/javascript">
+    window.addEventListener("DOMContentLoaded", () => {
+        // 진행도 progress
+        const progressBarEl = document.getElementById("learning-detail-banner-progress-now");
+        const progressValueEls = progressBarEl.parentNode.querySelectorAll("span");
+        let now = [...progressValueEls[0].textContent]
+        now.pop();
+        let result = +now.join("") / (+progressValueEls[1].textContent);
+        result = isNaN(result) ? 100 : result;
+        progressBarEl.style.width = result + "%";
+
+        // 기본 날짜 포매팅
+        moment.locale('ko');
+        $(".date-time").text(function (index, dateTime) {
+            return moment(dateTime, "YYYY-MM-DD'T'hh:mm").format("LLL");
+        })
+
+        const shortDateTimeEl = document.querySelector(".date-time-short");
+        if (shortDateTimeEl !== null) {
+            const formattedDate = new Intl.DateTimeFormat('ko-KR', {
+                year: '2-digit',
+                month: '2-digit',
+                day: '2-digit',
+            }).format(new Date(shortDateTimeEl?.textContent));
+            const finalDate = formattedDate.replace(/\. /g, '').replace(/(\d{2})(\d{2})(\d{2})/, '$1년 $2월 $3일');
+            shortDateTimeEl.textContent = finalDate.replace("\.", "");
+        }
+
+        // 장바구니 Click Event
+        const cartButtonEl = document.getElementById("cart-button");
+        cartButtonEl?.addEventListener("click", e => {
+            const targetId = e.target.dataset.learningId;
+            fetch('/learning/' + targetId + '/cart/add', {
+                method: "GET",
+            })
+        })
+    })
+</script>
+</html>

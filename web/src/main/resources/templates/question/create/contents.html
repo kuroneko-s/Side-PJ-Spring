@@ -1,0 +1,58 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<main class="question-container">
+    <p class="question-title"><span th:text="${learning.title}"></span> 질문</p>
+
+    <form id="questionForm" class="question-form form needs-validation" th:action="@{'/question/' + ${learning.id}}" method="post">
+        <label for="questionTitle">제목</label>
+        <input type="text" id="questionTitle" required minlength="2" maxlength="150">
+        <label for="summernote">질문 내용</label>
+        <textarea id="summernote" type="textarea" required> </textarea>
+
+        <button class="question-form-button" type="submit" id="submitButton">제출하기!</button>
+    </form>
+</main>
+
+<script type="application/javascript">
+    window.addEventListener("DOMContentLoaded", () => {
+        $("#summernote").summernote({
+            fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Noto Sans KR', 'Merriweather'],
+            placeholder: '질문에 대한 내용을 적어주세요!',
+            tabSize: 2,
+            lang: "ko-KR",
+            height: 200,
+            minHeight: 200,
+            maxHeight: 450,
+            minWidth: 500,
+            maxWidth: 875,
+            focus: true
+        });
+
+        document.getElementById("questionForm").addEventListener("submit", e => {
+            e.preventDefault();
+
+            const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+            const url = e.target.action;
+            const title = document.getElementById("questionTitle").value;
+            const description = document.getElementById("summernote").value;
+
+            fetch(url, {
+                method: "POST",
+                body: JSON.stringify({ title, description}),
+                headers: {
+                    [csrfHeader]: csrfToken,
+                    "Content-Type": "application/json"
+                }
+            }).then(() => {
+                self.close();
+            }).catch(() => {
+                alert("제출 실패.");
+                self.close();
+            })
+        })
+    })
+</script>
+</html>
