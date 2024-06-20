@@ -1,0 +1,19 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<main class="question-container">
+    <p class="question-title" th:text="${question.title}"></p>
+    <div class="question-description" th:utext="${question.description}"></div>
+
+    <hr />
+    <div>
+        <div class="question-description" th:utext="${question.answer}"></div>
+    </div>
+</main>
+
+<script type="application/javascript">
+    window.addEventListener("DOMContentLoaded", () => {
+        
+    })
+</script>
+</html>

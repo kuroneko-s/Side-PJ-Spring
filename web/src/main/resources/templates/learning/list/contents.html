@@ -87,24 +87,7 @@
       </div>
 
       <!-- pagination -->
-      <section class="pagination-container">
-        <div class="pagination-wrapper">
-          <a class="pagination-item" th:classappend="${!pageableLearning.hasPrevious()}? disabled"
-             href="#" th:href="@{${paginationUrl} + ${pageableLearning.getNumber() - 1}}">
-            Previous
-          </a>
-
-          <a class="pagination-item" href="#" th:href="@{${paginationUrl} + ${num}}" th:text="${num + 1}"
-             th:classappend="${num == pageableLearning.getNumber()}? active"
-             th:each="num : ${#numbers.sequence(0, pageableLearning.getTotalPages() -1)}">
-          </a>
-
-          <a class="pagination-item" th:classappend="${!pageableLearning.hasNext()}? disabled"
-             href="#" th:href="@{${paginationUrl} + ${pageableLearning.getNumber() + 1}}">
-            Next
-          </a>
-        </div>
-      </section>
+      <section th:replace="fragment/fragment.html :: pagination"></section>
     </div>
   </div>
   <!-- right content start -->

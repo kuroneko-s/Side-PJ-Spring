@@ -14,6 +14,7 @@ import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -207,7 +208,7 @@ public class AccountServiceImpl implements AccountService {
      * Chk 해당 강의를 수강중인 학생인지 검증
      */
     @Override
-    public boolean chkAccountHasLearning(Long accountId, Long learningId) {
+    public void chkAccountHasLearning(Long accountId, Long learningId) {
         // 해당 유저가 구매이력에 해당 강의를 가지고 있는지 검증
         boolean checker = false;
         Account account = this.getAccountByIdWithPurchaseHistories(accountId);
@@ -220,9 +221,7 @@ public class AccountServiceImpl implements AccountService {
         }
 
 //        if (!checker) {
-//            return ResponseEntity.badRequest().build();
+        // throw new IllegalArgumentException();
 //        }
-
-        return checker;
     }
 }

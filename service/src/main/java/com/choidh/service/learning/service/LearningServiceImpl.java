@@ -10,6 +10,7 @@ import com.choidh.service.attachment.entity.AttachmentFileType;
 import com.choidh.service.attachment.entity.AttachmentGroup;
 import com.choidh.service.attachment.service.AttachmentService;
 import com.choidh.service.common.StringUtils;
+import com.choidh.service.common.pagination.Paging;
 import com.choidh.service.joinTables.entity.AccountTagJoinTable;
 import com.choidh.service.joinTables.entity.LearningTagJoinTable;
 import com.choidh.service.joinTables.service.AccountTagService;
@@ -373,10 +374,18 @@ public class LearningServiceImpl implements LearningService {
                 sortProperty +
                 ",desc&page=";
 
+        Paging paging = Paging.builder()
+                .hasNext(learningPage.hasNext())
+                .hasPrevious(learningPage.hasPrevious())
+                .number(learningPage.getNumber())
+                .totalPages(learningPage.getTotalPages())
+                .paginationUrl(defaultButtonUrlBuilder)
+                .build();
+
         return LearningListVO.builder()
                 .learningPage(learningPage)
                 .learningImageMap(learningImageMap)
-                .paginationUrl(defaultButtonUrlBuilder)
+                .paging(paging)
                 .build();
     }
 
@@ -438,13 +447,17 @@ public class LearningServiceImpl implements LearningService {
         stringBuilder.append(sortProperty);
         stringBuilder.append(",desc&page=");
 
-        return LearningListAPIVO.builder()
-                .learningList(resultList)
-                .paginationUrl(stringBuilder.toString())
-                .hasPrevious(learningPage.hasPrevious())
+        Paging paging = Paging.builder()
                 .hasNext(learningPage.hasNext())
+                .hasPrevious(learningPage.hasPrevious())
                 .number(learningPage.getNumber())
                 .totalPages(learningPage.getTotalPages())
+                .paginationUrl(stringBuilder.toString())
+                .build();
+
+        return LearningListAPIVO.builder()
+                .learningList(resultList)
+                .paging(paging)
                 .build();
     }
 }

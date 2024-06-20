@@ -1,0 +1,14 @@
+.question-container {
+    position: relative;
+    margin-top: 1.25rem;
+}
+
+.question-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.25rem;
+}
+
+.question-description {
+
+}

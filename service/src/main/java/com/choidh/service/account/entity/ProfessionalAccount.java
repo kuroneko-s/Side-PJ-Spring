@@ -3,11 +3,14 @@ package com.choidh.service.account.entity;
 import com.choidh.service.annotation.Name;
 import com.choidh.service.common.entity.BaseEntity;
 import com.choidh.service.learning.entity.Learning;
+import com.choidh.service.question.entity.Question;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**

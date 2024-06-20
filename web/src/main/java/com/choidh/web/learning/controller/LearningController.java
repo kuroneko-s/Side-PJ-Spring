@@ -54,11 +54,10 @@ public class LearningController {
 
         model.addAttribute("mainCategory", mainCategory);
         model.addAttribute("subCategory", subCategory);
-        model.addAttribute("pageableLearning", learningListVO.getLearningPage());
         model.addAttribute("learningList", learningListVO.getLearningPage().getContent());
         model.addAttribute("learningImageMap", learningListVO.getLearningImageMap());
-        model.addAttribute("paginationUrl", learningListVO.getPaginationUrl());
         model.addAttribute("pageTitle", getTitle("검색"));
+        model.addAttribute(learningListVO.getPaging());
 
         return "learning/list/index";
     }

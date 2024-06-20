@@ -90,5 +90,5 @@ public interface AccountService {
     /**
      * Chk 해당 강의를 수강중인 학생인지 검증
      */
-    boolean chkAccountHasLearning(Long accountId, Long learningId);
+    void chkAccountHasLearning(Long accountId, Long learningId);
 }

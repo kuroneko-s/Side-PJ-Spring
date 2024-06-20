@@ -1,6 +1,7 @@
 package com.choidh.service.learning.vo;
 
 import com.choidh.service.annotation.Name;
+import com.choidh.service.common.pagination.Paging;
 import com.choidh.service.learning.entity.Learning;
 import lombok.*;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,5 @@ public class LearningListVO {
     @Name(name = "Learning 이미지 경로 정보")
     private Map<Long, List<String>> learningImageMap;
 
-    @Name(name = "페이지네이션 기본 버튼 Url")
-    private String paginationUrl;
+    private Paging paging;
 }

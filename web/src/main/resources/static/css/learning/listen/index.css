@@ -78,7 +78,7 @@
     border-color: var(--event-green-border);
 }
 
-.learning-listen-title-button:first-child {
+.learning-listen-title-button:not(:last-child) {
     margin-bottom: .75rem;
 }
 

@@ -10,6 +10,7 @@ import com.choidh.service.learning.service.LearningService;
 import com.choidh.service.question.entity.Question;
 import com.choidh.service.question.service.QuestionService;
 import com.choidh.service.question.vo.ModQuestionVO;
+import com.choidh.service.question.vo.QuestionListVO;
 import com.choidh.service.question.vo.RegQuestionVO;
 import com.choidh.service.tag.entity.Tag;
 import com.choidh.web.common.annotation.CurrentAccount;
@@ -17,6 +18,10 @@ import com.choidh.web.question.vo.QuestionForm;
 import com.choidh.web.question.vo.RegQuestionForm;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,16 +47,24 @@ public class QuestionController {
     /**
      * Get 질문 글 목록 View.
      */
-    @GetMapping("/list")
-    public String getQuestionListView(@CurrentAccount Account account, Model model) {
-        return "";
+    @GetMapping("/list/{learningId}")
+    public String getQuestionListView(@CurrentAccount Account account, Model model, @PathVariable Long learningId,
+                                      @PageableDefault(size = 16, sort = "questionTime", direction = Sort.Direction.DESC) Pageable pageable) {
+        QuestionListVO questionListVO = questionService.getQuestionList(pageable, account.getId(), learningId);
+
+        model.addAttribute("questionList", questionListVO.getQuestionPage());
+        model.addAttribute(questionListVO.getPaging());
+
+        model.addAttribute("pageTitle", getTitle("질문 목록"));
+
+        return "question/list/index";
     }
 
     /**
      * Get 질문 글 등록 View.
      */
-    @GetMapping("/{learningId}")
-    public String getRegQuestionView(@CurrentAccount Account account, Model model, @PathVariable Long learningId){
+    @GetMapping("/regQuestion")
+    public String getRegQuestionView(@CurrentAccount Account account, Model model, @RequestParam("learningId") Long learningId){
         // 해당 강의에 질의 글 등록 권한이 있는지 확인.
         accountService.chkAccountHasLearning(account.getId(), learningId);
 
@@ -66,7 +79,9 @@ public class QuestionController {
         return "question/create/index";
     }
 
-    // 질의 글 등록
+    /**
+     * Reg 질의 글 등록
+     */
     @PostMapping("/{learningId}")
     public ResponseEntity regQuestion(@CurrentAccount Account account, @PathVariable Long learningId, @RequestBody RegQuestionForm regQuestionForm){
         questionService.regQuestion(modelMapper.map(regQuestionForm, RegQuestionVO.class), account.getId(), learningId);
@@ -77,10 +92,15 @@ public class QuestionController {
     /**
      * Get 질문 글 상세 View.
      */
-    @GetMapping("/{learningId}/{questionId}")
-    public String getQuestionDetailView(@CurrentAccount Account account, Model model,
-                                        @PathVariable Long learningId, @PathVariable Long questionId) {
-        return "";
+    @GetMapping("/{questionId}")
+    public String getQuestionDetailView(@CurrentAccount Account account, Model model, @PathVariable Long questionId) {
+        Question question = questionService.getQuestionById(questionId);
+
+        model.addAttribute("question", question);
+
+        model.addAttribute("pageTitle", getTitle("질문 " + question.getTitle()));
+
+        return "question/detail/index";
     }
 
     // 질문 화면 이동

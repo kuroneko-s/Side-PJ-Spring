@@ -135,4 +135,25 @@
     });
 </script>
 
+<!-- pagination start -->
+<section class="pagination-container" th:fragment="pagination">
+    <div class="pagination-wrapper">
+        <a class="pagination-item" th:classappend="${!paging.hasPrevious}? disabled"
+           href="#" th:href="@{${paging.paginationUrl} + ${paging.number - 1}}">
+            Previous
+        </a>
+
+        <a class="pagination-item" href="#" th:href="@{${paging.paginationUrl} + ${num}}" th:text="${num + 1}"
+           th:classappend="${num == paging.number}? active"
+           th:each="num : ${#numbers.sequence(0, paging.totalPages -1)}">
+        </a>
+
+        <a class="pagination-item" th:classappend="${!paging.hasNext}? disabled"
+           href="#" th:href="@{${paging.paginationUrl} + ${paging.number + 1}}">
+            Next
+        </a>
+    </div>
+</section>
+<!-- pagination end -->
+
 </html>

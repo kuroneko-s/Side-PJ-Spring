@@ -11,6 +11,7 @@
 
         <div>
             <button class="learning-listen-title-button" type="button" id="questionPopupButton">강의 질문하기</button>
+            <button class="learning-listen-title-button" id="questionListButton">질문 목록</button>
             <button class="learning-listen-title-button" type="button" id="reviewPopupButton">강의 평가 작성하기</button>
         </div>
     </div>
@@ -34,7 +35,7 @@
         document.getElementById("questionPopupButton")?.addEventListener("click", e => {
             const popupX = (window.screen.width / 2) - (1100 / 2);
             const popupY= (window.screen.height / 2) - (700 / 2);
-            window.open("/question/" + [[${learning.id}]], "question", `width=1100, height=700, left=${popupX},screenX=${popupX}, top=${popupX}, screenY=${popupY} `);
+            window.open("/question/regQuestion?learningId=" + [[${learning.id}]], "question", `width=1100, height=700, left=${popupX},screenX=${popupX}, top=${popupX}, screenY=${popupY} `);
         })
 
         // 강의 평가하기 버튼 팝업 클릭 이벤트
@@ -83,6 +84,11 @@
                 .catch(err => {
                     console.error(err);
                 })
+        })
+
+        // 질문 목록 버튼 클릭 이벤트
+        document.getElementById("questionListButton").addEventListener("click", e => {
+            location.href = "/question/list/" + window.location.pathname.split("/")[3];
         })
     })
 </script>
