@@ -1,0 +1,63 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<main class="cart-container">
+    <div class="cart-item-container">
+        <p class="cart-item-title">구매하기</p>
+
+        <div class="cart-item-wrapper">
+            <div class="cart-item" th:each="learning : ${learningList}" th:data-learning-id="${learning.id}">
+                <a class="cart-item-anchor" href="#" th:href="@{'/learning/' + ${learning.id}}">
+                    <img class="cart-item-banner" th:src="${learningImageMap[learning.id][0]}" th:alt="${learningImageMap[learning.id][1]}"/>
+                    <div class="cart-item-info-wrapper">
+                        <p class="cart-item-info-title">
+                            강의: <span th:text="${learning.title}"></span>
+                        </p>
+                        <p class="cart-item-info-price" th:if="${!learning.priceComma().equals('free')}">
+                            가격: <span th:text="${learning.priceComma()}"></span>원
+                        </p>
+                        <p class="cart-item-info-price" th:if="${learning.priceComma().equals('free')}">
+                            가격: <span>무료 강의</span>
+                        </p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!--강의 항목들-->
+
+    <div class="cart-pay-container">
+        <p class="cart-pay-title">결제</p>
+
+        <div class="cart-pay-info-container">
+            <p>총 갯수 : <span th:text="${learningList.size()}"></span>개</p>
+            <p>총 가격 : <span th:text="${totalPrice}"></span>원</p>
+        </div>
+
+        <form class="cart-pay-button" action="#" th:action="@{/kakaoPay}" method="POST" th:object="${kakaoPayForm}">
+            <input type="hidden" class="hidden-value-id" th:field="*{id}"/>
+            <button class="cart-pay-kakaopay-button" type="submit" id="kakao-btn"></button>
+        </form>
+    </div>
+    <!--가격 및 구매하기 버튼-->
+</main>
+
+<script type="application/javascript">
+    window.addEventListener("DOMContentLoaded", () => {
+        moment.locale('ko');
+        $(".date-time").text(function (index, dateTime) {
+            return moment(dateTime, "YYYY-MM-DD'T'hh:mm").format("LL");
+        })
+
+        $('.learning-list').ready(function() {
+            let lecture = $('.hidden-p-lecture').text().toString();
+            let id = $('.hidden-p-id').text().toString();
+
+            let $id = $('.hidden-value-id');
+            let $lecture = $('.hidden-value-lecture');
+            $id.val(id)
+            $lecture.val(lecture)
+        })
+    })
+</script>
+</html>

@@ -10,7 +10,7 @@ public interface LearningCartService {
      */
     Set<LearningCartJoinTable> getCartListWithLearningByCartId(Long cartId);
 
-    void saveLearningCart(LearningCartJoinTable learningCartJoinTable);
+    LearningCartJoinTable saveLearningCart(LearningCartJoinTable learningCartJoinTable);
 
     int removeLearning(Long cartId, Long learningId);
 }

@@ -44,6 +44,6 @@ public class Cart extends BaseEntity {
     }
 
     public void setLearningCartJoinTables(Set<LearningCartJoinTable> learningCartJoinTables) {
-        this.learningCartJoinTables = Collections.unmodifiableSet(learningCartJoinTables);
+        this.learningCartJoinTables = new HashSet<>(learningCartJoinTables);
     }
 }

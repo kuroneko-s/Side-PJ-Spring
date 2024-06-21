@@ -4,11 +4,13 @@ import com.choidh.service.joinTables.entity.LearningCartJoinTable;
 import com.choidh.service.joinTables.repository.LearningCartRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class LearningCartServiceImpl implements LearningCartService {
     private final LearningCartRepository learningCartRepository;
 
@@ -21,8 +23,8 @@ public class LearningCartServiceImpl implements LearningCartService {
     }
 
     @Override
-    public void saveLearningCart(LearningCartJoinTable learningCartJoinTable) {
-        learningCartRepository.save(learningCartJoinTable);
+    public LearningCartJoinTable saveLearningCart(LearningCartJoinTable learningCartJoinTable) {
+        return learningCartRepository.save(learningCartJoinTable);
     }
 
     @Override

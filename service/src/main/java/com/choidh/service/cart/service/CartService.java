@@ -1,8 +1,10 @@
 package com.choidh.service.cart.service;
 
 import com.choidh.service.cart.entity.Cart;
+import com.choidh.service.cart.vo.BuyVO;
 import com.choidh.service.learning.entity.Learning;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public interface CartService {
@@ -19,10 +21,15 @@ public interface CartService {
     /**
      * 유저의 카트에 강의 추가.
      */
-    void addCart(Long accountId, Long learningId);
+    String addCart(Long accountId, Long learningId);
 
     /**
      * 카트에서 강의 삭제
      */
     void deleteCart(Cart cart, List<Learning> learningList);
+
+    /**
+     * 구매 화면 View
+     */
+    BuyVO buyCartView(Long accountId, @Nullable Long learningId);
 }

@@ -55,6 +55,7 @@ public class AccountServiceImpl implements AccountService {
      * Account 단건 조회. By Id With Learning In Cart
      */
     @Override
+    @Transactional
     public Account getAccountByIdWithLearningInCart(Long accountId) {
         // Account 단건 조회. By Id With LearningCartJoinTable
         Account account = accountRepository.findAccountByIdWithLearningCart(accountId);
@@ -63,11 +64,6 @@ public class AccountServiceImpl implements AccountService {
             Cart cart = cartService.regCart(accountId);
             account.setCart(cart);
         }
-
-        // LearningCartJoinTable 목록 조회. By Cart Id
-        Set<LearningCartJoinTable> cartListWithLearningByCartId = learningCartService.getCartListWithLearningByCartId(account.getCart().getId());
-        // 조회 결과를 Account.Cart 에 덮어쓰기
-        account.getCart().setLearningCartJoinTables(cartListWithLearningByCartId);
 
         return account;
     }

@@ -91,18 +91,4 @@ public class LearningRestController {
             return ResponseEntity.badRequest().build();
         }
     }
-
-    // 강의를 카트에 추가. API.
-    @GetMapping("/learning/{learningId}/cart/add")
-    public ResponseEntity cartLearning(@CurrentAccount Account account, @PathVariable("learningId") Long id) {
-        try {
-            cartService.addCart(id, account.getId());
-
-            return ResponseEntity.ok().build();
-        } catch(Exception e) {
-            log.error(e.getMessage(), e);
-
-            return ResponseEntity.badRequest().build();
-        }
-    }
 }

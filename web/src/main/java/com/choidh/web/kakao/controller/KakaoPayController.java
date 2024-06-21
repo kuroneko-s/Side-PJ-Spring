@@ -64,7 +64,7 @@ public class KakaoPayController {
         model.addAttribute("info", kakaoPaySuccessResult.getKakaoPayApprovalVO());
         model.addAttribute("learningList", kakaoPaySuccessResult.getLearningList());
 
-        return "shop/paysuccess";
+        return "cart/paysuccess";
     }
 
     /**
@@ -84,6 +84,6 @@ public class KakaoPayController {
         model.addAttribute("account", kakaoPayCancelResult.getAccount());
         model.addAttribute("learningList", kakaoPayCancelResult.getLearningList());
 
-        return "shop/cancel";
+        return "cart/cancel";
     }
 }

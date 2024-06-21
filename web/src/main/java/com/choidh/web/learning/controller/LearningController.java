@@ -135,27 +135,4 @@ public class LearningController {
         AttachmentFile attachmentFile = attachmentService.getAttachmentFileById(Long.parseLong(fileId));
         return ResponseEntity.ok(attachmentFile.getFullPath(""));
     }
-
-    // 강의 페이지에서 구매하기 버튼 누르면 강의 구매 화면으로 전환되는 그 동작.
-    @GetMapping("/learning/{learningId}/buy")
-    public String getLearningBuyView(@CurrentAccount Account account, RedirectAttributes attributes, @PathVariable("learningId") Long learningId) {
-        // 카트에 강의 등록
-        cartService.addCart(account.getId(), learningId);
-
-        return "redirect:/learning/buy";
-    }
-
-    // 구매화면 이동 같음.
-    @GetMapping("/learning/buy")
-    public String getBuyView(@CurrentAccount Account account, Model model) {
-        Set<LearningCartJoinTable> learningCartJoinTableList = learningCartService.getCartListWithLearningByCartId(account.getCart().getId());
-        List<Learning> learningList = learningCartJoinTableList.stream().map(LearningCartJoinTable::getLearning).collect(Collectors.toList());
-
-        model.addAttribute("account", account);
-        model.addAttribute("learningList", learningList);
-        model.addAttribute("totalPrice", learningList.stream().mapToInt(Learning::getPrice).sum());
-        model.addAttribute(new KakaoPayForm());
-
-        return "shop/buy";
-    }
 }

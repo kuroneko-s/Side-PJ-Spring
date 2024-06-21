@@ -124,20 +124,20 @@
         <!-- Floating Box start -->
         <div class="learning-detail-contents-right-container">
             <div class="learning-detail-floating-container">
-                <div class="learning-detail-floating-box" th:if="${!nowListening}">
+                <div class="learning-detail-floating-box" th:if="${nowListening}">
                     <form action="#" th:action="@{'/learning/listen/' + ${learning.id}}" method="GET">
                         <button class="learning-detail-floating-box-button" type="submit">학습하기</button>
                     </form>
                 </div>
 
                 <!-- 현재 유저가 강의를 구매하지 않았을 경우 동작 -->
-                <div class="learning-detail-floating-box" th:if="${nowListening}">
+                <div class="learning-detail-floating-box" th:if="${!nowListening}">
                     <div class="learning-detail-floating-box-price">
                         110,000원
                     </div>
-                    <form action="#" th:action="@{'/learning/' + ${learning.id} + '/buy'}" method="GET">
-                        <button class="learning-detail-floating-box-button" type="submit">구매하기</button>
-                    </form>
+                    <button type="button" class="learning-detail-floating-box-button" id="buy-button" th:data-learning-id="${learning.id}">
+                        구매하기
+                    </button>
                     <button type="button" class="learning-detail-floating-box-button blue" id="cart-button" th:data-learning-id="${learning.id}">
                         장바구니
                     </button>
@@ -176,13 +176,38 @@
             shortDateTimeEl.textContent = finalDate.replace("\.", "");
         }
 
-        // 장바구니 Click Event
-        const cartButtonEl = document.getElementById("cart-button");
-        cartButtonEl?.addEventListener("click", e => {
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+        // 구매하기 버튼 클릭 이벤트
+        document.getElementById("buy-button").addEventListener("click", e => {
             const targetId = e.target.dataset.learningId;
-            fetch('/learning/' + targetId + '/cart/add', {
-                method: "GET",
-            })
+
+            location.href = "/cart/buy?learningId=" + targetId;
+        })
+
+        // 장바구니 Click Event
+        document.getElementById("cart-button").addEventListener("click", e => {
+            const targetId = e.target.dataset.learningId;
+
+            fetch('/cart/append', {
+                method: "POST",
+                body: targetId,
+                headers: {
+                    [csrfHeader]: csrfToken,
+                    "Content-Type": "application/json"
+                }
+            }).then(res => res.text())
+                .then(text => {
+                    if (text === "99") {
+                        alert("이미 추가되어있어요");
+                    } else {
+                        alert("추가되었습니다.");
+                    }
+                }).catch(err => {
+                console.error(err);
+                alert("다시 추가해주세요.");
+            });
         })
     })
 </script>

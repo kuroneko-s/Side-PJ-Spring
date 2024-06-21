@@ -123,7 +123,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
      */
     private HttpHeaders getKakaoHeader() {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "KakaoAK " + ADMIN_KEY);
+        headers.add("Authorization", "SECRET_KEY " + ADMIN_KEY);
         headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
         headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=utf-8");
 
