@@ -6,20 +6,23 @@ import com.choidh.service.account.repository.AccountRepository;
 import com.choidh.service.account.vo.*;
 import com.choidh.service.cart.entity.Cart;
 import com.choidh.service.cart.service.CartService;
-import com.choidh.service.joinTables.entity.LearningCartJoinTable;
+import com.choidh.service.joinTables.entity.AccountTagJoinTable;
 import com.choidh.service.joinTables.service.LearningCartService;
+import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.mail.service.EmailService;
 import com.choidh.service.mail.vo.EmailForAuthenticationVO;
 import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
+import com.choidh.service.question.entity.Question;
+import com.choidh.service.tag.entity.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.choidh.service.common.AppConstant.getAccountNotFoundErrorMessage;
 
@@ -196,8 +199,26 @@ public class AccountServiceImpl implements AccountService {
      * GET 단건 조회 For 프로필 화면용
      */
     @Override
-    public Account getAccountForProfile(Long accountId) {
-        return accountRepository.findAccountForProfile(accountId);
+    public ProfileVO getAccountForProfile(Long accountId) {
+        Account account = accountRepository.findAccountForProfile(accountId);
+
+        List<String> tagTitleList = account.getTags()
+                .stream().map(AccountTagJoinTable::getTag)
+                .map(Tag::getTitle)
+                .collect(Collectors.toList());
+
+        List<Learning> learningList = account.getPurchaseHistories().stream().map(PurchaseHistory::getLearning).collect(Collectors.toList());
+        List<Learning> learningTop4 = learningList.stream().limit(4).collect(Collectors.toList());
+        List<String> learningTitle = learningList.stream().map(Learning::getTitle).limit(3).collect(Collectors.toList());
+        List<Question> questionList = account.getQuestions().stream().limit(4).collect(Collectors.toList());
+
+        return ProfileVO.builder()
+                .account(account)
+                .tagTitleList(tagTitleList)
+                .learningTitleList(learningTitle)
+                .learningTop4List(learningTop4)
+                .questionList(questionList)
+                .build();
     }
 
     /**

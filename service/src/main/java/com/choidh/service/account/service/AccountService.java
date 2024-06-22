@@ -1,10 +1,7 @@
 package com.choidh.service.account.service;
 
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.account.vo.ModNotificationVO;
-import com.choidh.service.account.vo.ModPasswordVO;
-import com.choidh.service.account.vo.ModAccountVO;
-import com.choidh.service.account.vo.RegAccountVO;
+import com.choidh.service.account.vo.*;
 import com.choidh.service.security.AccountUser;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -85,7 +82,7 @@ public interface AccountService {
     /**
      * GET 유저 단건 조회 For 프로필 화면용
      */
-    Account getAccountForProfile(Long accountId);
+    ProfileVO getAccountForProfile(Long accountId);
 
     /**
      * Chk 해당 강의를 수강중인 학생인지 검증

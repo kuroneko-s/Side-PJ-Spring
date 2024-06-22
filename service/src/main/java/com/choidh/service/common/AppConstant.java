@@ -8,9 +8,9 @@ public class AppConstant {
     /**
      * 카카오 페이 관련 값들
      */
-    public static final String KAKAO_PAY_SUCCESS_REDIRECT_URL = "/kakaoPaySuccess"; // 카카오 페이 성공시 리다이렉트 주소
-    public static final String KAKAO_PAY_CANCEL_REDIRECT_URL = "/kakaoPayCancel"; // 카카오 페이 취소시 리다이렉트 주소
-    public static final String KAKAO_PAY_FAIL_REDIRECT_URL = "/kakaoPaySuccessFail"; // 카카오 페이 실패시 리다이렉트 주소
+    public static final String KAKAO_PAY_SUCCESS_REDIRECT_URL = "/kakaopay/success"; // 카카오 페이 성공시 리다이렉트 주소
+    public static final String KAKAO_PAY_CANCEL_REDIRECT_URL = "/kakaopay/cancel"; // 카카오 페이 취소시 리다이렉트 주소
+    public static final String KAKAO_PAY_FAIL_REDIRECT_URL = "/kakaopay/fail"; // 카카오 페이 실패시 리다이렉트 주소
 
     // 페이지 URL 관련
     public static final String CREATE_LEARNING = "profile/learning/create/create_learning";

@@ -5,6 +5,7 @@ import com.choidh.service.account.service.AccountService;
 import com.choidh.service.account.vo.ModNotificationVO;
 import com.choidh.service.account.vo.ModPasswordVO;
 import com.choidh.service.account.vo.ModAccountVO;
+import com.choidh.service.account.vo.ProfileVO;
 import com.choidh.service.joinTables.entity.AccountTagJoinTable;
 import com.choidh.service.joinTables.service.AccountTagService;
 import com.choidh.service.learning.entity.Learning;
@@ -12,8 +13,6 @@ import com.choidh.service.learning.service.LearningService;
 import com.choidh.service.notification.entity.Notification;
 import com.choidh.service.notification.service.NotificationService;
 import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
-import com.choidh.service.question.entity.Question;
-import com.choidh.service.tag.entity.Tag;
 import com.choidh.service.tag.service.TagService;
 import com.choidh.web.common.annotation.CurrentAccount;
 import com.choidh.web.profile.validator.ProfileNicknameValidator;
@@ -39,7 +38,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.choidh.service.common.AppConstant.getTitle;
+
 @Controller
+@RequestMapping(value = "/profile")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ProfileController {
     private final ModelMapper modelMapper;
@@ -68,24 +70,20 @@ public class ProfileController {
         webDataBinder.addValidators(profilePasswordValidator);
     }
 
-    @GetMapping("/profile/{id}")
-    public String getProfileView(@PathVariable Long id, Model model) {
-        Account account = accountService.getAccountForProfile(id);
+    @GetMapping("/{accountId}")
+    public String getProfileView(@PathVariable Long accountId, Model model) {
+        ProfileVO profileVO = accountService.getAccountForProfile(accountId);
+        Account account = profileVO.getAccount();
 
-        List<Tag> tagList = account.getTags().stream().map(AccountTagJoinTable::getTag).collect(Collectors.toList());
-        List<Learning> learningList = account.getPurchaseHistories().stream().map(PurchaseHistory::getLearning).collect(Collectors.toList());
-        List<Question> questionList = account.getQuestions().stream().limit(4).collect(Collectors.toList());
-        List<String> tagTitleList = tagList.stream().map(Tag::getTitle).collect(Collectors.toList());
-        List<String> learningTitle = learningList.stream().map(Learning::getTitle).limit(3).collect(Collectors.toList());
-        List<Learning> learnings = learningList.stream().limit(4).collect(Collectors.toList());
+        model.addAttribute("accountVO", account);
+        model.addAttribute("learningTitleList", profileVO.getLearningTitleList());
+        model.addAttribute("questionList", profileVO.getQuestionList());
+        model.addAttribute("tagTitleList", profileVO.getTagTitleList());
+        model.addAttribute("learningTop4List", profileVO.getLearningTop4List());
 
-        model.addAttribute("account", account);
-        model.addAttribute("learningTitle", learningTitle);
-        model.addAttribute("accountQuestion", questionList);
-        model.addAttribute("tagList", tagTitleList);
-        model.addAttribute("learnings", learnings);
+        model.addAttribute("pageTitle", getTitle(account.getNickname()));
 
-        return "profile/profile";
+        return "profile/detail/index";
     }
 
     /**

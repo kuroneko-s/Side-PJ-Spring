@@ -3,10 +3,7 @@ package com.choidh.service.account.service;
 import com.choidh.service.AbstractServiceTestConfig;
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.entity.ProfessionalAccount;
-import com.choidh.service.account.vo.ModAccountVO;
-import com.choidh.service.account.vo.ModNotificationVO;
-import com.choidh.service.account.vo.ModPasswordVO;
-import com.choidh.service.account.vo.RegAccountVO;
+import com.choidh.service.account.vo.*;
 import com.choidh.service.cart.entity.Cart;
 import com.choidh.service.cart.repository.CartRepository;
 import com.choidh.service.joinTables.entity.LearningCartJoinTable;
@@ -317,8 +314,8 @@ class AccountServiceImplTest extends AbstractServiceTestConfig {
 
         theLine();
 
-        Account newAccount = accountService.getAccountForProfile(account.getId());
+        ProfileVO profileVO = accountService.getAccountForProfile(account.getId());
 
-        assertNotNull(newAccount);
+        assertNotNull(profileVO);
     }
 }

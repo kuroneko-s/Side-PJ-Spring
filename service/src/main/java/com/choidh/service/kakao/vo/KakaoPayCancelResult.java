@@ -5,12 +5,15 @@ import com.choidh.service.learning.entity.Learning;
 import lombok.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter @Setter @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class KakaoPayCancelResult {
-    private KakaoPayCancelVO kakaoPayCancelVO;
     private List<Learning> learningList;
+
     private Account account;
+
+    private Map<Long, List<String>> learningImageMap;
 }

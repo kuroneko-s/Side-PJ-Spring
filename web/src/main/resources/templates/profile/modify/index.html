@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/layout.html :: head">
+    <title>Blank</title>
+</head>
+
+<section>
+    <script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
+    <script src="/node_modules/summernote/dist/summernote-bs4.js"></script>
+
+    <link rel="stylesheet" href="/css/profile-bar.css"/>
+    <link rel="stylesheet" href="/css/profile-settings.css"/>
+    <link rel="stylesheet" href="/node_modules/summernote/dist/summernote-bs4.min.css"/>
+    <link rel="stylesheet" href="/node_modules/@yaireo/tagify/dist/tagify.css">
+</section>
+
+<body class="container">
+    <div th:replace="layout/layout.html :: body(pageContent='profile/modify/contents')"></div>
+</body>
+
+</html>

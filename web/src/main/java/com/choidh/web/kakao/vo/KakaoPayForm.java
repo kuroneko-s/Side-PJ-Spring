@@ -11,5 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class KakaoPayForm {
     @Name(name = "강의 ID", description = "구분 값 - ,")
-    private String id;
+    private String learningIds;
 }

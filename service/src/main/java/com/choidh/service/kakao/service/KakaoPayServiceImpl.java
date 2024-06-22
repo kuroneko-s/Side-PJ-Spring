@@ -3,6 +3,9 @@ package com.choidh.service.kakao.service;
 
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.service.AccountService;
+import com.choidh.service.attachment.entity.AttachmentFile;
+import com.choidh.service.attachment.entity.AttachmentFileType;
+import com.choidh.service.attachment.service.AttachmentService;
 import com.choidh.service.common.AppConstant;
 import com.choidh.service.kakao.vo.*;
 import com.choidh.service.learning.entity.Learning;
@@ -13,17 +16,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -44,6 +46,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
     private final AccountService accountService;
     private final LearningService learningService;
     private final PurchaseHistoryService purchaseHistoryService;
+    private final AttachmentService attachmentService;
 
     /**
      * 카카오 페이 결제 초기 진행
@@ -51,22 +54,22 @@ public class KakaoPayServiceImpl implements KakaoPayService {
     @Override
     public KakaoPayReadyVO kakaoPayReady(){
         // 서버로 요청할 body
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("cid", "TC0ONETIME"); // Test Code
-        params.add("partner_order_id", "1001"); // 가맹점 주문번호
-        params.add("partner_user_id", "흑우냥이"); //가맹점 회원
-        params.add("item_name", "갤럭시 Tab S9 울라리"); // 상품명
-        params.add("quantity", "1"); // 상품 수량
-        params.add("total_amount", "2100"); // 상품 총액
-        params.add("tax_free_amount", "100"); //상품 비과세 금액
-        params.add("approval_url", HOST + AppConstant.KAKAO_PAY_SUCCESS_REDIRECT_URL); // 성공시 redirect URL
-        params.add("cancel_url", HOST + AppConstant.KAKAO_PAY_CANCEL_REDIRECT_URL); // 취소시 redirect URL
-        params.add("fail_url", HOST + AppConstant.KAKAO_PAY_FAIL_REDIRECT_URL); // 실패시 redirect URL
+        Map<String, String> params = new HashMap<>();
+        params.put("cid", "TC0ONETIME"); // Test Code
+        params.put("partner_order_id", "1001"); // 가맹점 주문번호
+        params.put("partner_user_id", "흑우냥이"); //가맹점 회원
+        params.put("item_name", "갤럭시 Tab S9 울라리"); // 상품명
+        params.put("quantity", "1"); // 상품 수량
+        params.put("total_amount", "2100"); // 상품 총액
+        params.put("tax_free_amount", "100"); //상품 비과세 금액
+        params.put("approval_url", HOST + AppConstant.KAKAO_PAY_SUCCESS_REDIRECT_URL); // 성공시 redirect URL
+        params.put("cancel_url", HOST + AppConstant.KAKAO_PAY_CANCEL_REDIRECT_URL); // 취소시 redirect URL
+        params.put("fail_url", HOST + AppConstant.KAKAO_PAY_FAIL_REDIRECT_URL); // 실패시 redirect URL
 
         // header와 body를 합치는 부분
-        HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(params, this.getKakaoHeader());
+        HttpEntity<Map<String, String>> body = new HttpEntity<>(params, this.getKakaoHeader());
 
-        try{
+        try {
             return restTemplate.postForObject(new URI(KAKAO_HOST + "/v1/payment/ready"), body, KakaoPayReadyVO.class);
         } catch (URISyntaxException e) {
             log.error(e.getMessage(), e);
@@ -81,14 +84,14 @@ public class KakaoPayServiceImpl implements KakaoPayService {
     @Override
     public KakaoPayApprovalVO kakaoPayInfo(String pg_token, String tid){
         //서버로 요청할 body
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("cid", "TC0ONETIME"); // Test Code
-        params.add("tid", tid);
-        params.add("partner_order_id", "1001"); // 가맹점 주문번호
-        params.add("partner_user_id", "흑우냥이"); //가맹점 회원
-        params.add("pg_token", pg_token);
+        Map<String, String> params = new HashMap<>();
+        params.put("cid", "TC0ONETIME"); // Test Code
+        params.put("tid", tid);
+        params.put("partner_order_id", "1001"); // 가맹점 주문번호
+        params.put("partner_user_id", "흑우냥이"); //가맹점 회원
+        params.put("pg_token", pg_token);
 
-        HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(params, this.getKakaoHeader());
+        HttpEntity<Map<String, String>> body = new HttpEntity<>(params, this.getKakaoHeader());
 
         try{
             return restTemplate.postForObject(new URI(KAKAO_HOST + "/v1/payment/approve"), body, KakaoPayApprovalVO.class);
@@ -101,13 +104,13 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 
     @Override
     public KakaoPayCancelVO kakaoPayCancel(String tid){
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("cid", "TC0ONETIME"); // Test Code
-        params.add("tid", tid); // tid
-        params.add("cancel_amount", "2100"); // 취소금액
-        params.add("cancel_tax_free_amount", "100");//취소금액 세금
+        Map<String, String> params = new HashMap<>();
+        params.put("cid", "TC0ONETIME"); // Test Code
+        params.put("tid", tid); // tid
+        params.put("cancel_amount", "2100"); // 취소금액
+        params.put("cancel_tax_free_amount", "100");//취소금액 세금
 
-        HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<>(params, this.getKakaoHeader());
+        HttpEntity<Map<String, String>> body = new HttpEntity<>(params, this.getKakaoHeader());
 
         try{
             return restTemplate.postForObject(new URI(KAKAO_HOST + "/v1/payment/cancel"), body, KakaoPayCancelVO.class);
@@ -124,8 +127,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
     private HttpHeaders getKakaoHeader() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "SECRET_KEY " + ADMIN_KEY);
-        headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
-        headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=utf-8");
+        headers.add("Content-Type", "application/json");
 
         return headers;
     }
@@ -135,14 +137,8 @@ public class KakaoPayServiceImpl implements KakaoPayService {
      */
     @Override
     @Transactional
-    public KakaoPaySuccessResult paidLearning(Long accountId, String pgToken, String kakaoPayTid, String learningId) {
-        KakaoPaySuccessResult kakaoPaySuccessResult = new KakaoPaySuccessResult();
+    public KakaoPaySuccessResult paidLearning(Long accountId, String learningId) {
         Account account = accountService.getAccountById(accountId);
-        kakaoPaySuccessResult.setAccount(account);
-
-        // 결제 진행
-        KakaoPayApprovalVO kakaoPayApprovalVO = this.kakaoPayInfo(pgToken, kakaoPayTid);
-        kakaoPaySuccessResult.setKakaoPayApprovalVO(kakaoPayApprovalVO);
 
         // 구매처리한 강의 리스트
         List<Learning> learningList = learningService.getLearningListByIdList(
@@ -150,14 +146,33 @@ public class KakaoPayServiceImpl implements KakaoPayService {
                         .map(Long::valueOf)
                         .collect(Collectors.toList())
         );
-        kakaoPaySuccessResult.setLearningList(Collections.unmodifiableList(learningList));
 
         // 구매 이력 등록.
         for (Learning learning : learningList) {
             purchaseHistoryService.regPurchaseHistory(account.getId(), learning.getId());
         }
 
-        return kakaoPaySuccessResult;
+        // 강의 이미지 목록 조회
+        Map<Long, List<String>> learningImageMap = new HashMap<>();
+        for (Learning learning : learningList) {
+            List<AttachmentFile> attachmentFiles = attachmentService.getAttachmentFiles(learning.getAttachmentGroup().getId(), AttachmentFileType.BANNER);
+            if (attachmentFiles.size() != 1) {
+                throw new IllegalArgumentException();
+            }
+
+            List<String> valueList = learningImageMap.getOrDefault(learning.getId(), new ArrayList<>());
+
+            AttachmentFile attachmentFile = attachmentFiles.get(0);
+            valueList.add(attachmentFile.getFullPath(""));
+            valueList.add(attachmentFile.getOriginalFileName());
+            learningImageMap.put(learning.getId(), valueList);
+        }
+
+        return KakaoPaySuccessResult.builder()
+                .account(account)
+                .learningList(learningList)
+                .learningImageMap(learningImageMap)
+                .build();
     }
 
     /**
@@ -166,13 +181,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
     @Override
     @Transactional
     public KakaoPayCancelResult cancelLearning(Long accountId, String learningId, String kakaoPayTid) {
-        KakaoPayCancelResult kakaoPayCancelResult = new KakaoPayCancelResult();
         Account account = accountService.getAccountById(accountId);
-        kakaoPayCancelResult.setAccount(account);
-
-        // 구매 취소 진행
-        KakaoPayCancelVO kakaoPayCancelVO = this.kakaoPayCancel(kakaoPayTid);
-        kakaoPayCancelResult.setKakaoPayCancelVO(kakaoPayCancelVO);
 
         // 구매 취소한 강의들
         List<Learning> learningList = learningService.getLearningListByIdList(
@@ -180,13 +189,32 @@ public class KakaoPayServiceImpl implements KakaoPayService {
                         .map(Long::valueOf)
                         .collect(Collectors.toList())
         );
-        kakaoPayCancelResult.setLearningList(Collections.unmodifiableList(learningList));
 
         // 구매 이력 취소 처리
         for (Learning learning : learningList) {
             purchaseHistoryService.modPurchaseHistoryOfCancel(account.getId(), learning.getId());
         }
 
-        return kakaoPayCancelResult;
+        // 강의 이미지 목록 조회
+        Map<Long, List<String>> learningImageMap = new HashMap<>();
+        for (Learning learning : learningList) {
+            List<AttachmentFile> attachmentFiles = attachmentService.getAttachmentFiles(learning.getAttachmentGroup().getId(), AttachmentFileType.BANNER);
+            if (attachmentFiles.size() != 1) {
+                throw new IllegalArgumentException();
+            }
+
+            List<String> valueList = learningImageMap.getOrDefault(learning.getId(), new ArrayList<>());
+
+            AttachmentFile attachmentFile = attachmentFiles.get(0);
+            valueList.add(attachmentFile.getFullPath(""));
+            valueList.add(attachmentFile.getOriginalFileName());
+            learningImageMap.put(learning.getId(), valueList);
+        }
+
+        return KakaoPayCancelResult.builder()
+                .account(account)
+                .learningList(learningList)
+                .learningImageMap(learningImageMap)
+                .build();
     }
 }

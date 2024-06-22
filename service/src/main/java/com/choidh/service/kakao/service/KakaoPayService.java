@@ -21,7 +21,7 @@ public interface KakaoPayService {
     /**
      * 강의 구매
      */
-    KakaoPaySuccessResult paidLearning(Long accountId, String pgToken, String kakaoPayTid, String learningId);
+    KakaoPaySuccessResult paidLearning(Long accountId, String learningId);
 
     /**
      * 강의 구매 취소 처리

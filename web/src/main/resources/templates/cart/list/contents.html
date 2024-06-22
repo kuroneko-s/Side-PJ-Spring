@@ -34,8 +34,8 @@
             <p>총 가격 : <span th:text="${totalPrice}"></span>원</p>
         </div>
 
-        <form class="cart-pay-button" action="#" th:action="@{/kakaoPay}" method="POST" th:object="${kakaoPayForm}">
-            <input type="hidden" class="hidden-value-id" th:field="*{id}"/>
+        <form id="cart-pay-button" class="cart-pay-button" action="#" th:action="@{/kakaoPay}" method="POST" th:object="${kakaoPayForm}">
+            <input type="hidden" id="learningIds" name="learningIds"/>
             <button class="cart-pay-kakaopay-button" type="submit" id="kakao-btn"></button>
         </form>
     </div>
@@ -57,6 +57,12 @@
             let $lecture = $('.hidden-value-lecture');
             $id.val(id)
             $lecture.val(lecture)
+        })
+
+        document.getElementById("cart-pay-button").addEventListener("submit", e => {
+            const targetId = [];
+            document.querySelectorAll(".cart-item").forEach(node => targetId.push(node.dataset.learningId))
+            document.getElementById("learningIds").value = targetId.join(",");
         })
     })
 </script>
