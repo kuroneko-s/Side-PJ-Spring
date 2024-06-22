@@ -27,6 +27,7 @@ import static com.choidh.service.common.AppConstant.getTitle;
 
 /**
  * @see <a href="https://developers.kakaopay.com">카카오페이</a>
+ * @see <a href="https://developers.kakao.com/">카카오 API</a>
  */
 
 @Slf4j
