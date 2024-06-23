@@ -65,6 +65,27 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     /**
+     * GET 나의 질의 글 목록 조회.
+     */
+    @Override
+    public QuestionListVO getMyQuestionList(Pageable pageable, Long accountId) {
+        Page<Question> questionPage = questionRepository.findListByAccountId(pageable, accountId);
+
+        Paging paging = Paging.builder()
+                .hasNext(questionPage.hasNext())
+                .hasPrevious(questionPage.hasPrevious())
+                .number(questionPage.getNumber())
+                .paginationUrl("/question/list?sort=questionTime,desc&page=")
+                .totalPages(questionPage.getTotalPages())
+                .build();
+
+        return QuestionListVO.builder()
+                .questionPage(questionPage)
+                .paging(paging)
+                .build();
+    }
+
+    /**
      * Reg 질의 글 등록
      */
     @Override

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:th="http://www.thymeleaf.org">
+
+<!-- 상단 바 -->
+<header class="navbar-container" th:fragment="navbar">
+    <div class="navbar-left-container">
+        <a class="navbar-logo" href="#" th:href="@{/}">
+            <img src="/images/rogo.png" class="navbar-logo-image" alt="">
+            <span class="navbar-logo-context">커뮤니티</span>
+        </a>
+
+        <div class="navbar-menu-items">
+            <ul class="navbar-menu-item-ul">
+                <li class="navbar-menu-item-dropdown navbar-mr pointer" th:each="mainMenu : ${mainMenuList}">
+                    <p class="navbar-menu-item-title" th:text="${mainMenu.name}">
+                        강의 이름
+                    </p>
+                    <div class="navbar-menu-item-dropdown-details hide">
+                        <a class="navbar-menu-item-dropdown-details-item" href="#" th:each="subMenu : ${subMenuMap[mainMenu.url]}" th:href="@{${subMenu.url}}" th:text="${subMenu.name}">서브 강의 이름</a>
+                    </div>
+                </li>
+
+                <li class="navbar-mr">
+                    <a class="navbar-menu-item-title" href="#">로드맵</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="navbar-right-container">
+        <div class="navbar-menu-image">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+
+        <div class="navbar-menu-items">
+            <form class="form navbar-mr" action="#" method="GET" id="global-search-bar">
+                <input name="keyword" type="text" placeholder="강의 검색하기" />
+            </form>
+
+            <form class="form navbar-mr" action="#" sec:authorize="isAuthenticated()" th:action="@{'/profile/' + ${account.id}}">
+                <button class="button" type="submit">대시보드</button>
+            </form>
+
+            <ul class="navbar-menu-item-ul">
+                <li class="navbar-mr" sec:authorize="!isAuthenticated()">
+                    <a class="navbar-menu-item-title" href="#" th:href="@{/register}">회원가입</a>
+                </li>
+                <li class="navbar-mr" sec:authorize="!isAuthenticated()">
+                    <a class="navbar-menu-item-title" href="#" th:href="@{/login}" >로그인</a>
+                </li>
+                <li class="navbar-mr" sec:authorize="isAuthenticated()">
+                    <a class="navbar-menu-item-title" href="#" th:href="@{/cart/buy}">장바구니</a>
+                </li>
+
+                <li class="nav-bell-container" sec:authorize="isAuthenticated()">
+                    <a class="nav-bell" href="#" th:href="@{'/profile/notification'}">
+                        <i class="far fa-bell" th:if="${!hasNotification}"></i>
+                        <span class="text-info" th:if="${hasNotification}"><i class="fas fa-bell"></i></span>
+                    </a>
+                </li>
+
+                <li class="navbar-menu-item-dropdown arrow-rotate pointer" sec:authorize="isAuthenticated()" id="profile-menu">
+                    <a class="navbar-menu-item-title" href="#">
+                        <svg class="navbar-menu-item-profile" th:data-jdenticon-value="${#authentication.name}" width="20" height="20"></svg>
+                        <span class="navbar-menu-item-arrow"><i class="fa-solid fa-greater-than"></i></span>
+                    </a>
+
+                    <div class="navbar-menu-item-dropdown-details hide">
+                        <h6 class="navbar-menu-item-dropdown-details-title" sec:authentication="name">Anonymous</h6>
+                        <a class="navbar-menu-item-dropdown-details-item" href="#" th:href="@{'/profile/dashboard'}">프로필</a>
+                        <a class="navbar-menu-item-dropdown-details-item" href="#" th:href="@{'/profile/dashboard/custom'}">설정</a>
+                        <form method="post" th:action="@{/logout}">
+                            <button type="submit" class="navbar-menu-item-dropdown-details-item">로그아웃</button>
+                        </form>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>
+
+
+</html>

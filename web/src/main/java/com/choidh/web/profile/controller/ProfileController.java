@@ -2,9 +2,9 @@ package com.choidh.web.profile.controller;
 
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.service.AccountService;
+import com.choidh.service.account.vo.ModAccountVO;
 import com.choidh.service.account.vo.ModNotificationVO;
 import com.choidh.service.account.vo.ModPasswordVO;
-import com.choidh.service.account.vo.ModAccountVO;
 import com.choidh.service.account.vo.ProfileVO;
 import com.choidh.service.joinTables.entity.AccountTagJoinTable;
 import com.choidh.service.joinTables.service.AccountTagService;
@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -70,10 +71,14 @@ public class ProfileController {
         webDataBinder.addValidators(profilePasswordValidator);
     }
 
-    @GetMapping("/{accountId}")
-    public String getProfileView(@PathVariable Long accountId, Model model) {
-        ProfileVO profileVO = accountService.getAccountForProfile(accountId);
-        Account account = profileVO.getAccount();
+    @GetMapping("/dashboard")
+    public String getProfileView(@CurrentAccount Account account, Model model) {
+        if (account == null) {
+            throw new AccessDeniedException("접근 불가");
+        }
+
+        ProfileVO profileVO = accountService.getAccountForProfile(account.getId());
+        account = profileVO.getAccount();
 
         model.addAttribute("accountVO", account);
         model.addAttribute("learningTitleList", profileVO.getLearningTitleList());
@@ -82,14 +87,15 @@ public class ProfileController {
         model.addAttribute("learningTop4List", profileVO.getLearningTop4List());
 
         model.addAttribute("pageTitle", getTitle(account.getNickname()));
+        model.addAttribute("pageContent", "profile/dashboard/contents");
 
-        return "profile/detail/index";
+        return "profile/index";
     }
 
     /**
      * GET 프로필 수정 화면
      */
-    @GetMapping("/profile/{id}/custom")
+    @GetMapping("/dashboard/custom")
     public String getAccountView(@CurrentAccount Account account, Model model) throws JsonProcessingException {
         Set<AccountTagJoinTable> tagListByAccountId = accountTagService.getTagListByAccountId(account.getId());
         List<String> tagtitleList = tagListByAccountId.stream().map(accountTagJoinTable -> accountTagJoinTable.getTag().getTitle()).collect(Collectors.toList());

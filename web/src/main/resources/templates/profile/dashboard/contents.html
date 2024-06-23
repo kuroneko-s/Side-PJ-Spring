@@ -1,0 +1,97 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<section>
+    <link rel="stylesheet" href="/css/profile/dashboard/index.css">
+</section>
+
+<div class="profile-dashboard-container">
+    <p class="profile-title">대시보드</p>
+
+    <div class="profile-dashboard-box">
+        <p class="profile-dashboard-box-title">내 프로필</p>
+        <div class="profile-dashboard-box-contents">
+            <svg th:data-jdenticon-value="${#authentication.name}"
+                 width="100" height="100" class="profile-dashboard-box-image" preserveAspectRatio="xMidYMid slice"
+                 focusable="false" role="img" aria-label="account_profile"></svg>
+            <div class="profile-dashboard-box-description">
+                <p class="card-body-profile-inner-name"><span th:text="${accountVO.nickname}" style="font-weight: bold">운영자</span>님, 즐거운 하루!!</p>
+                <p>닉네임: <span th:text="${accountVO.nickname}">운영자</span></p>
+                <p>이메일: <span th:text="${accountVO.email}">kuroneko2@gmail.com</span></p>
+            </div>
+        </div>
+        <a class="profile-button" href="#" th:href="@{'/profile/' + ${accountVO.id} + '/custom'}">프로필 수정하기</a>
+    </div>
+
+    <div class="profile-dashboard-contents-box">
+        <!--최근 학습 강의-->
+        <div class="profile-dashboard-box">
+            <p class="profile-dashboard-box-title">학습 중인 강의</p>
+            <div class="profile-dashboard-box-contents">
+                <div class="profile-dashboard-box-description" th:if="${learningTitleList.size() > 0}">
+                    <p th:each="num : ${#numbers.sequence(0, learningTitleList.size()-1)}">
+                        <span th:text="${learningTitleList.get(num)}"> </span>
+                    </p>
+                </div>
+                <div class="profile-dashboard-box-description" th:if="${learningTitleList.size() <= 0}">
+                    <p>수강중인 강의가 존재하지 않습니다.</p>
+                </div>
+            </div>
+            <a class="profile-button" href="#" th:href="@{'/profile/learning'}">내 모든 강의</a>
+        </div>
+
+        <!--질문-->
+        <div class="profile-dashboard-box">
+            <p class="profile-dashboard-box-title">질문</p>
+            <div class="profile-dashboard-box-contents">
+                <div class="profile-dashboard-box-description">
+                    <a class="profile-wrapper" href="#" th:href="@{'/question/' + ${question.id}}" th:each="question : ${questionList}">
+                        <p class="profile-dashboard-question-title text-overflow" th:text="${question.title}"></p>
+                        <p class="profile-dashboard-question-date date-time text-overflow" th:text="${question.questionTime}"></p>
+                    </a>
+                </div>
+            </div>
+            <a class="profile-button" href="#" th:href="@{'/question/list'}">나의 질문 목록</a>
+        </div>
+
+        <!--관심 분야-->
+        <div class="profile-dashboard-box">
+            <p class="profile-dashboard-box-title">관심 분야</p>
+            <div class="card-body" th:if="${tagTitleList.size() > 0}">
+                <span class="ml-3" th:each="tag: ${tagTitleList}">
+                    <span class="tagFont" th:id="${tag}" th:text="${tag}"></span>   ,
+                </span>
+            </div>
+            <div class="card-body" th:if="${tagTitleList.size() == 0}">
+                <p>관심 분야가 없어요</p>
+            </div>
+            <a class="profile-button" th:if="${tagTitleList.size() > 0}" href="#" th:href="@{'/profile/learning'}">관심분야 수정하기</a>
+            <a class="profile-button" th:if="${tagTitleList.size() == 0}" href="#" th:href="@{'/profile/learning'}">관심분야 추가하기</a>
+        </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+    window.addEventListener("DOMContentLoaded", () => {
+        moment.locale('ko');
+        $(".date-time").text(function (index, dateTime) {
+            return moment(dateTime, "YYYY-MM-DD'T'hh:mm").format("LL");
+        })
+
+        const shortDateTimeEl = document.querySelector(".date-time");
+        if (shortDateTimeEl !== null) {
+            const formattedDate = new Intl.DateTimeFormat('ko-KR', {
+                year: '2-digit',
+                month: '2-digit',
+                day: '2-digit',
+            }).format(new Date(shortDateTimeEl?.textContent));
+            const finalDate = formattedDate.replace(/\. /g, '').replace(/(\d{2})(\d{2})(\d{2})/, '$1년 $2월 $3일');
+            shortDateTimeEl.textContent = finalDate.replace("\.", "");
+        }
+
+        [[${tagTitleList}]].forEach(value => {
+            value.style.color = "#" + (parseInt(Math.random() * 0xffffff)).toString(16);
+        });
+    })
+</script>
+</html>

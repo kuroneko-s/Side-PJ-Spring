@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <title th:text="${pageTitle}">Title</title>
+
+    <script src="https://kit.fontawesome.com/d460620ffc.js" crossorigin="anonymous"></script>
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="/node_modules/jquery-form/dist/jquery.form.min.js"></script>
+    <script src="/node_modules/tooltipster/dist/js/tooltipster.bundle.min.js"></script>
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/node_modules/moment/min/moment-with-locales.min.js"></script>
+    <script src="/node_modules/jdenticon/dist/jdenticon.min.js"></script>
+
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&display=swap"/>
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/node_modules/tooltipster/dist/css/tooltipster.bundle.min.css"/>
+
+    <link rel="stylesheet" href="/css/layout/common.css"/>
+    <link rel="stylesheet" href="/css/layout/navbar.css"/>
+    <link rel="stylesheet" href="/css/layout/footer.css"/>
+    <link rel="stylesheet" href="/css/layout/pagination.css"/>
+    <link rel="stylesheet" href="/css/layout/profileBar.css"/>
+</head>
+
+<body class="container">
+    <!-- 상단 바 -->
+    <header th:replace="layout/fragment.html :: navbar"></header>
+
+    <main class="profile-container">
+        <!-- 프로필 바 -->
+        <div class="profile-bar-container" id="profile-bar-container">
+            <a th:href="@{'/profile/' + ${account.id}}">
+                <p class="profile-bar-menu">
+                    대시보드
+                </p>
+            </a>
+
+            <a href="/profile/notification">
+                <p class="profile-bar-menu">
+                    알람
+                </p>
+            </a>
+
+            <a href="/profile/learning">
+                <p class="profile-bar-menu">
+                    내 학습
+                </p>
+            </a>
+
+            <a th:href="@{'/profile/' + ${account.id} + '/custom'}">
+                <p class="profile-bar-menu">
+                    설정
+                </p>
+            </a>
+
+            <div class="profile-bar-menu-accordion" id="profile-bar-menu-accordion" th:if="${account.professionalAccount != null}">
+                <div>
+                    <p class="profile-bar-menu-accordion-trigger">
+                        업로드
+                    </p>
+                </div>
+
+                <div class="profile-bar-menu-accordion-details hide" id="profile-bar-menu-accordion-details">
+                    <a href='/profile/learning/create'>
+                        <p class="profile-bar-menu-accordion-details-menu">
+                            강의 개설
+                        </p>
+                    </a>
+
+                    <a href="/profile/learning/list">
+                        <p class="profile-bar-menu-accordion-details-menu">
+                            강의 영상 업로드
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div th:replace="${pageContent}"></div>
+    </main>
+
+    <footer class="footer-container">
+        <div class="footer-wrapper">
+            <div class="footer-logo">
+                <img src="/images/rogo.png" alt="logo">
+            </div>
+            <div class="footer-name">
+                &copy; Learning Site By ChoiDH.
+            </div>
+            <div class="footer-email">
+                <p>이메일: choidh.dev@gmail.com</p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="application/javascript">
+        window.addEventListener("DOMContentLoaded", () => {
+            // 검색 기능
+            const globalSearchBarEl = document.getElementById("global-search-bar");
+            globalSearchBarEl.addEventListener("submit", e => {
+                const targetEl = e.target;
+                const inputEl = targetEl.querySelector("input");
+                const value = inputEl.value;
+
+                if (value.length <= 0) {
+                    e.preventDefault();
+                    return false;
+                }
+
+                targetEl.action = '/learning/search/all?keyword=' + value;
+            })
+
+            // 프로필 바 기능
+            const dashboardRegex = /^\/profile\/\d+$/;
+            const settingRegex = /^\/profile\/\d+\/custom$/;
+            const pathName = window.location.pathname;
+            const menuEls = document.getElementById("profile-bar-container").querySelectorAll(".profile-bar-menu");
+            if (dashboardRegex.test(pathName)) {
+                menuEls[0].classList.add("active");
+            } else if (pathName === "/profile/notification") {
+                menuEls[1].classList.add("active");
+            } else if (pathName === "/profile/learning") {
+                menuEls[2].classList.add("active");
+            } else if (settingRegex.test(pathName)) {
+                menuEls[3].classList.add("active");
+            } else if (pathName === "/profile/learning/create") {
+                document.getElementById("profile-bar-container").querySelectorAll(".profile-bar-menu-accordion-details-menu")[0].classList.add("active");
+                document.getElementById("profile-bar-menu-accordion-details").classList.remove("hide");
+            } else if (pathName === "/profile/learning/list") {
+                document.getElementById("profile-bar-container").querySelectorAll(".profile-bar-menu-accordion-details-menu")[1].classList.add("active");
+                document.getElementById("profile-bar-menu-accordion-details").classList.remove("hide");
+            }
+        })
+    </script>
+</body>
+</html>

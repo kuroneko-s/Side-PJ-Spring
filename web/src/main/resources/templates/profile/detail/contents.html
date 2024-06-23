@@ -43,7 +43,7 @@
                             <a class="list-group-item-action d-flex justify-content-between align-items-center custom-list-group" href="#"
                                th:href="@{'/learning/' + ${learning.id}}" th:each="learning : ${learningTop4List}">
                                 <div class="course-title" th:text="${learning.title}">question title</div>
-                                <div class="list-daytime date-time" th:text="${learning.createLearning}">date time</div>
+                                <div class="list-daytime date-time" th:text="${learning.createdAt}">date time</div>
                             </a>
                         </div>
                     </div>

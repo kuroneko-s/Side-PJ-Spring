@@ -18,11 +18,11 @@ import com.choidh.web.question.vo.QuestionForm;
 import com.choidh.web.question.vo.RegQuestionForm;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +43,26 @@ public class QuestionController {
     private final AccountService accountService;
     private final LearningTagService learningTagService;
     private final AttachmentService attachmentService;
+
+    /**
+     * Get 나의 질문 글 목록 View.
+     */
+    @GetMapping("/list")
+    public String getMyQuestionListView(@CurrentAccount Account account, Model model,
+                                        @PageableDefault(size = 16, sort = "questionTime", direction = Sort.Direction.DESC) Pageable pageable) {
+        if (account == null) {
+            throw new AccessDeniedException("접근 불가");
+        }
+
+        QuestionListVO questionListVO = questionService.getMyQuestionList(pageable, account.getId());
+
+        model.addAttribute("questionList", questionListVO.getQuestionPage());
+        model.addAttribute(questionListVO.getPaging());
+
+        model.addAttribute("pageTitle", getTitle("질문 목록"));
+
+        return "question/list/index";
+    }
 
     /**
      * Get 질문 글 목록 View.

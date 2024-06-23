@@ -1,0 +1,29 @@
+.profile-container {
+    position: relative;
+    margin-top: 1.25rem;
+    display: flex;
+}
+
+.profile-wrapper {
+    display: flex;
+    flex: 1;
+}
+
+.profile-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.profile-button {
+    width: fit-content;
+    padding: .5rem .75rem;
+    color: white !important;
+    background-color: var(--green);
+    border: var(--green) 1px solid;
+    border-radius: 2px;
+}
+
+.profile-button:hover {
+    background-color: var(--event-green);
+    border: var(--event-green-border) 1px solid;
+}

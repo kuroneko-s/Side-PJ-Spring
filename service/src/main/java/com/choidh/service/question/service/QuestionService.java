@@ -5,10 +5,7 @@ import com.choidh.service.question.entity.Question;
 import com.choidh.service.question.vo.ModQuestionVO;
 import com.choidh.service.question.vo.QuestionListVO;
 import com.choidh.service.question.vo.RegQuestionVO;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 public interface QuestionService {
     /**
@@ -20,6 +17,11 @@ public interface QuestionService {
      * GET 질의 글 목록 조회.
      */
     QuestionListVO getQuestionList(Pageable pageable, Long accountId, Long learningId);
+
+    /**
+     * GET 나의 질의 글 목록 조회.
+     */
+    QuestionListVO getMyQuestionList(Pageable pageable, Long accountId);
 
     /**
      * Reg 질의 글 등록
