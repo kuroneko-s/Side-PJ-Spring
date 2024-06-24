@@ -1,7 +1,9 @@
 .profile-container {
     position: relative;
-    margin-top: 1.25rem;
     display: flex;
+
+    min-height: 85vh;
+    padding: 1.25rem 0;
 }
 
 .profile-wrapper {

@@ -1,0 +1,111 @@
+.profile-setting-container {
+    flex: 1;
+
+    margin-left: 1rem;
+}
+
+.profile-setting-tab-container {
+    display: flex;
+    border-bottom: 1px solid #dee2e6;
+    margin-bottom: 0;
+    margin-top: 1.25rem;
+}
+
+.profile-setting-tab {
+    padding: .5rem 1rem;
+    user-select: none;
+    cursor: pointer;
+
+    border-top: rgba(222, 226, 230, 0) 1px solid;
+    border-right: rgba(222, 226, 230, 0) 1px solid;
+    border-left: rgba(222, 226, 230, 0) 1px solid;
+
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+
+    background-color: #fff;
+}
+
+.profile-setting-tab:hover {
+    border-top: rgba(222, 226, 230, 0.5) 1px solid;
+    border-right: rgba(222, 226, 230, 0.5) 1px solid;
+    border-left: rgba(222, 226, 230, 0.5) 1px solid;
+}
+
+.profile-setting-tab.active {
+    font-weight: 600;
+    border-top: #dee2e6 1px solid;
+    border-right: #dee2e6 1px solid;
+    border-left: #dee2e6 1px solid;
+    margin-bottom: -1px;
+}
+
+.profile-setting-tab-contents {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 1rem;
+}
+
+.profile-setting-tab-contents span {
+    margin: 0;
+}
+
+.profile-setting-tab-contents svg {
+    border-radius: 4px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.profile-setting-tab-contents label {
+    margin-bottom: .5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.profile-setting-tab-contents input {
+    display: block;
+    width: 100%;
+
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+
+    margin-bottom: 1rem;
+}
+
+.profile-setting-tab-contents .button {
+    display: block;
+    width: fit-content;
+    color: #fff;
+    background-color: var(--green);
+    border-color: var(--green-border);
+    border-radius: 3px;
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 1.25rem;
+    padding: .75rem 1.5rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.profile-setting-tab-contents .button:hover {
+    background-color: var(--event-green);
+    border-color: var(--event-green-border);
+}
+
+.tagify {
+    border: none;
+    width: 66%!important;
+}
+
+.tagify__dropdown.tagify__dropdown--input {
+    left: 17.7% !important;
+}

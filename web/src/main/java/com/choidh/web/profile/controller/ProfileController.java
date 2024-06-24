@@ -6,6 +6,7 @@ import com.choidh.service.account.vo.ModAccountVO;
 import com.choidh.service.account.vo.ModNotificationVO;
 import com.choidh.service.account.vo.ModPasswordVO;
 import com.choidh.service.account.vo.ProfileVO;
+import com.choidh.service.common.StringUtils;
 import com.choidh.service.joinTables.entity.AccountTagJoinTable;
 import com.choidh.service.joinTables.service.AccountTagService;
 import com.choidh.service.learning.entity.Learning;
@@ -14,17 +15,19 @@ import com.choidh.service.notification.entity.Notification;
 import com.choidh.service.notification.service.NotificationService;
 import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
 import com.choidh.service.tag.service.TagService;
+import com.choidh.service.tag.vo.RegTagVO;
 import com.choidh.web.common.annotation.CurrentAccount;
 import com.choidh.web.profile.validator.ProfileNicknameValidator;
 import com.choidh.web.profile.validator.ProfilePasswordValidator;
-import com.choidh.web.profile.vo.NotificationUpdateForm;
-import com.choidh.web.profile.vo.PasswordUpdateForm;
-import com.choidh.web.profile.vo.ProfileUpdateForm;
+import com.choidh.web.profile.vo.NotificationUpdateVO;
+import com.choidh.web.profile.vo.PasswordUpdateVO;
+import com.choidh.web.profile.vo.ProfileUpdateVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -57,16 +60,12 @@ public class ProfileController {
 
     public final static String CUSTOM_PROFILE = "profile/custom_profile";
 
-    private static String redirectPath_Custom(Long id) {
-        return "redirect:/profile/" + id + "/custom";
-    }
-
-    @InitBinder("profileUpdateForm")
+    @InitBinder("profileUpdateVO")
     public void nicknameUpdate(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(profileNicknameValidator);
     }
 
-    @InitBinder("passwordUpdateForm")
+    @InitBinder("passwordUpdateVO")
     public void passwordUpdate(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(profilePasswordValidator);
     }
@@ -93,105 +92,32 @@ public class ProfileController {
     }
 
     /**
-     * GET 프로필 수정 화면
+     * GET 프로필 알림 페이지
      */
-    @GetMapping("/dashboard/custom")
-    public String getAccountView(@CurrentAccount Account account, Model model) throws JsonProcessingException {
-        Set<AccountTagJoinTable> tagListByAccountId = accountTagService.getTagListByAccountId(account.getId());
-        List<String> tagtitleList = tagListByAccountId.stream().map(accountTagJoinTable -> accountTagJoinTable.getTag().getTitle()).collect(Collectors.toList());
-        List<String> tagAllTitleList = tagService.getTitleList();
-
-        model.addAttribute("account", account);
-        model.addAttribute("tags", tagtitleList);
-        model.addAttribute("whiteList", objectMapper.writeValueAsString(tagAllTitleList));
-        model.addAttribute(new PasswordUpdateForm());
-        model.addAttribute(modelMapper.map(account, ProfileUpdateForm.class));
-        model.addAttribute(modelMapper.map(account, NotificationUpdateForm.class));
-
-        return CUSTOM_PROFILE;
-    }
-
-    /**
-     * PATCH 프로필 수정
-     */
-    @PatchMapping("/update/nickname/{id}")
-    public String modAccount(@CurrentAccount Account account, @PathVariable Long id, Model model,
-                             @Valid ProfileUpdateForm profileUpdateForm, Errors errors, RedirectAttributes attributes) {
-        if (errors.hasErrors()) {
-            model.addAttribute(account);
-            model.addAttribute(new PasswordUpdateForm());
-            model.addAttribute(modelMapper.map(account, NotificationUpdateForm.class));
-            model.addAttribute("message", "잘못 입력하셧습니다. 다시 입력해주세요.");
-            return CUSTOM_PROFILE;
-        }
-
-        account = accountService.modAccount(modelMapper.map(profileUpdateForm, ModAccountVO.class), account.getId());
-
-        attributes.addFlashAttribute("account", account);
-        attributes.addFlashAttribute("message", "프로필이 수정되었습니다.");
-
-        return redirectPath_Custom(account.getId());
-    }
-
-    /**
-     * PATCH 패스워드 수정
-     */
-    @PatchMapping("/update/password/{id}")
-    public String modPassword(@CurrentAccount Account account, @PathVariable Long id,
-                              @Valid PasswordUpdateForm passwordUpdateForm, Errors errors, Model model, RedirectAttributes attributes) {
-        if (errors.hasErrors()) {
-            model.addAttribute("account", account);
-            model.addAttribute("profileUpdateForm", new ProfileUpdateForm());
-            model.addAttribute(modelMapper.map(account, NotificationUpdateForm.class));
-            model.addAttribute("message", "비밀번호가 잘못되었습니다. 다시 입력해주세요.");
-
-            return CUSTOM_PROFILE;
-        }
-
-        account = accountService.modPassword(modelMapper.map(passwordUpdateForm, ModPasswordVO.class), account.getId());
-
-        attributes.addFlashAttribute("account", account);
-        attributes.addFlashAttribute("message", "비밀번호가 수정되었습니다.");
-
-        return redirectPath_Custom(account.getId());
-    }
-
-    /**
-     * PATCH 알림 설정 수정
-     */
-    @PatchMapping("/update/noti/{id}")
-    public String modNotification(@CurrentAccount Account account, @PathVariable Long id,
-                                  NotificationUpdateForm notificationUpdateForm, RedirectAttributes attributes) {
-        account = accountService.modNotifications(modelMapper.map(notificationUpdateForm, ModNotificationVO.class), account.getId());
-
-        attributes.addFlashAttribute("account", account);
-        attributes.addFlashAttribute("message", "알림 설정이 완료되었습니다.");
-
-        return redirectPath_Custom(account.getId());
-    }
-
-    /**
-     * GET 프로필 알람 페이지
-     */
-    @GetMapping("/profile/notification")
+    @GetMapping("/notification")
     public String getNotificationView(@CurrentAccount Account account, Model model) {
+        if (account == null) {
+            throw new AccessDeniedException("접근 불가");
+        }
+
         account = accountService.getAccountByIdWithPurchaseHistories(account.getId());
         List<Learning> learningList = account.getPurchaseHistories().stream().map(PurchaseHistory::getLearning).collect(Collectors.toList());
-        // Set<Learning> learningList = learningService.getLearningList(account.getId());
         List<Notification> notificationList = notificationService.getNotificationListByType(
                 learningList.stream().map(Learning::getId).collect(Collectors.toList())
         );
 
-        model.addAttribute(account);
         model.addAttribute("notificationList", notificationList);
 
-        return "profile/notification";
+        model.addAttribute("pageTitle", getTitle("알림"));
+        model.addAttribute("pageContent", "profile/notification/contents");
+
+        return "profile/index";
     }
 
     /**
-     * 알람 비활성화. (관리자 전용)
+     * POST 알림 비활성화. API.
      */
-    @GetMapping("/profile/notification/remove")
+    @PostMapping("/notification")
     public String removeNotification(@RequestBody Long notificationId, RedirectAttributes attributes) {
         notificationService.delNotification(notificationId);
 
@@ -202,14 +128,119 @@ public class ProfileController {
     /**
      * 프로필 내 학습 화면
      */
-    @GetMapping("/profile/learning")
+    @GetMapping("/learning")
     public String getProfileLearningView(@CurrentAccount Account account, Model model) {
+        if (account == null) {
+            throw new AccessDeniedException("접근 불가");
+        }
+
         Set<Learning> learningList = learningService.getLearningList(account.getId());
 
-        model.addAttribute("account", account);
         model.addAttribute("learningList", learningList);
         model.addAttribute("now", LocalDateTime.now().minusDays(3));
 
-        return "profile/learning";
+        model.addAttribute("pageTitle", getTitle("알림"));
+        model.addAttribute("pageContent", "profile/learning/contents");
+
+        return "profile/index";
+    }
+
+    /**
+     * GET 프로필 수정 화면
+     */
+    @GetMapping("/setting")
+    public String getAccountView(@CurrentAccount Account account, Model model) throws JsonProcessingException {
+        if (account == null) {
+            throw new AccessDeniedException("접근 불가");
+        }
+
+        Set<AccountTagJoinTable> tagListByAccountId = accountTagService.getTagListByAccountId(account.getId());
+        List<String> tagtitleList = tagListByAccountId.stream().map(accountTagJoinTable -> accountTagJoinTable.getTag().getTitle()).collect(Collectors.toList());
+        List<String> tagAllTitleList = tagService.getTitleList();
+
+        model.addAttribute("tags", tagtitleList);
+        model.addAttribute("whiteList", objectMapper.writeValueAsString(tagAllTitleList));
+        model.addAttribute("tagList", objectMapper.writeValueAsString(tagtitleList));
+
+        model.addAttribute("pageTitle", getTitle("설정"));
+        model.addAttribute("pageContent", "profile/setting/contents");
+
+        return "profile/index";
+    }
+
+    /**
+     * PATCH 프로필 수정. API
+     */
+    @PatchMapping("/setting/1")
+    public ResponseEntity modAccount(@CurrentAccount Account account, @Valid ProfileUpdateVO profileUpdateVO, Errors errors) {
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest().body("잘못 입력하셧습니다. 다시 입력해주세요.");
+        }
+
+        accountService.modAccount(modelMapper.map(profileUpdateVO, ModAccountVO.class), account.getId());
+
+        return ResponseEntity.ok("프로필이 수정되었습니다.");
+    }
+
+    /**
+     * PATCH 패스워드 수정. API
+     */
+    @PatchMapping("/setting/2")
+    public ResponseEntity modPassword(@CurrentAccount Account account, @Valid PasswordUpdateVO passwordUpdateVO, Errors errors) {
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest().body("비밀번호가 잘못되었습니다. 다시 입력해주세요.");
+        }
+
+        accountService.modPassword(modelMapper.map(passwordUpdateVO, ModPasswordVO.class), account.getId());
+
+        return ResponseEntity.ok("비밀번호가 수정되었습니다.");
+    }
+
+    /**
+     * PATCH 알림 설정 수정. API
+     */
+    @PatchMapping("/setting/3")
+    public ResponseEntity modNotification(@CurrentAccount Account account, NotificationUpdateVO notificationUpdateVO) {
+        accountService.modNotifications(modelMapper.map(notificationUpdateVO, ModNotificationVO.class), account.getId());
+
+        return ResponseEntity.ok("알림 설정이 완료되었습니다.");
+    }
+
+    /**
+     * POST 계정 태그 추가
+     */
+    @PostMapping("/tag/add")
+    public ResponseEntity addTag(@CurrentAccount Account account, @RequestBody String context) {
+        if (StringUtils.isNullOrEmpty(context)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        AccountTagJoinTable accountTagJoinTable = accountTagService.regTag(
+                RegTagVO.builder()
+                        .title(context)
+                        .build(),
+                account.getId());
+
+        if (accountTagJoinTable == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * POST 계정 태그 삭제
+     */
+    @PostMapping("/tag/remove")
+    public ResponseEntity removeTag(@CurrentAccount Account account, @RequestBody String context) {
+        if (StringUtils.isNullOrEmpty(context)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (accountTagService.delTag(context, account.getId())) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

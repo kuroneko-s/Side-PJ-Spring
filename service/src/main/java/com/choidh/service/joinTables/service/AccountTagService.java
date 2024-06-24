@@ -19,5 +19,5 @@ public interface AccountTagService {
     /**
      * 태그 삭제
      */
-    boolean delTag(Long tagId, Long accountId);
+    boolean delTag(String tagTitle, Long accountId);
 }

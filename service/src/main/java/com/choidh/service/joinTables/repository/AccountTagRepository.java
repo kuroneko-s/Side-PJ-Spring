@@ -20,7 +20,7 @@ public interface AccountTagRepository extends JpaRepository<AccountTagJoinTable,
      * AccountTagJoinTable 삭제. By Account Id And Tag Id
      */
     @Query(value = "delete from AccountTagJoinTable atjt " +
-            "where atjt.id = :tagId " +
+            "where atjt.tag.id = :tagId " +
             "and atjt.account.id = :accountId")
     @Modifying
     int deleteByAccountIdAndTagId(Long accountId, Long tagId);

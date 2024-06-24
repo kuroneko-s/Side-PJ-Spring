@@ -1,6 +1,7 @@
 .question-container {
     position: relative;
-    margin-top: 1.25rem;
+    padding: 1.25rem 0;
+    min-height: 85vh;
 }
 
 .question-title {

@@ -29,9 +29,16 @@ public class TagServiceImpl implements TagService {
     // 태그 생성
     @Override
     public Tag regTag(RegTagVO regTagVO) {
-        return tagRepository.save(Tag.builder()
-                .title(regTagVO.getTitle())
-                .build());
+        String title = regTagVO.getTitle();
+
+        Tag tag = tagRepository.findByTitle(title);
+        if (tag == null) {
+            return tagRepository.save(Tag.builder()
+                    .title(title)
+                    .build());
+        }
+
+        return tag;
     }
 
     // 태그 타이틀 목록 조회
@@ -67,5 +74,11 @@ public class TagServiceImpl implements TagService {
     @Override
     public int removeTagsForLearning(Long learningTagJoinTableId) {
         return learningTagRepository.deleteByLearningIdAndTagTitle(learningTagJoinTableId);
+    }
+
+    // 태그 단건 조회 By Title
+    @Override
+    public Tag getTagByTitle(String tagTitle) {
+        return tagRepository.findByTitle(tagTitle);
     }
 }

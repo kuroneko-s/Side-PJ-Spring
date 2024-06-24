@@ -20,7 +20,7 @@
                 <p>이메일: <span th:text="${accountVO.email}">kuroneko2@gmail.com</span></p>
             </div>
         </div>
-        <a class="profile-button" href="#" th:href="@{'/profile/' + ${accountVO.id} + '/custom'}">프로필 수정하기</a>
+        <a class="profile-button" href="#" th:href="@{'/profile/setting'}">프로필 수정하기</a>
     </div>
 
     <div class="profile-dashboard-contents-box">
@@ -65,8 +65,8 @@
             <div class="card-body" th:if="${tagTitleList.size() == 0}">
                 <p>관심 분야가 없어요</p>
             </div>
-            <a class="profile-button" th:if="${tagTitleList.size() > 0}" href="#" th:href="@{'/profile/learning'}">관심분야 수정하기</a>
-            <a class="profile-button" th:if="${tagTitleList.size() == 0}" href="#" th:href="@{'/profile/learning'}">관심분야 추가하기</a>
+            <a class="profile-button" th:if="${tagTitleList.size() > 0}" href="#" th:href="@{'/profile/setting?tab=tagTab'}">관심분야 수정하기</a>
+            <a class="profile-button" th:if="${tagTitleList.size() == 0}" href="#" th:href="@{'/profile/setting?tab=tagTab'}">관심분야 추가하기</a>
         </div>
     </div>
 </div>
@@ -78,16 +78,15 @@
             return moment(dateTime, "YYYY-MM-DD'T'hh:mm").format("LL");
         })
 
-        const shortDateTimeEl = document.querySelector(".date-time");
-        if (shortDateTimeEl !== null) {
-            const formattedDate = new Intl.DateTimeFormat('ko-KR', {
-                year: '2-digit',
-                month: '2-digit',
-                day: '2-digit',
-            }).format(new Date(shortDateTimeEl?.textContent));
-            const finalDate = formattedDate.replace(/\. /g, '').replace(/(\d{2})(\d{2})(\d{2})/, '$1년 $2월 $3일');
-            shortDateTimeEl.textContent = finalDate.replace("\.", "");
-        }
+        document.querySelectorAll(".date-time").forEach(shortDateTimeEl => {
+            // const formattedDate = new Intl.DateTimeFormat('ko-KR', {
+            //     year: '2-digit',
+            //     month: '2-digit',
+            //     day: '2-digit',
+            // }).format(new Date(shortDateTimeEl?.textContent));
+            // const finalDate = formattedDate.replace(/\. /g, '').replace(/(\d{2})(\d{2})(\d{2})/, '$1년 $2월 $3일');
+            // shortDateTimeEl.textContent = finalDate.replace("\.", "");
+        });
 
         [[${tagTitleList}]].forEach(value => {
             value.style.color = "#" + (parseInt(Math.random() * 0xffffff)).toString(16);

@@ -4,6 +4,8 @@
 }
 
 .navbar-container {
+    height: 5vh;
+
     position: relative;
     display: flex;
     justify-content: space-between;

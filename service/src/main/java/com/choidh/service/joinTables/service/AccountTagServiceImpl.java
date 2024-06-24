@@ -10,6 +10,7 @@ import com.choidh.service.tag.vo.RegTagVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
@@ -35,6 +36,7 @@ public class AccountTagServiceImpl implements AccountTagService {
     @Transactional
     public AccountTagJoinTable regTag(RegTagVO regTagVO, Long accountId) {
         Account account = accountService.getAccountById(accountId);
+
         Tag tag = tagService.regTag(regTagVO);
 
         return accountTagRepository.save(AccountTagJoinTable.builder()
@@ -48,9 +50,10 @@ public class AccountTagServiceImpl implements AccountTagService {
      */
     @Override
     @Transactional
-    public boolean delTag(Long tagId, Long accountId) {
+    public boolean delTag(String tagTitle, Long accountId) {
         try {
-            accountTagRepository.deleteByAccountIdAndTagId(accountId, tagId);
+            Tag tag = tagService.getTagByTitle(tagTitle);
+            accountTagRepository.deleteByAccountIdAndTagId(accountId, tag.getId());
 
             return true;
         } catch (Exception e) {

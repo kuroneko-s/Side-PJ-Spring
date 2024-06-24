@@ -1,8 +1,9 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<main>
-  <div th:replace="fragment/flushAlter/flushAlter.html :: flushAlter"></div>
+
+<main class="home-container">
+  <div th:replace="layout/fragment.html :: flushMessage"></div>
 
   <!-- 이미지 슬라이더 start -->
   <div class="image-slider-container" id="image-slider">
@@ -95,7 +96,7 @@
     <!-- 강의가 존재하지 않을 경우 -->
     <div class="learning-item" th:if="${learningList.isEmpty()}">
       <div class="learning-item-card">
-        <img class="learning-item-card-image" src="/images/rogo.png" alt="anonymous"/>
+        <img class="learning-item-card-image" src="/images/logo.png" alt="anonymous"/>
         <div class="learning-item-card-body">
           <p class="learning-item-card-body-title">강의가 존재하지 않습니다.</p>
           <p class="learning-item-card-body-tags">태그가 존재하지 않습니다.</p>
@@ -156,7 +157,7 @@
     <!-- 강의가 존재하지 않을 경우 -->
     <div class="learning-item" th:if="${newLearningList.isEmpty()}">
       <div class="learning-item-card">
-        <img class="learning-item-card-image" src="/images/rogo.png" alt="anonymous"/>
+        <img class="learning-item-card-image" src="/images/logo.png" alt="anonymous"/>
         <div class="learning-item-card-body">
           <p class="learning-item-card-body-title">강의가 존재하지 않습니다.</p>
           <p class="learning-item-card-body-tags">태그가 존재하지 않습니다.</p>

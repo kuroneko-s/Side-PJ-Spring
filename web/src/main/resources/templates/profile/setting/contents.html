@@ -1,0 +1,207 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<section>
+    <link rel="stylesheet" href="/css/profile-settings.css"/>
+    <link rel="stylesheet" href="/css/profile/setting/index.css"/>
+</section>
+
+<div class="profile-setting-container">
+    <div th:replace="layout/fragment.html :: flushMessage"></div>
+
+    <p class="profile-title">설정</p>
+
+    <ul class="profile-setting-tab-container" id="profile-setting-tab-container">
+        <li role="tab" id="profileTab" class="profile-setting-tab active">나의 프로필</li>
+        <li role="tab" id="tagTab" class="profile-setting-tab">나의 관심분야</li>
+        <li role="tab" id="passwordTab" class="profile-setting-tab">비밀번호 설정</li>
+        <li role="tab" id="notificationTab" class="profile-setting-tab">알림 설정</li>
+    </ul>
+
+    <div class="profile-setting-tab-contents-container">
+        <!-- 나의 프로필 start -->
+        <div class="profile-setting-tab-contents" id="profileContents" role="tabpanel">
+            <svg th:data-jdenticon-value="${#authentication.name}" width="200" height="200"></svg>
+
+            <label for="nickname">닉네임</label>
+            <input type="text" id="nickname" minlength="2" maxlength="20" autocomplete="off">
+
+            <label for="summernote">자기소개</label>
+            <textarea id="summernote"> 잘 부탁드립니다. </textarea>
+
+            <button type="button" class="button">수정하기</button>
+        </div>
+        <!-- 나의 프로필 end -->
+
+        <!-- 나의 관심분야 start -->
+        <div class="profile-setting-tab-contents hide" id="tagContents" role="tabpanel">
+            <div th:text="${whiteList}" id="whitelist" hidden></div>
+            <label for="skills">관심 분야</label>
+            <input class="tag-input" id="skills" type="text" th:value="${tagList}"/>
+        </div>
+        <!-- 나의 관심분야 end -->
+
+        <!-- 비밀번호 설정 start -->
+        <div class="profile-setting-tab-contents hide" id="passwordContents" role="tabpanel">
+            <div class="align-items-center profile-content d-flex justify-content-center">
+                <input type="hidden" th:value="${account.nickname}" name="accountNickname">
+                <div class="card-body form-group">
+                    <label for="nowPassword">비밀번호</label>
+                    <input type="password" class="form-control-custom form-control" id="nowPassword" placeholder="현재 비밀번호" required minlength="1" maxlength="50">
+                </div>
+                <div class="card-body form-group">
+                    <input type="password" class="form-control-custom form-control mt-sm-0" id="newPassword" placeholder="새 비밀번호" required minlength="1" maxlength="50">
+                </div>
+                <div class="card-body form-group">
+                    <input type="password" class="form-control-custom form-control" id="newPasswordCheck" placeholder="새 비밀번호 재입력" required minlength="1" maxlength="50">
+                </div>
+
+                <button type="button" class="btn btn-success mt-md-3 mb-md-3">수정하기</button>
+            </div>
+        </div>
+        <!-- 비밀번호 설정 end -->
+
+        <!--알림 설정 start-->
+        <div class="profile-setting-tab-contents hide" id="notificationContents" role="tabpanel">
+            <div class="mt-md-3 justify-content-start">
+                <p>메일 알림 설정</p>
+                <div class="align-items-center d-flex notification-setting-mail">
+                    <div class="notification-setting-notifi">
+                        <strong>Learing Mail 알림</strong><br>
+                        Learning 사이트의 새로운 정보들을 메일로 받아보고 싶으신가요 ?
+                    </div>
+                    <div class="custom-control custom-switch custom-control-inline">
+                        <input type="checkbox" class="custom-control-input" id="webMailNotification">
+                        <label class="custom-control-label" for="webMailNotification"></label>
+                    </div>
+                </div>
+                <div class="align-items-center d-flex notification-setting-mail">
+                    <div class="notification-setting-notifi">
+                        <strong>수강중인 강의 Mail 알림</strong><br>
+                        현재 수강중인 강의들의 알람을 메일로 받아보고 싶으신가요?
+                    </div>
+                    <div class="custom-control custom-switch custom-control-inline">
+                        <input type="checkbox" class="custom-control-input" id="learingMailNotification">
+                        <label class="custom-control-label" for="learingMailNotification"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-md-3 justify-content-start">
+                <p class="mt-md-4"><strong style="font-size: 18px">웹 알림 설정</strong></p>
+                <div class="align-items-center d-flex notification-setting-mail">
+                    <div class="notification-setting-notifi">
+                        <strong>Learing Web 알림</strong><br>
+                        Learning 사이트의 새로운 정보들을 웹에서 받아보고 싶으신가요 ?
+                    </div>
+                    <div class="custom-control custom-switch custom-control-inline">
+                        <input type="checkbox" class="custom-control-input" id="webNotification">
+                        <label class="custom-control-label" for="webNotification"></label>
+                    </div>
+                </div>
+                <div class="align-items-center d-flex notification-setting-mail">
+                    <div class="notification-setting-notifi">
+                        <strong>수강중인 강의 Web 알림</strong><br>
+                        현재 수강중인 강의들의 알람을 웹에서 받아보고 싶으신가요?
+                    </div>
+                    <div class="custom-control custom-switch custom-control-inline">
+                        <input type="checkbox" class="custom-control-input" id="learingWebNotification">
+                        <label class="custom-control-label" for="learingWebNotification"></label>
+                    </div>
+                </div>
+            </div>
+            <!--notification settings web-->
+            <button type="button" class="btn btn-success mt-md-3 mb-md-3">수정하기</button>
+            <!--notification settings body-->
+        </div>
+        <!--알림 설정 end-->
+    </div>
+    <!--profile main data - body-->
+</div>
+
+<script type="application/javascript">
+    window.addEventListener("DOMContentLoaded", () => {
+        const params = new URLSearchParams(window.location.search);
+        const initTab = params.get("tab");
+        if (!!initTab) {
+            const targetEl = document.getElementById(initTab);
+            document.querySelector("#profile-setting-tab-container .active").classList.remove("active");
+            targetEl.classList.add("active");
+
+            const contentTargetId = initTab.replace("Tab", "Contents");
+            document.querySelectorAll(".profile-setting-tab-contents").forEach(node => node.classList.add("hide"));
+            document.getElementById(contentTargetId).classList.remove("hide");
+        }
+
+        // Tab 기능
+        document.getElementById("profile-setting-tab-container")?.addEventListener("click", e => {
+            let targetId = e.target.id;
+
+            if (["profileTab", "tagTab", "passwordTab", "notificationTab"].includes(targetId)) {
+                e.currentTarget.querySelector(".active").classList.remove("active");
+                e.target.classList.add("active");
+
+                const contentTargetId = targetId.replace("Tab", "Contents");
+                document.querySelectorAll(".profile-setting-tab-contents").forEach(node => node.classList.add("hide"));
+                document.getElementById(contentTargetId).classList.remove("hide");
+            }
+        })
+
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+        function tagRequest(url, context) {
+            fetch("/profile/tag" + url, {
+                method: "POST",
+                headers: {
+                    [csrfHeader]: csrfToken,
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                body: context
+            })
+
+            // $.ajax({
+            //     dataType: "json",
+            //     autocomplete:{
+            //         enabled: true,
+            //         rightKey: true,
+            //     },
+            //     contentType: "application/json; charset=utf-8",
+            //     method: "PATCH",
+            //     url: "/profile/tag" + url,
+            //     data: JSON.stringify({'context': context})
+            // });
+        }
+
+        const input = document.getElementById('skills')
+        const tagify = new Tagify(input, {
+            whitelist: JSON.parse(document.querySelector('#whitelist').textContent),
+            focusable: false,
+            dropdown: {
+                enabled: 0,
+                position: 'input',
+            }
+        })
+
+        tagify.on("add", e => tagRequest("/add", e.detail.data.value));
+        tagify.on("remove", e => tagRequest("/remove", e.detail.data.value));
+
+        // add a class to Tagify's input element
+        tagify.DOM.input.classList.add('form-control');
+        tagify.DOM.input.classList.add('form-control-custom');
+
+        // re-place Tagify's input element outside of the  element (tagify.DOM.scope), just before it
+        tagify.DOM.scope.parentNode.insertBefore(tagify.DOM.input, tagify.DOM.scope);
+
+        $("#summernote").summernote({
+            fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Noto Sans KR', 'Merriweather'],
+            placeholder: '자기소개를 반드시 입력해주세요!',
+            tabSize: 2,
+            lang: "ko-KR",
+            height: 220,
+            minHeight: 220,
+            maxHeight: 220,
+            focus: true
+        });
+    })
+</script>
+</html>

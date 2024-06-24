@@ -7,7 +7,6 @@ import com.choidh.service.learning.service.LearningService;
 import com.choidh.service.tag.service.TagService;
 import com.choidh.web.common.annotation.CurrentAccount;
 import com.choidh.web.tag.vo.DelTagForm;
-import com.choidh.web.tag.vo.RegTagForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -52,9 +51,9 @@ public class LearningRestController {
 
     // 강의 태그 추가. API.
     @PostMapping("/profile/learning/upload/{id}/add")
-    public ResponseEntity postTagsForLearning(@CurrentAccount Account account, @PathVariable Long id, @RequestBody RegTagForm regTagForm) {
+    public ResponseEntity postTagsForLearning(@CurrentAccount Account account, @PathVariable Long id, @RequestBody String title) {
         try {
-            tagService.addTagsForLearning(regTagForm.getTitle(), id);
+            tagService.addTagsForLearning(title, id);
 
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException exception) {

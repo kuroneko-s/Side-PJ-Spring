@@ -3,7 +3,7 @@ package com.choidh.web.profile.validator;
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.repository.AccountRepository;
 import com.choidh.service.excel.validator.IsValidator;
-import com.choidh.web.profile.vo.PasswordUpdateForm;
+import com.choidh.web.profile.vo.PasswordUpdateVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
@@ -17,12 +17,12 @@ public class ProfilePasswordValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return clazz.isAssignableFrom(PasswordUpdateForm.class);
+        return clazz.isAssignableFrom(PasswordUpdateVO.class);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        PasswordUpdateForm form = (PasswordUpdateForm) target;
+        PasswordUpdateVO form = (PasswordUpdateVO) target;
         Account account = accountRepository.findByNicknameAndChecked(form.getAccountNickname(), true);
 
         if (!passwordEncoder.matches(form.getNowPassword(), account.getPassword())) {

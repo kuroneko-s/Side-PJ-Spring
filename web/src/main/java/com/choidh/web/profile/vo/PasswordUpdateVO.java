@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PasswordUpdateForm {
+public class PasswordUpdateVO {
     @NotBlank
     @Length(min = 10, max = 50, message = "패스워드 길이가 알맞지 않습니다. 다시 입력해주세요")
     private String nowPassword;

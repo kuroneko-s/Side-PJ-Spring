@@ -17,11 +17,15 @@
     <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/node_modules/moment/min/moment-with-locales.min.js"></script>
     <script src="/node_modules/jdenticon/dist/jdenticon.min.js"></script>
+    <script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
+    <script src="/node_modules/summernote/dist/summernote-bs4.js"></script>
 
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&display=swap"/>
     <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/node_modules/tooltipster/dist/css/tooltipster.bundle.min.css"/>
+    <link rel="stylesheet" href="/node_modules/summernote/dist/summernote-bs4.min.css"/>
+    <link rel="stylesheet" href="/node_modules/@yaireo/tagify/dist/tagify.css">
 
     <link rel="stylesheet" href="/css/layout/common.css"/>
     <link rel="stylesheet" href="/css/layout/navbar.css"/>
@@ -37,7 +41,7 @@
     <main class="profile-container">
         <!-- 프로필 바 -->
         <div class="profile-bar-container" id="profile-bar-container">
-            <a th:href="@{'/profile/' + ${account.id}}">
+            <a th:href="@{'/profile/dashboard'}">
                 <p class="profile-bar-menu">
                     대시보드
                 </p>
@@ -55,7 +59,7 @@
                 </p>
             </a>
 
-            <a th:href="@{'/profile/' + ${account.id} + '/custom'}">
+            <a href="/profile/setting">
                 <p class="profile-bar-menu">
                     설정
                 </p>
@@ -86,19 +90,7 @@
         <div th:replace="${pageContent}"></div>
     </main>
 
-    <footer class="footer-container">
-        <div class="footer-wrapper">
-            <div class="footer-logo">
-                <img src="/images/rogo.png" alt="logo">
-            </div>
-            <div class="footer-name">
-                &copy; Learning Site By ChoiDH.
-            </div>
-            <div class="footer-email">
-                <p>이메일: choidh.dev@gmail.com</p>
-            </div>
-        </div>
-    </footer>
+    <footer th:replace="layout/fragment.html :: footer"></footer>
 
     <script type="application/javascript">
         window.addEventListener("DOMContentLoaded", () => {
@@ -118,17 +110,15 @@
             })
 
             // 프로필 바 기능
-            const dashboardRegex = /^\/profile\/\d+$/;
-            const settingRegex = /^\/profile\/\d+\/custom$/;
             const pathName = window.location.pathname;
             const menuEls = document.getElementById("profile-bar-container").querySelectorAll(".profile-bar-menu");
-            if (dashboardRegex.test(pathName)) {
+            if (pathName === "/profile/dashboard") {
                 menuEls[0].classList.add("active");
             } else if (pathName === "/profile/notification") {
                 menuEls[1].classList.add("active");
             } else if (pathName === "/profile/learning") {
                 menuEls[2].classList.add("active");
-            } else if (settingRegex.test(pathName)) {
+            } else if (pathName === "/profile/setting") {
                 menuEls[3].classList.add("active");
             } else if (pathName === "/profile/learning/create") {
                 document.getElementById("profile-bar-container").querySelectorAll(".profile-bar-menu-accordion-details-menu")[0].classList.add("active");

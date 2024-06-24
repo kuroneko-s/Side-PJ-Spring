@@ -1,9 +1,9 @@
 .learning-search-container {
     display: flex;
-    min-height: 77vh;
+    min-height: 85vh;
     width: 100%;
 
-    margin-top: 3rem;
+    padding: 1.25rem 0;
 }
 
 .learning-search-menu-container {

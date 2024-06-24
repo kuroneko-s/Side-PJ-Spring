@@ -17,4 +17,7 @@ public interface TagService {
 
     // 태그 삭제 For 강의
     int removeTagsForLearning(Long learningTagJoinTableId);
+
+    // 태그 단건 조회 By Title
+    Tag getTagByTitle(String tagTitle);
 }

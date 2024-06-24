@@ -67,7 +67,7 @@ class AccountTagRepositoryTest extends AbstractRepositoryTestConfig {
         theLine();
 
         AccountTagJoinTable deleteTarget = targetList.get(3);
-        int deleteResult = accountTagRepository.deleteByAccountIdAndTagId(account.getId(), deleteTarget.getId());
+        int deleteResult = accountTagRepository.deleteByAccountIdAndTagId(account.getId(), deleteTarget.getTag().getId());
 
         assertEquals(deleteResult, 1);
 

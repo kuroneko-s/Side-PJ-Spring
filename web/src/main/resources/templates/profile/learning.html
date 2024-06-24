@@ -39,7 +39,7 @@
                         <a href="#" th:href="@{'/learning/' + ${learning.id}}">
                             <img class="bd-placeholder-img card-img-top card-img" role="img" aria-label="Placeholder: Thumbnail"
                                  th:src="|data:image/*;base64,${learning.bannerBytes}|" th:if="${learning.bannerBytes} != null"/>
-                            <img class="banner-image card-img" src="/images/rogo.png" th:if="${learning.bannerBytes} == null"/>
+                            <img class="banner-image card-img" src="/images/logo.png" th:if="${learning.bannerBytes} == null"/>
                         </a>
                         <div class="card-body d-flex flex-column pl-1">
                             <p class="card-text card-title" th:text="${learning.title}">Default Title</p>
@@ -58,7 +58,7 @@
                 <div class="d-flex justify-content-start" th:if="${learningList.size() <= 0}">
                     <div class="roof-start">
                         <div class="card mb-4 shadow-sm card-view">
-                            <img class="banner-image card-img" src="/images/rogo.png"/>
+                            <img class="banner-image card-img" src="/images/logo.png"/>
                             <div class="card-body d-flex align-items-center justify-content-center">
                                 <p class="card-text card-title-non">강의가 존재하지 않습니다.</p>
                             </div>

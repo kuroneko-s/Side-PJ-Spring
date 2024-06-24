@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class NotificationUpdateForm {
+public class NotificationUpdateVO {
     @Name(name = "사이트 관련 메일 알림 활성화 여부", description = "라고 생각함")
     private boolean siteMailNotification;
 

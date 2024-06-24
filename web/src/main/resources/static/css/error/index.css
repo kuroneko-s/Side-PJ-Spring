@@ -1,0 +1,18 @@
+.error-container {
+    position: relative;
+    padding-top: 1.25rem;
+    min-height: 85vh;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.error-logo {
+    margin-bottom: 3rem;
+}
+
+.error-description {
+    margin-bottom: 1.25rem;
+}
