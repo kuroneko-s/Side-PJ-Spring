@@ -7,8 +7,6 @@
 </section>
 
 <div class="profile-setting-container">
-    <div th:replace="layout/fragment.html :: flushMessage"></div>
-
     <p class="profile-title">설정</p>
 
     <ul class="profile-setting-tab-container" id="profile-setting-tab-container">
@@ -23,95 +21,83 @@
         <div class="profile-setting-tab-contents" id="profileContents" role="tabpanel">
             <svg th:data-jdenticon-value="${#authentication.name}" width="200" height="200"></svg>
 
-            <label for="nickname">닉네임</label>
-            <input type="text" id="nickname" minlength="2" maxlength="20" autocomplete="off">
+            <label class="profile-setting-tab-contents-label" for="nickname">닉네임</label>
+            <input class="profile-setting-tab-contents-input" type="text" id="nickname" minlength="2" maxlength="20" autocomplete="off" th:value="${account.nickname}">
 
-            <label for="summernote">자기소개</label>
-            <textarea id="summernote"> 잘 부탁드립니다. </textarea>
+            <label class="profile-setting-tab-contents-label" for="summernote">자기소개</label>
+            <textarea id="summernote"> 잘 부탁드립니다.</textarea>
+            <div id="defaultDescription" class="hide" th:utext="${account.description}"></div>
 
-            <button type="button" class="button">수정하기</button>
+            <button type="button" class="button" id="profileButton">수정하기</button>
         </div>
         <!-- 나의 프로필 end -->
 
         <!-- 나의 관심분야 start -->
         <div class="profile-setting-tab-contents hide" id="tagContents" role="tabpanel">
             <div th:text="${whiteList}" id="whitelist" hidden></div>
-            <label for="skills">관심 분야</label>
-            <input class="tag-input" id="skills" type="text" th:value="${tagList}"/>
+            <label class="profile-setting-tab-contents-label" for="skills">관심 분야</label>
+            <input class="profile-setting-tab-contents-input tag-input" id="skills" type="text" th:value="${tagList}"/>
         </div>
         <!-- 나의 관심분야 end -->
 
         <!-- 비밀번호 설정 start -->
         <div class="profile-setting-tab-contents hide" id="passwordContents" role="tabpanel">
-            <div class="align-items-center profile-content d-flex justify-content-center">
-                <input type="hidden" th:value="${account.nickname}" name="accountNickname">
-                <div class="card-body form-group">
-                    <label for="nowPassword">비밀번호</label>
-                    <input type="password" class="form-control-custom form-control" id="nowPassword" placeholder="현재 비밀번호" required minlength="1" maxlength="50">
-                </div>
-                <div class="card-body form-group">
-                    <input type="password" class="form-control-custom form-control mt-sm-0" id="newPassword" placeholder="새 비밀번호" required minlength="1" maxlength="50">
-                </div>
-                <div class="card-body form-group">
-                    <input type="password" class="form-control-custom form-control" id="newPasswordCheck" placeholder="새 비밀번호 재입력" required minlength="1" maxlength="50">
-                </div>
-
-                <button type="button" class="btn btn-success mt-md-3 mb-md-3">수정하기</button>
-            </div>
+            <label class="profile-setting-tab-contents-label" for="nowPassword">비밀번호</label>
+            <input class="profile-setting-tab-contents-input" type="hidden" id="accountId" th:value="${account.id}">
+            <input class="profile-setting-tab-contents-input" type="password" id="nowPassword" placeholder="현재 비밀번호" required minlength="10" maxlength="50">
+            <input class="profile-setting-tab-contents-input" type="password" id="newPassword" placeholder="새 비밀번호" required minlength="10" maxlength="50">
+            <input class="profile-setting-tab-contents-input" type="password" id="newPasswordCheck" placeholder="새 비밀번호 재입력" required minlength="10" maxlength="50">
+            <small>※ 10자 이상 14자 이내로 입력해주세요. 영문자, 숫자, 특수기호(_!@#$)를 사용할 수 있으며 공백은 사용할 수 없습니다.</small>
+            <button type="button" class="button" id="passwordButton">비밀번호 수정하기</button>
         </div>
         <!-- 비밀번호 설정 end -->
 
         <!--알림 설정 start-->
         <div class="profile-setting-tab-contents hide" id="notificationContents" role="tabpanel">
-            <div class="mt-md-3 justify-content-start">
-                <p>메일 알림 설정</p>
-                <div class="align-items-center d-flex notification-setting-mail">
-                    <div class="notification-setting-notifi">
-                        <strong>Learing Mail 알림</strong><br>
-                        Learning 사이트의 새로운 정보들을 메일로 받아보고 싶으신가요 ?
+            <div class="profile-setting-tab-notification-container">
+                <p class="profile-setting-tab-notification-title">메일 알림 설정</p>
+                <div class="profile-setting-tab-notification-wrapper">
+                    <div class="notification-setting-notification-card">
+                        <p class="notification-setting-notification-card-title">사이트의 새로운 정보들을 메일로 받아보실 수 있어요!</p>
                     </div>
                     <div class="custom-control custom-switch custom-control-inline">
-                        <input type="checkbox" class="custom-control-input" id="webMailNotification">
-                        <label class="custom-control-label" for="webMailNotification"></label>
+                        <input type="checkbox" class="custom-control-input" id="siteMailNotification" th:checked="${account.siteMailNotification}">
+                        <label class="custom-control-label" for="siteMailNotification"></label>
                     </div>
                 </div>
-                <div class="align-items-center d-flex notification-setting-mail">
-                    <div class="notification-setting-notifi">
-                        <strong>수강중인 강의 Mail 알림</strong><br>
-                        현재 수강중인 강의들의 알람을 메일로 받아보고 싶으신가요?
+                <div class="profile-setting-tab-notification-wrapper">
+                    <div class="notification-setting-notification-card">
+                        <p class="notification-setting-notification-card-title">현재 수강중인 강의들의 알람을 메일로 받아보실 수 있어요!</p>
                     </div>
                     <div class="custom-control custom-switch custom-control-inline">
-                        <input type="checkbox" class="custom-control-input" id="learingMailNotification">
-                        <label class="custom-control-label" for="learingMailNotification"></label>
+                        <input type="checkbox" class="custom-control-input" id="learningMailNotification" th:checked="${account.learningMailNotification}">
+                        <label class="custom-control-label" for="learningMailNotification"></label>
                     </div>
                 </div>
             </div>
-            <div class="mt-md-3 justify-content-start">
-                <p class="mt-md-4"><strong style="font-size: 18px">웹 알림 설정</strong></p>
-                <div class="align-items-center d-flex notification-setting-mail">
-                    <div class="notification-setting-notifi">
-                        <strong>Learing Web 알림</strong><br>
-                        Learning 사이트의 새로운 정보들을 웹에서 받아보고 싶으신가요 ?
+
+            <div class="profile-setting-tab-notification-container">
+                <p class="profile-setting-tab-notification-title">사이트에서의 알림 설정</p>
+                <div class="profile-setting-tab-notification-wrapper">
+                    <div class="notification-setting-notification-card">
+                        <p class="notification-setting-notification-card-title">사이트의 새로운 정보들을 웹에서 받아보실 수 있어요!</p>
                     </div>
                     <div class="custom-control custom-switch custom-control-inline">
-                        <input type="checkbox" class="custom-control-input" id="webNotification">
-                        <label class="custom-control-label" for="webNotification"></label>
+                        <input type="checkbox" class="custom-control-input" id="siteWebNotification" th:checked="${account.siteWebNotification}">
+                        <label class="custom-control-label" for="siteWebNotification"></label>
                     </div>
                 </div>
-                <div class="align-items-center d-flex notification-setting-mail">
-                    <div class="notification-setting-notifi">
-                        <strong>수강중인 강의 Web 알림</strong><br>
-                        현재 수강중인 강의들의 알람을 웹에서 받아보고 싶으신가요?
+                <div class="profile-setting-tab-notification-wrapper">
+                    <div class="notification-setting-notification-card">
+                        <p class="notification-setting-notification-card-title">현재 수강중인 강의들의 알람을 웹에서 받아보실 수 있어요!</p>
                     </div>
                     <div class="custom-control custom-switch custom-control-inline">
-                        <input type="checkbox" class="custom-control-input" id="learingWebNotification">
-                        <label class="custom-control-label" for="learingWebNotification"></label>
+                        <input type="checkbox" class="custom-control-input" id="learningWebNotification" th:checked="${account.learningWebNotification}">
+                        <label class="custom-control-label" for="learningWebNotification"></label>
                     </div>
                 </div>
             </div>
-            <!--notification settings web-->
-            <button type="button" class="btn btn-success mt-md-3 mb-md-3">수정하기</button>
-            <!--notification settings body-->
+            <button type="button" class="button" id="notificationButton">수정하기</button>
         </div>
         <!--알림 설정 end-->
     </div>
@@ -149,29 +135,6 @@
         const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
         const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
-        function tagRequest(url, context) {
-            fetch("/profile/tag" + url, {
-                method: "POST",
-                headers: {
-                    [csrfHeader]: csrfToken,
-                    "Content-Type": "application/json; charset=utf-8",
-                },
-                body: context
-            })
-
-            // $.ajax({
-            //     dataType: "json",
-            //     autocomplete:{
-            //         enabled: true,
-            //         rightKey: true,
-            //     },
-            //     contentType: "application/json; charset=utf-8",
-            //     method: "PATCH",
-            //     url: "/profile/tag" + url,
-            //     data: JSON.stringify({'context': context})
-            // });
-        }
-
         const input = document.getElementById('skills')
         const tagify = new Tagify(input, {
             whitelist: JSON.parse(document.querySelector('#whitelist').textContent),
@@ -182,16 +145,33 @@
             }
         })
 
-        tagify.on("add", e => tagRequest("/add", e.detail.data.value));
-        tagify.on("remove", e => tagRequest("/remove", e.detail.data.value));
+        tagify.on("add", e => {
+            sendFetch(
+                "/profile/tag/add",
+                "POST",
+                {"context" : e.detail.data.value},
+                null,
+                null
+            );
+        });
+        tagify.on("remove", e => {
+            sendFetch(
+                "/profile/tag/remove",
+                "POST",
+                {"context" : e.detail.data.value},
+                null,
+                null
+            );
+        });
 
         // add a class to Tagify's input element
         tagify.DOM.input.classList.add('form-control');
         tagify.DOM.input.classList.add('form-control-custom');
-
         // re-place Tagify's input element outside of the  element (tagify.DOM.scope), just before it
         tagify.DOM.scope.parentNode.insertBefore(tagify.DOM.input, tagify.DOM.scope);
 
+        // 프로필 Text Aria
+        // ${account.description}
         $("#summernote").summernote({
             fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Noto Sans KR', 'Merriweather'],
             placeholder: '자기소개를 반드시 입력해주세요!',
@@ -200,7 +180,98 @@
             height: 220,
             minHeight: 220,
             maxHeight: 220,
-            focus: true
+            focus: true,
+            callbacks: {
+                onInit: function() {
+                    // 기본 텍스트 설정
+                    const text = document.getElementById("defaultDescription").innerHTML;
+                    $('#summernote').summernote('code', text);
+                }
+            }
+        });
+
+        // 패스워드 마지막 input 이벤트
+        document.getElementById("newPasswordCheck").addEventListener("keypress", e => {
+            if (e.key === "Enter") {
+                document.getElementById("passwordButton").click();
+            }
+        })
+
+        // 패스워드 버튼 클릭 이벤트
+        document.getElementById("passwordButton").addEventListener("click", e => {
+            const nowPasswordEl = document.getElementById("nowPassword");
+            const newPasswordEl = document.getElementById("newPassword");
+            const newPasswordCheckEl = document.getElementById("newPasswordCheck");
+
+            const nowValue = nowPasswordEl.value;
+            const newValue = newPasswordEl.value;
+            const newChkValue = newPasswordCheckEl.value;
+            if (newValue !== newChkValue) {
+                floatMessage("새 비밀번호가 서로 일치하지 않아요.");
+                return false;
+            }
+
+            if (nowValue.length < 10 || newValue.length < 10 || newChkValue.length < 10) {
+                floatMessage("비밀번호의 길이가 10자 이상이여야해요");
+                return false;
+            }
+
+            sendFetch(
+                "/profile/setting/password",
+                "PATCH",
+                {
+                    nowPassword: nowValue,
+                    newPassword: newValue,
+                    newPasswordCheck: newChkValue,
+                    accountId: document.getElementById("accountId").value
+                },
+                floatMessage,
+                null
+            );
+        });
+
+        // 프로필 수정하기 버튼 클릭 이벤트
+        document.getElementById("profileButton").addEventListener("click", e => {
+            const nicknameEl = document.getElementById("nickname");
+            const descriptionEl = document.getElementById("summernote")
+
+            const nickname = nicknameEl.value;
+            if (nickname.length > 20) {
+                floatMessage("닉네임이 너무 길어요! 20자 이내로 작성해주세요.");
+                return false;
+            }
+
+            sendFetch(
+                "/profile/setting/profile",
+                "PATCH",
+                {
+                    nickname: nickname,
+                    description: descriptionEl.value
+                },
+                floatMessage,
+                null
+            );
+        });
+
+        // 알림 수정하기 버튼 클릭 이벤트
+        document.getElementById("notificationButton").addEventListener("click", e => {
+            const siteMailNotificationEl = document.getElementById("siteMailNotification");
+            const siteWebNotificationEl = document.getElementById("siteWebNotification");
+            const learningMailNotificationEl = document.getElementById("learningMailNotification");
+            const learningWebNotificationEl = document.getElementById("learningWebNotification");
+
+            sendFetch(
+                "/profile/setting/notification",
+                "PATCH",
+                {
+                    "siteMailNotification": siteMailNotificationEl.checked,
+                    "siteWebNotification": siteWebNotificationEl.checked,
+                    "learningMailNotification": learningMailNotificationEl.checked,
+                    "learningWebNotification": learningWebNotificationEl.checked,
+                },
+                floatMessage,
+                null
+            );
         });
     })
 </script>

@@ -60,6 +60,12 @@ public interface AccountRepository extends JpaRepository<Account, Long>, Queryds
     Account findByNicknameAndChecked(String nickname, boolean check);
 
     /**
+     * Account 단건 조회 By 닉네임 and Email Token Checked
+     */
+    @EntityGraph(attributePaths = {"professionalAccount", "cart"}, type = EntityGraph.EntityGraphType.LOAD)
+    Account findByIdAndChecked(Long id, boolean check);
+
+    /**
      * Account 단건 조회 By Id with Learning
      */
     @Query("select a " +

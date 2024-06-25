@@ -14,6 +14,7 @@ import com.choidh.service.learning.service.LearningService;
 import com.choidh.service.notification.entity.Notification;
 import com.choidh.service.notification.service.NotificationService;
 import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
+import com.choidh.service.security.AccountUser;
 import com.choidh.service.tag.service.TagService;
 import com.choidh.service.tag.vo.RegTagVO;
 import com.choidh.web.common.annotation.CurrentAccount;
@@ -29,6 +30,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -39,6 +44,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -171,13 +177,19 @@ public class ProfileController {
     /**
      * PATCH 프로필 수정. API
      */
-    @PatchMapping("/setting/1")
-    public ResponseEntity modAccount(@CurrentAccount Account account, @Valid ProfileUpdateVO profileUpdateVO, Errors errors) {
+    @PatchMapping("/setting/profile")
+    public ResponseEntity modAccount(@CurrentAccount Account account, @Valid @RequestBody ProfileUpdateVO profileUpdateVO, Errors errors) {
+        if (errors.hasFieldErrors("nickname")) {
+            return ResponseEntity.badRequest().body("이미 존재하는 닉네임이에요. 다른 닉네임을 입력해주세요!");
+        }
         if (errors.hasErrors()) {
             return ResponseEntity.badRequest().body("잘못 입력하셧습니다. 다시 입력해주세요.");
         }
 
         accountService.modAccount(modelMapper.map(profileUpdateVO, ModAccountVO.class), account.getId());
+
+        // Principal 갱신
+        this.refreshPrincipal(account.getId());
 
         return ResponseEntity.ok("프로필이 수정되었습니다.");
     }
@@ -185,8 +197,8 @@ public class ProfileController {
     /**
      * PATCH 패스워드 수정. API
      */
-    @PatchMapping("/setting/2")
-    public ResponseEntity modPassword(@CurrentAccount Account account, @Valid PasswordUpdateVO passwordUpdateVO, Errors errors) {
+    @PatchMapping("/setting/password")
+    public ResponseEntity modPassword(@CurrentAccount Account account, @Valid @RequestBody PasswordUpdateVO passwordUpdateVO, Errors errors) {
         if (errors.hasErrors()) {
             return ResponseEntity.badRequest().body("비밀번호가 잘못되었습니다. 다시 입력해주세요.");
         }
@@ -199,9 +211,12 @@ public class ProfileController {
     /**
      * PATCH 알림 설정 수정. API
      */
-    @PatchMapping("/setting/3")
-    public ResponseEntity modNotification(@CurrentAccount Account account, NotificationUpdateVO notificationUpdateVO) {
+    @PatchMapping("/setting/notification")
+    public ResponseEntity modNotification(@CurrentAccount Account account, @RequestBody NotificationUpdateVO notificationUpdateVO) {
         accountService.modNotifications(modelMapper.map(notificationUpdateVO, ModNotificationVO.class), account.getId());
+
+        // Principal 갱신
+        this.refreshPrincipal(account.getId());
 
         return ResponseEntity.ok("알림 설정이 완료되었습니다.");
     }
@@ -210,7 +225,12 @@ public class ProfileController {
      * POST 계정 태그 추가
      */
     @PostMapping("/tag/add")
-    public ResponseEntity addTag(@CurrentAccount Account account, @RequestBody String context) {
+    public ResponseEntity addTag(@CurrentAccount Account account, @RequestBody Map<String, Object> params) {
+        if (!params.containsKey("context")) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        String context = params.get("context").toString();
         if (StringUtils.isNullOrEmpty(context)) {
             return ResponseEntity.badRequest().build();
         }
@@ -232,7 +252,12 @@ public class ProfileController {
      * POST 계정 태그 삭제
      */
     @PostMapping("/tag/remove")
-    public ResponseEntity removeTag(@CurrentAccount Account account, @RequestBody String context) {
+    public ResponseEntity removeTag(@CurrentAccount Account account, @RequestBody Map<String, Object> params) {
+        if (!params.containsKey("context")) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        String context = params.get("context").toString();
         if (StringUtils.isNullOrEmpty(context)) {
             return ResponseEntity.badRequest().build();
         }
@@ -242,5 +267,18 @@ public class ProfileController {
         } else {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    private void refreshPrincipal(Long accountId) {
+        Account account = accountService.getAccountById(accountId);
+
+        // 로그인 성공했다는 유효 토큰 생성.
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+                new AccountUser(account),
+                account.getPassword(),
+                List.of(new SimpleGrantedAuthority("ROLE_USER"))
+        );
+        SecurityContext context = SecurityContextHolder.getContext();
+        context.setAuthentication(token); // 토큰을 Thread Holder 에 저장.
     }
 }

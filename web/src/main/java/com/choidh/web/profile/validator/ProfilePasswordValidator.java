@@ -23,7 +23,7 @@ public class ProfilePasswordValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         PasswordUpdateVO form = (PasswordUpdateVO) target;
-        Account account = accountRepository.findByNicknameAndChecked(form.getAccountNickname(), true);
+        Account account = accountRepository.findByIdAndChecked(Long.valueOf(form.getAccountId()), true);
 
         if (!passwordEncoder.matches(form.getNowPassword(), account.getPassword())) {
             errors.rejectValue("nowPassword", "wrong.nowPassword", "패스워드가 일치하지 않습니다.");
