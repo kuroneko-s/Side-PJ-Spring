@@ -35,6 +35,10 @@ public class AppConstant {
         return id + "에 해당하는 질문글이 존재하지 않습니다.";
     }
 
+    public static String getNotificationNotFoundErrorMessage(Long id) {
+        return id + "에 해당하는 알림이 존재하지 않습니다.";
+    }
+
     public static boolean isNotImageFile(String extension) {
         return !extension.equals("jpg") && !extension.equals("png") && !extension.equals("jpeg");
     }

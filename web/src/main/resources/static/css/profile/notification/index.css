@@ -1,0 +1,52 @@
+.profile-notification-container {
+    flex: 1;
+    margin-left: 1rem;
+}
+
+.profile-notification-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.profile-notification-contents-wrapper {
+    display: flex;
+    margin-top: .75rem;
+}
+
+.profile-notification-contents-title {
+    font-size: 1.15rem;
+}
+
+.profile-notification-card {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 21px;
+
+    padding: 1rem 1.25rem;
+
+    border: rgba(128, 128, 128, 0.2) 1px solid;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.profile-notification-card:hover {
+    background-color: rgba(115, 115, 115, 0.1);
+}
+
+.profile-notification-card p {
+    user-select: none;
+}
+
+.profile-notification-card-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+.profile-notification-card-date {
+    color: rgba(128, 128, 128, 0.8);
+    font-size: .8rem;
+}
+

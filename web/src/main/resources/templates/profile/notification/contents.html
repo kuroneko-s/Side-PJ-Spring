@@ -2,82 +2,39 @@
       xmlns:th="http://www.thymeleaf.org">
 
 <section>
-    <link rel="stylesheet" href="/css/profile/dashboard/index.css">
-    <link rel="stylesheet" href="/css/notification.css"/>
+    <link rel="stylesheet" href="/css/profile/notification/index.css">
 </section>
 
-<div class="profile-dashboard-container">
+<div class="profile-notification-container">
     <p class="profile-title">알림</p>
 
-    <!-- toast message start -->
-    <div class="notification-toast-message-container" id="notification-toast-message-container" th:if="${message}">
-        <div class="notification-toast-message">
-            <p th:text="${message}">flush message</p>
-            <button type="button" class="notification-toast-message-close-button" id="notification-toast-message-close-button">
-                <span>&times;</span>
-            </button>
-        </div>
-    </div>
-    <!-- toast message end -->
-
-    <div class="notification-menu-nav-tabs">
-        <div class="notification-menu-nav-tab active">
-            <a class="nav-link active d-flex justify-content-between align-items-center nav-btn1" href="#notread"
-               aria-controls="notread" role="tab" data-toggle="tab">
-                읽지 않은 알림
-                <span class="badge badge-primary badge-pill" th:text="${notificationList.size()}"></span>
-            </a>
+    <div class="profile-notification-contents-wrapper" th:if="${notificationList.size() > 0}" id="profile-notification-contents-wrapper">
+        <div class="profile-notification-card" th:data-notification-id="${notification.id}" th:each="notification : ${notificationList}">
+            <p class="profile-notification-title" th:text="${notification.title}"></p>
+            <div class="text-overflow-three" th:utext="${notification.description}"></div>
+            <p class="profile-notification-card-date date-time" th:text="${notification.createdAt}"></p>
         </div>
     </div>
 
-    <div class="tab-content d-flex justify-content-start">
-        <!-- 읽지 않은 알림 start -->
-        <div class="profile-body tab-pane active profile-content-body col-9" id="notread" role="tabpanel">
-            <div class="d-flex flex-column notification-body mt-md-2 justify-content-between pl-2 pr-2 pt-1 pb-1"
-                 th:each="notification : ${notificationList}">
-                <p class="notification-title" th:text="${notification.title}">default title</p>
-                <span id="description" th:text="${notification.description}" hidden></span>
-                <p class="notification-description"></p>
-                <p class="notification-foot d-flex justify-content-between">
-                    <span>
-                        from: <span class="notification-lectureName" th:text="${notification.lectureName}"></span>
-                    </span>
-                    <span class="notification-dateTime date-time" th:text="${notification.createNotification}"></span>
-                </p>
-            </div>
-        </div>
-        <!-- 읽지 않은 알림 end -->
-
-        <div class="col-3 mt-3">
-            <form action="#" th:action="@{'/profile/notification/remove'}" method="get">
-                <button class="btn btn-info notification-btn" type="submit">선택 삭제</button>
-            </form>
-            <form action="#" th:action="@{'/profile/notification/remove'}" method="get">
-                <button class="btn btn-info notification-btn" type="submit">전체 삭제</button>
-            </form>
-        </div>
+    <div class="profile-notification-contents-wrapper" th:if="${notificationList.size() == 0}">
+        <p class="profile-notification-contents-title">읽지 않은 알람이 없어요!</p>
     </div>
 </div>
 
 <script type="application/javascript">
     window.addEventListener("DOMContentLoaded", () => {
-        document.getElementById("notification-toast-message-close-button")?.addEventListener("click", () => {
-            document.getElementById('click');
-            document.getElementById("notification-toast-message-container").classList.add("hide");
-        })
-
         moment.locale('ko');
         $(".date-time").text(function (index, dateTime) {
             return moment(dateTime, "YYYY-MM-DD'T'hh:mm").format("LL");
         })
 
-        let value = document.getElementById('description').textContent;
-        value = $.parseHTML(value);
-        $('.notification-description').append(value);
+        // 알림 부분 클릭 이벤트
+        document.getElementById("profile-notification-contents-wrapper").addEventListener("click", e => {
+            const [result, targetEl] = hasClass(e.target, "profile-notification-card");
+            if (!result) return false;
 
-        let value_2 = document.getElementById('description-checked').textContent;
-        value_2 = $.parseHTML(value_2);
-        $('.notification-description-checked').append(value_2);
+            location.href = "/notification/" + targetEl.dataset.notificationId;
+        })
     })
 </script>
 </html>

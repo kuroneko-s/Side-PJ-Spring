@@ -2,6 +2,7 @@ package com.choidh.service.notification.entity;
 
 import com.choidh.service.annotation.Name;
 import com.choidh.service.common.entity.BaseDateEntity;
+import com.choidh.service.event.entity.Event;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.notice.entity.Notice;
 import com.choidh.service.notification.vo.NotificationType;
@@ -34,4 +35,7 @@ public class Notification extends BaseDateEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     private Notice notice;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private Event event;
 }

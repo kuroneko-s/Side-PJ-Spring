@@ -176,6 +176,13 @@
                     console.error(err);
                 });
         }
+
+        function hasClass(el, className) {
+            if (el.classList.contains("container")) return [false, el];
+            else if (el.classList.contains(className)) return [true, el];
+
+            return hasClass(el.parentNode, className);
+        }
     </script>
 </body>
 </html>

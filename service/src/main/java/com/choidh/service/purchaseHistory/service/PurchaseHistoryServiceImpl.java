@@ -36,14 +36,18 @@ public class PurchaseHistoryServiceImpl implements PurchaseHistoryService {
         Account account = accountService.getAccountById(accountId);
         Learning learning = learningService.getLearningById(learningId);
 
-        PurchaseHistory purchaseHistory = purchaseHistoryRepository.save(PurchaseHistory.builder()
-                .account(account)
-                .learning(learning)
-                .purchaseStatus(PurchaseStatus.BUY)
-                .build());
+        PurchaseHistory purchaseHistory = purchaseHistoryRepository.findByAccountIdAndLearningId(accountId, learningId);
 
-        account.getPurchaseHistories().add(purchaseHistory);
-        learning.getPurchaseHistories().add(purchaseHistory);
+        if (purchaseHistory == null) {
+            purchaseHistory = purchaseHistoryRepository.save(PurchaseHistory.builder()
+                    .account(account)
+                    .learning(learning)
+                    .purchaseStatus(PurchaseStatus.BUY)
+                    .build());
+
+            account.getPurchaseHistories().add(purchaseHistory);
+            learning.getPurchaseHistories().add(purchaseHistory);
+        }
 
         return purchaseHistory;
     }

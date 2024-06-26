@@ -13,7 +13,6 @@ import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.service.LearningService;
 import com.choidh.service.notification.entity.Notification;
 import com.choidh.service.notification.service.NotificationService;
-import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
 import com.choidh.service.security.AccountUser;
 import com.choidh.service.tag.service.TagService;
 import com.choidh.service.tag.vo.RegTagVO;
@@ -105,12 +104,8 @@ public class ProfileController {
         if (account == null) {
             throw new AccessDeniedException("접근 불가");
         }
-
-        account = accountService.getAccountByIdWithPurchaseHistories(account.getId());
-        List<Learning> learningList = account.getPurchaseHistories().stream().map(PurchaseHistory::getLearning).collect(Collectors.toList());
-        List<Notification> notificationList = notificationService.getNotificationListByType(
-                learningList.stream().map(Learning::getId).collect(Collectors.toList())
-        );
+        // 내가 듣고 있는 강의들 한해서 가져오는 것.
+        List<Notification> notificationList = notificationService.getNotificationListByType(account.getId());
 
         model.addAttribute("notificationList", notificationList);
 

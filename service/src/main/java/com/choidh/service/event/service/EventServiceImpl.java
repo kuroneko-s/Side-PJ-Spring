@@ -6,6 +6,8 @@ import com.choidh.service.attachment.entity.AttachmentGroup;
 import com.choidh.service.attachment.service.AttachmentService;
 import com.choidh.service.event.entity.Event;
 import com.choidh.service.event.repository.EventRepository;
+import com.choidh.service.event.vo.RegEventVO;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,14 @@ public class EventServiceImpl implements EventService {
     private AttachmentService attachmentService;
     @Autowired
     private EventRepository eventRepository;
+
+    /**
+     * 이벤트 목록 조회.
+     */
+    @Override
+    public List<Event> getEventList() {
+        return eventRepository.findAll();
+    }
 
     /**
      * 이벤트 목록 조회 With 첨부 파일.
@@ -34,5 +44,16 @@ public class EventServiceImpl implements EventService {
         }
 
         return resultList;
+    }
+
+    /**
+     * 이벤트 생성.
+     */
+    @Override
+    public Event regEvent(RegEventVO regEventVO) {
+        return eventRepository.save(Event.builder()
+                .attachmentGroup(regEventVO.getAttachmentGroup())
+                .used(regEventVO.isUsed())
+                .build());
     }
 }
