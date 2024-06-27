@@ -1,7 +1,7 @@
 .learning-listen-container {
     display: flex;
-    min-height: 74.5vh;
-    margin-top: 3rem;
+    min-height: 85vh;
+    padding-top: 1.25rem;
 }
 
 .learning-listen-left-container {
