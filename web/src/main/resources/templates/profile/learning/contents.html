@@ -2,61 +2,48 @@
       xmlns:th="http://www.thymeleaf.org">
 
 <section>
-    <link rel="stylesheet" href="/css/profile/dashboard/index.css">
+    <link rel="stylesheet" href="/css/profile/learning/index.css">
 </section>
 
-<div class="profile-dashboard-container">
-    <div class="col-sm-11 mt-md-5">
-        <header>
-            <div class="alert alert-info alert-dismissible fade show mt-3 alert-custom" role="alert" th:if="${message}">
-                <p th:text="${message}">flush message</p>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        </header>
+<div class="profile-learning-container">
+    <p class="profile-title">수강중인 목록</p>
 
-        <div class="col-md-12 mb-2">
-            <div style="opacity: 0.7; font-size: 13px">설정/내 학습</div>
-            <span style="font-size: 17px; font-weight: bold">설정/내 학습</span>
+    <!--강의가 존재할 경우 start-->
+    <div class="profile-learning-item-container" th:if="${!learningList.isEmpty()}">
+        <div class="profile-learning-item" th:each="learning : ${learningList}">
+            <div class="profile-learning-item-card" th:data-learning-id="${learning.id}">
+                <a class="profile-learning-item-card-anchor" th:href="@{'/learning/' + ${learning.id}}">
+                    <img class="profile-learning-item-card-image" th:src="${learningImageMap[learning.id][0]}" th:alt="${learningImageMap[learning.id][1]}" />
+                    <div class="profile-learning-item-card-body">
+                        <p class="profile-learning-item-card-body-title" th:text="${learning.title}"></p>
+                        <p class="profile-learning-item-card-body-tags">
+                            <i class="fas fa-tasks"></i>
+                            <span th:each="tag : ${learning.tags}">
+                                <span th:text="${tag.getTitle()}"></span>
+                            </span>
+                        </p>
+                        <p class="profile-learning-item-card-body-rating">
+                           <span class="full-star star" th:each="num : ${#numbers.sequence(0, learning.getRatingInt() - 1)}" th:if="${learning.getRatingInt() > 0}">
+                               <i class="fas fa-star"></i>
+                           </span>
+                           <span class="half-star star" th:if="${learning.checkRatingBoolean()}">
+                                <i class="fas fa-star-half-alt"></i>
+                            </span>
+                            <span class="empty-star star" th:each="num : ${#numbers.sequence(1, learning.emptyRating())}" th:if="${learning.emptyRating() > 0}">
+                                <i class="far fa-star"></i>
+                            </span>
+                            <span class="profile-learning-item-card-body-rating-number">(<span th:text="${learning.rating}"></span>)</span>
+                        </p>
+                    </div>
+                </a>
+            </div>
         </div>
-
-        <main class="col-12 pr-5 mr-5 row mt-md-3 d-flex justify-content-start">
-            <div class="roof-start pr-2" th:each="learning : ${learningList}" th:if="${learningList.size() > 0}">
-                <div class="card mb-4 shadow-sm card-view">
-                    <a href="#" th:href="@{'/learning/' + ${learning.id}}">
-                        <img class="bd-placeholder-img card-img-top card-img" role="img" aria-label="Placeholder: Thumbnail"
-                             th:src="|data:image/*;base64,${learning.bannerBytes}|" th:if="${learning.bannerBytes} != null"/>
-                        <img class="banner-image card-img" src="/images/logo.png" th:if="${learning.bannerBytes} == null"/>
-                    </a>
-                    <div class="card-body d-flex flex-column pl-1">
-                        <p class="card-text card-title" th:text="${learning.title}">Default Title</p>
-                        <div>
-                            <p>구매 일자 : <span class="date-time" th:text="${learning.buyLearning}"></span></p>
-                            <form action="#" th:action="@{/kakaoPayCancel}" method="get">
-                                <button type="submit" class="btn btn-warning" th:if="${learning.buyLearning} > ${now}">구매 취소</button>
-                                <span class="btn btn-warning" th:if="${learning.buyLearning} < ${now}">취소 불가(기간초과)</span>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--강의가 존재할 경우-->
-
-            <div class="d-flex justify-content-start" th:if="${learningList.size() <= 0}">
-                <div class="roof-start">
-                    <div class="card mb-4 shadow-sm card-view">
-                        <img class="banner-image card-img" src="/images/logo.png"/>
-                        <div class="card-body d-flex align-items-center justify-content-center">
-                            <p class="card-text card-title-non">강의가 존재하지 않습니다.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--강의가 존재하지 않을 경우-->
-
-        </main>
     </div>
+    <!--강의가 존재할 경우 end-->
+
+    <!--강의가 존재하지 않을 경우 start-->
+    <p class="profile-learning-item-empty-title" th:if="${learningList.isEmpty()}">구매한 강의가 존재하지 않습니다.</p>
+    <!--강의가 존재하지 않을 경우 end-->
 </div>
 
 <script type="application/javascript">

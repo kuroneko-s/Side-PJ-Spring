@@ -6,13 +6,16 @@ import com.choidh.service.account.vo.ModAccountVO;
 import com.choidh.service.account.vo.ModNotificationVO;
 import com.choidh.service.account.vo.ModPasswordVO;
 import com.choidh.service.account.vo.ProfileVO;
+import com.choidh.service.attachment.entity.AttachmentFile;
+import com.choidh.service.attachment.entity.AttachmentFileType;
+import com.choidh.service.attachment.service.AttachmentService;
 import com.choidh.service.common.StringUtils;
 import com.choidh.service.joinTables.entity.AccountTagJoinTable;
 import com.choidh.service.joinTables.service.AccountTagService;
 import com.choidh.service.learning.entity.Learning;
-import com.choidh.service.learning.service.LearningService;
 import com.choidh.service.notification.entity.Notification;
 import com.choidh.service.notification.service.NotificationService;
+import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
 import com.choidh.service.security.AccountUser;
 import com.choidh.service.tag.service.TagService;
 import com.choidh.service.tag.vo.RegTagVO;
@@ -41,10 +44,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.choidh.service.common.AppConstant.getTitle;
@@ -58,10 +58,10 @@ public class ProfileController {
     private final ProfileNicknameValidator profileNicknameValidator;
     private final ProfilePasswordValidator profilePasswordValidator;
     private final AccountService accountService;
-    private final LearningService learningService;
     private final NotificationService notificationService;
     private final AccountTagService accountTagService;
     private final TagService tagService;
+    private final AttachmentService attachmentService;
 
     public final static String CUSTOM_PROFILE = "profile/custom_profile";
 
@@ -135,12 +135,31 @@ public class ProfileController {
             throw new AccessDeniedException("접근 불가");
         }
 
-        Set<Learning> learningList = learningService.getLearningList(account.getId());
+        account = accountService.getAccountByIdWithPurchaseHistories(account.getId());
+        List<Learning> learningList = new ArrayList<>();
+        Map<Long, List<String>> learningImageMap = new HashMap<>();
+        // 강의 이미지 목록 조회
+        for (PurchaseHistory purchaseHistory : account.getPurchaseHistories()) {
+            Learning learning = purchaseHistory.getLearning();
+            learningList.add(learning);
+
+            List<AttachmentFile> attachmentFiles = attachmentService.getAttachmentFiles(learning.getAttachmentGroup().getId(), AttachmentFileType.BANNER);
+            if (attachmentFiles.size() != 1) {
+                throw new IllegalArgumentException();
+            }
+
+            List<String> valueList = learningImageMap.getOrDefault(learning.getId(), new ArrayList<>());
+
+            AttachmentFile attachmentFile = attachmentFiles.get(0);
+            valueList.add(attachmentFile.getFullPath(""));
+            valueList.add(attachmentFile.getOriginalFileName());
+            learningImageMap.put(learning.getId(), valueList);
+        }
 
         model.addAttribute("learningList", learningList);
-        model.addAttribute("now", LocalDateTime.now().minusDays(3));
+        model.addAttribute("learningImageMap", learningImageMap);
 
-        model.addAttribute("pageTitle", getTitle("알림"));
+        model.addAttribute("pageTitle", getTitle("수강 목록"));
         model.addAttribute("pageContent", "profile/learning/contents");
 
         return "profile/index";

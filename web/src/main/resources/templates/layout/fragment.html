@@ -23,9 +23,9 @@
                     </div>
                 </li>
 
-                <li class="navbar-mr">
-                    <a class="navbar-menu-item-title" href="#">로드맵</a>
-                </li>
+<!--                <li class="navbar-mr">-->
+<!--                    <a class="navbar-menu-item-title" href="#">로드맵</a>-->
+<!--                </li>-->
             </ul>
         </div>
     </div>
@@ -40,7 +40,7 @@
                 <input name="keyword" type="text" placeholder="강의 검색하기" />
             </form>
 
-            <form class="form navbar-mr" action="#" sec:authorize="isAuthenticated()" th:action="@{'/profile/' + ${account.id}}">
+            <form class="form navbar-mr" action="#" sec:authorize="isAuthenticated()" th:action="@{'/profile/learning'}">
                 <button class="button" type="submit">대시보드</button>
             </form>
 

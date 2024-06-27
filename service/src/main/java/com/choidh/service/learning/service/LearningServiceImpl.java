@@ -120,11 +120,10 @@ public class LearningServiceImpl implements LearningService {
      * 강의 목록조회 By Account Id
      */
     @Override
-    public Set<Learning> getLearningList(Long accountId) {
+    public Set<Learning> getLearningListByProfessionalAccount(Long accountId) {
         ProfessionalAccount professionalAccount = professionalAccountRepository.findByAccountIdWithLearningList(accountId);
 
         if (professionalAccount == null) {
-            // TODO : 해당 에러 날 경우 페이지 리다이렉션도 해주긴 해야할 듯 (AdviceController 에서)
             throw new AccessDeniedException("접근 권한이 없는 계정입니다.");
         }
 

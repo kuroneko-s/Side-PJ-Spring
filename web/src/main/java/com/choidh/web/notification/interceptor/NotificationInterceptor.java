@@ -37,6 +37,8 @@ public class NotificationInterceptor implements HandlerInterceptor {
         ) {
             Account account = ((AccountUser) authentication.getPrincipal()).getAccount();
             int accountPurchaseHistoriesCount = notificationService.getNotificationCountByAccount(account.getId());
+
+            // TODO : 알림같은거 읽었으면 어느정도 마킹을 해주는 컬럼이 필요할 수도 있음. 근데 일단 보류. 급한건 아니니깐...
             modelAndView.addObject("hasNotification", accountPurchaseHistoriesCount > 0);
         }
     }

@@ -45,9 +45,9 @@ public interface LearningService {
     Learning regLearning(RegLearningVO regLearningVO, Long accountId);
 
     /**
-     * 강의 목록조회 By Account Id
+     * 강의 목록조회 (내가 만든 강의들) By Account Id
      */
-    Set<Learning> getLearningList(Long accountId);
+    Set<Learning> getLearningListByProfessionalAccount(Long accountId);
 
     /**
      * 강의 단건 조회 By
