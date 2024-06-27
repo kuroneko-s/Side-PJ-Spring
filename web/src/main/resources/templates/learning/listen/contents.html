@@ -42,7 +42,7 @@
         document.getElementById("reviewPopupButton")?.addEventListener("click", e => {
             const popupX = (window.screen.width / 2) - (1100 / 2);
             const popupY= (window.screen.height / 2) - (700 / 2);
-            window.open("/review/" + [[${learning.id}]], "review", `width=1100, height=700, left=${popupX},screenX=${popupX}, top=${popupX}, screenY=${popupY} `);
+            window.open("/review/regReview?learningId=" + [[${learning.id}]], "review", `width=1100, height=700, left=${popupX},screenX=${popupX}, top=${popupX}, screenY=${popupY} `);
         })
 
         // 목차 클릭 이벤트

@@ -4,7 +4,7 @@
 <main class="question-container">
     <p class="question-title"><span th:text="${learning.title}"></span> 질문</p>
 
-    <form id="questionForm" class="question-form form needs-validation" th:action="@{'/question/' + ${learning.id}}" method="post">
+    <form id="questionForm" class="question-form form" th:action="@{'/question/' + ${learning.id}}" method="post">
         <label for="questionTitle">제목</label>
         <input type="text" id="questionTitle" required minlength="2" maxlength="150">
         <label for="summernote">질문 내용</label>

@@ -51,6 +51,16 @@
 
                 targetEl.action = '/learning/search/all?keyword=' + value;
             })
+
+            // 플로팅 메시지 띄우기
+            function floatMessage(message) {
+                document.getElementById("toast-message-context").textContent = message;
+                const containerEl = document.getElementById("toast-message-container");
+                containerEl.classList.remove("hide");
+
+                // 3초 후 자동 종료
+                setTimeout(() => containerEl.classList.add("hide"), 3000);
+            }
         })
     </script>
 </body>

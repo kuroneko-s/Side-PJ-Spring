@@ -26,6 +26,15 @@ public class ReviewServiceImpl implements ReviewService{
     private final ModelMapper modelMapper;
 
     /**
+     * 단건 리뷰 조회. By Account Id and Learning Id
+     */
+    @Override
+    public boolean extReview(Long accountId, Long learningId) {
+        Review review = reviewRepository.findByAccountIdAndLearningId(accountId, learningId);
+        return review != null;
+    }
+
+    /**
      * Reg 리뷰 생성.
      */
     @Override

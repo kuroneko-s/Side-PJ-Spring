@@ -25,7 +25,6 @@ public class Review extends BaseDateEntity {
 
     private float rating;
     private String description;
-    private LocalDateTime createTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")

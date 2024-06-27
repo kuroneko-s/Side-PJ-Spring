@@ -104,17 +104,15 @@
                 <p class="learning-detail-contents-title">강의 후기</p>
                 <div class="learning-detail-contents-review-contents" th:each="review : ${reviews}">
                     <div class="learning-detail-contents-review-profile-wrapper">
-                        <svg th:data-jdenticon-value="${review.account.nickname}" th:width="25" th:height="25"></svg>
+                        <svg th:data-jdenticon-value="${review.account.nickname}" th:width="50" th:height="50"></svg>
                         <div class="learning-detail-contents-review-profile-info">
                             <p class="learning-detail-contents-review-profile-info-nickname" th:text="${review.account.nickname}"></p>
-                            <p class="learning-detail-contents-review-profile-info-datetime date-time-short" th:text="${review.createTime}"></p>
+                            <p class="learning-detail-contents-review-profile-info-datetime date-time-short" th:text="${review.createdAt}"></p>
                         </div>
                     </div>
                     <div class="learning-detail-contents-review-rating-wrapper">
-                        <p>
-                            평점 : <span th:text="${review.rating}"></span>
-                        </p>
-                        <p th:text="${review.description}"></p>
+                        <p>평점 : <span th:text="${review.rating}"></span></p>
+                        <div class="" th:utext="${review.description}"></div>
                     </div>
                 </div>
             </div>
@@ -165,8 +163,7 @@
             return moment(dateTime, "YYYY-MM-DD'T'hh:mm").format("LLL");
         })
 
-        const shortDateTimeEl = document.querySelector(".date-time-short");
-        if (shortDateTimeEl !== null) {
+        document.querySelectorAll(".date-time-short").forEach(shortDateTimeEl => {
             const formattedDate = new Intl.DateTimeFormat('ko-KR', {
                 year: '2-digit',
                 month: '2-digit',
@@ -174,20 +171,20 @@
             }).format(new Date(shortDateTimeEl?.textContent));
             const finalDate = formattedDate.replace(/\. /g, '').replace(/(\d{2})(\d{2})(\d{2})/, '$1년 $2월 $3일');
             shortDateTimeEl.textContent = finalDate.replace("\.", "");
-        }
+        });
 
         const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
         const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
         // 구매하기 버튼 클릭 이벤트
-        document.getElementById("buy-button").addEventListener("click", e => {
+        document.getElementById("buy-button")?.addEventListener("click", e => {
             const targetId = e.target.dataset.learningId;
 
             location.href = "/cart/buy?learningId=" + targetId;
         })
 
         // 장바구니 Click Event
-        document.getElementById("cart-button").addEventListener("click", e => {
+        document.getElementById("cart-button")?.addEventListener("click", e => {
             const targetId = e.target.dataset.learningId;
 
             fetch('/cart/append', {

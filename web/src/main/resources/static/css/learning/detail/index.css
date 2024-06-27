@@ -2,6 +2,7 @@
     position: relative;
     min-height: 85vh;
     padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
 }
 
 .learning-detail-banner-container {
@@ -157,14 +158,35 @@
 
 .learning-detail-contents-review-contents {
     display: flex;
+
+    border: rgba(115, 115, 115, 0.25) 1px solid;
+    border-radius: 4px;
+    box-shadow: 2px 4px 4px -5px rgba(102,92,102,0.2);
+    padding: .5rem 0;
+}
+
+.learning-detail-contents-review-contents:not(:last-child) {
+    margin-bottom: .5rem;
 }
 
 .learning-detail-contents-review-profile-wrapper {
-    flex: 1;
+    width: 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.learning-detail-contents-review-profile-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .learning-detail-contents-review-profile-info-nickname {
     font-weight: 600;
+    margin-bottom: .25rem;
 }
 
 .learning-detail-contents-review-profile-info-datetime {
@@ -173,7 +195,8 @@
 }
 
 .learning-detail-contents-review-rating-wrapper {
-    flex: 9;
+    flex: 1;
+    line-height: 18px;
 }
 
 .learning-detail-contents-review-image svg {
