@@ -1,0 +1,22 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<main class="admin-container">
+  <div class="admin-card-wrapper one">
+    <a href="/admin/event/list">이벤트 목록</a>
+  </div>
+  <div class="admin-card-wrapper two">
+    <a href="/admin/notice/list">사이트 공지사항 목록</a>
+  </div>
+  <div class="admin-card-wrapper three">
+    <a href="/admin/professional/list">강의 제공자 목록</a>
+  </div>
+</main>
+
+<script type="application/javascript">
+  window.addEventListener("DOMContentLoaded", () => {
+    console.log("관리자 대시보드")
+  });
+</script>
+</html>

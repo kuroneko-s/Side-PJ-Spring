@@ -1,6 +1,7 @@
 package com.choidh.web.common.config;
 
 import com.choidh.service.security.AccountDetailsService;
+import com.choidh.service.security.AccountRoleType;
 import com.choidh.service.security.CustomAuthenticationFailureHandler;
 import com.choidh.service.security.CustomAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("/learning/search/**").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/profile/**").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/learning/{id}").access("@webSecurity.checkLearningId(#id)")
+                .mvcMatchers("/admin/**").hasAuthority(AccountRoleType.ROLE_ADMIN.name())
+                .mvcMatchers("/professional/**").hasAnyAuthority(AccountRoleType.ROLE_ADMIN.name(), AccountRoleType.ROLE_PROFESSIONAL.name())
                 .anyRequest().authenticated();
 
         http.formLogin()

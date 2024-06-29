@@ -96,6 +96,7 @@ public class MainController {
         model.addAttribute("learningImageMap", learningImageMap);
         model.addAttribute("newLearningList", newLearningList);
         model.addAttribute("newLearningImageMap", newLearningImageMap);
+
         model.addAttribute("pageTitle", getTitle("홈"));
 
         return "home/index";

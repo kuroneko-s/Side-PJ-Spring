@@ -23,9 +23,12 @@
                     </div>
                 </li>
 
-<!--                <li class="navbar-mr">-->
-<!--                    <a class="navbar-menu-item-title" href="#">로드맵</a>-->
-<!--                </li>-->
+                <li class="navbar-mr" sec:authorize="hasRole('ROLE_PROFESSIONAL')">
+                    <a href="#" th:href="@{'/professional/dashboard'}">강의 제공자 메뉴</a>
+                </li>
+                <li sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a href="#" th:href="@{'/admin/dashboard'}">관리자 메뉴</a>
+                </li>
             </ul>
         </div>
     </div>

@@ -1,4 +1,4 @@
-package com.choidh.web.account.account;
+package com.choidh.web.account.controller;
 
 import com.choidh.service.account.service.AccountService;
 import com.choidh.service.account.vo.RegAccountVO;

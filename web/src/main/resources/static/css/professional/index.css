@@ -1,0 +1,63 @@
+.professional-container {
+    height: 85vh;
+    padding: 1.25rem 0;
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    column-gap: 5rem;
+    row-gap: 3rem;
+}
+
+.professional-card-wrapper {
+    border-radius: 10px;
+    box-shadow: .25rem .25rem .25rem rgba(0,0,0,.075);
+    transition: all 0.3s ease;
+
+    cursor: pointer;
+}
+
+.professional-card-wrapper.one {
+    background: #36D1DC;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to top left, #5B86E5, #36D1DC);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to top left, #5B86E5, #36D1DC); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.professional-card-wrapper.two {
+    background: #7F7FD5;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to top left, #91EAE4, #86A8E7, #7F7FD5);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to top left, #91EAE4, #86A8E7, #7F7FD5); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.professional-card-wrapper.three {
+    background: #00d2ff;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to top left, #928DAB, #00d2ff);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to top left, #928DAB, #00d2ff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.professional-card-wrapper.four {
+    background: #c2e59c;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to top left, #64b3f4, #c2e59c);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to top left, #64b3f4, #c2e59c); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.professional-card-wrapper:hover {
+    box-shadow: .5rem .5rem .5rem rgba(0, 0, 0, .2);
+    transform: translateY(-5px);
+}
+
+.professional-card-wrapper a,
+.professional-card-wrapper p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #ffffff;
+
+    user-select: none;
+}

@@ -16,6 +16,7 @@ import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.notification.entity.Notification;
 import com.choidh.service.notification.service.NotificationService;
 import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
+import com.choidh.service.security.AccountRoleType;
 import com.choidh.service.security.AccountUser;
 import com.choidh.service.tag.service.TagService;
 import com.choidh.service.tag.vo.RegTagVO;
@@ -290,7 +291,7 @@ public class ProfileController {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                 new AccountUser(account),
                 account.getPassword(),
-                List.of(new SimpleGrantedAuthority("ROLE_USER"))
+                List.of(new SimpleGrantedAuthority(AccountRoleType.ROLE_USER.name()))
         );
         SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(token); // 토큰을 Thread Holder 에 저장.
