@@ -2,13 +2,87 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<main class="admin-container">
-  <p>이벤트 목록 보여줌</p>
+<section>
+  <link rel="stylesheet" href="/css/admin/event/list/index.css"/>
+</section>
+
+<main class="admin-event-container">
+  <!-- Modal start -->
+  <div class="modal-background hide" id="confirmDialog">
+    <div class="modal-content">
+      <p id="modalContext">modal 내용</p>
+      <button id="confirmYes">네!</button>
+      <button id="confirmNo">아니요</button>
+    </div>
+  </div>
+  <!-- Modal end -->
+
+  <div class="admin-event-header">
+    <p class="admin-event-title">이벤트 목록 보여줌</p>
+    <a class="admin-event-button green" href="#" th:href="@{'/admin/event/create'}">신규 이벤트 등록</a>
+  </div>
+
+  <div class="admin-event-item-container">
+    <div class="admin-event-item-wrapper" th:if="${!eventList.isEmpty()}">
+      <div class="admin-event-item" th:each="event : ${eventList}" th:id="${event.id}">
+        <div class="admin-event-item-content-wrapper">
+          <div class="admin-event-item-info-wrapper">
+            <p class="admin-event-item-title" th:text="${event.title}"></p>
+            <div class="admin-event-item-description" th:utext="${event.description}"></div>
+          </div>
+          <img class="admin-event-item-image" th:src="${imageMap[event.id]}" th:alt="${event.title}"/>
+        </div>
+        <div class="admin-event-item-button-wrapper">
+          <a class="admin-event-button green" href="#" th:href="@{'/admin/event/' + ${event.id}}">이벤트 수정</a>
+          <p class="admin-event-button red" th:onclick="|eventDelete('${event.id}')|">이벤트 삭제</p>
+        </div>
+      </div>
+    </div>
+
+    <div th:if="${eventList.isEmpty()}">
+      <p>등록된 이벤트가 없습니다.</p>
+    </div>
+
+    <!-- pagination -->
+    <section th:replace="fragment/fragment.html :: pagination"></section>
+  </div>
 </main>
 
 <script type="application/javascript">
-  window.addEventListener("DOMContentLoaded", () => {
+  function eventDelete(eventId) {
+    const eventTitle = document.getElementById(eventId).querySelector(".admin-event-item-title").textContent;
 
+    document.getElementById("modalContext").textContent = eventTitle + "를 삭제하시겠어요 ?";
+    document.getElementById("confirmDialog").classList.remove("hide");
+    document.getElementById("confirmDialog").dataset.eventId = eventId;
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    // 모달 확인 이벤트
+    document.getElementById('confirmYes').addEventListener('click', function() {
+      document.getElementById("confirmDialog").classList.add("hide");
+      const targetEventId = document.getElementById("confirmDialog").dataset.eventId;
+
+      sendFetch(
+              "/admin/event/" + targetEventId,
+              "DELETE",
+              {},
+              floatMessage,
+              null
+      );
+    });
+
+    // 모달 취소 이벤트
+    document.getElementById('confirmNo').addEventListener('click', function() {
+      document.getElementById("confirmDialog").classList.add("hide");
+    });
+
+    // 모달 취소 글로벌 이벤트
+    window.onclick = function(event) {
+      if (event.target === document.getElementById('confirmDialog')) {
+        document.getElementById("confirmDialog").classList.add("hide");
+      }
+    }
   });
 </script>
 </html>

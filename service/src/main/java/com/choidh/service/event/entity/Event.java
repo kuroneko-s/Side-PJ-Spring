@@ -20,6 +20,10 @@ public class Event extends BaseEntity {
     @Column(name = "event_id")
     private Long id;
 
+    private String title;
+
+    private String description;
+
     private boolean used;
 
     @OneToOne

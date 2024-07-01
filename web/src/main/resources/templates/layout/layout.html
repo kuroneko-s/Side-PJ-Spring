@@ -16,6 +16,7 @@
     <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/node_modules/moment/min/moment-with-locales.min.js"></script>
     <script src="/node_modules/jdenticon/dist/jdenticon.min.js"></script>
+    <script src="/js/index.js"></script>
 
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&display=swap"/>
@@ -31,6 +32,17 @@
 <body class="container">
     <!-- 상단 바 -->
     <header th:replace="layout/fragment.html :: navbar"></header>
+
+    <!-- toast message start -->
+    <div class="toast-message-container hide" id="toast-message-container">
+        <div class="toast-message-wrapper">
+            <p id="toast-message-context">이메일과 패스워드를 다시 입력해주세요.</p>
+            <button type="button" class="toast-message-close-button" id="toast-message-close-button">
+                <span>&times;</span>
+            </button>
+        </div>
+    </div>
+    <!-- toast message end -->
 
     <main th:replace="${pageContent}"></main>
 
@@ -51,16 +63,6 @@
 
                 targetEl.action = '/learning/search/all?keyword=' + value;
             })
-
-            // 플로팅 메시지 띄우기
-            function floatMessage(message) {
-                document.getElementById("toast-message-context").textContent = message;
-                const containerEl = document.getElementById("toast-message-container");
-                containerEl.classList.remove("hide");
-
-                // 3초 후 자동 종료
-                setTimeout(() => containerEl.classList.add("hide"), 3000);
-            }
         })
     </script>
 </body>
