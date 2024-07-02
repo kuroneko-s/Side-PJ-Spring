@@ -3,32 +3,127 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <section>
-  <link rel="stylesheet" href="/css/admin/event/list/index.css"/>
+  <link rel="stylesheet" href="/css/admin/event/create_modify/index.css"/>
 </section>
 
-<main class="admin-event-container">
-  <p>이벤트 수정</p>
+<main class="admin-event-manage-container">
+  <p class="admin-event-manage-title">이벤트 수정 화면</p>
 
-  <!--<div class="admin-event-item-container">
-    <div class="admin-event-item" th:each="event : ${eventList}">
-      <p th:text="${event.title}"></p>
-      <p th:text="${event.description}"></p>
-      <a href="#">이벤트 수정</a>
-      <a href="#">이벤트 삭제</a>
+  <form id="modifyForm" class="admin-event-manage-content-wrapper" th:action="@{/admin/event/modify}" method="POST"
+        enctype="multipart/form-data">
+    <input type="hidden" name="eventId" th:value="${eventDetail.id}">
+    <div class="admin-event-manage-image-wrapper">
+      <div class="admin-event-manage-image-title-wrapper">
+        <span class="admin-event-manage-image-title">배너 이미지</span>
+        <label for="eventBannerImage"><i class="admin-event-manage-image-button fa-solid fa-upload"></i></label>
+      </div>
+      <input class="admin-event-manage-image-input" name="banner" type="file" id="eventBannerImage" accept="image/*"/>
+      <div class="admin-event-image-preview-wrapper" id="eventBannerPreviewWrapper">
+        <img id="eventBannerImagePreview" th:src="${eventDetail.bannerImageUrl}" th:alt="${eventDetail.bannerImageAlt}">
+      </div>
     </div>
 
-    <div th:if="${eventList.isEmpty()}">
-      <p>등록된 이벤트가 없습니다.</p>
+    <div class="admin-event-manage-image-wrapper">
+      <div class="admin-event-manage-image-title-wrapper">
+        <span class="admin-event-manage-image-title">내용 이미지</span>
+        <label for="eventContextImage"><i class="admin-event-manage-image-button fa-solid fa-upload"></i></label>
+      </div>
+      <input class="admin-event-manage-image-input" name="context" type="file" id="eventContextImage" accept="image/*"/>
+      <div class="admin-event-context-image-preview-wrapper" id="eventContextImagePreviewWrapper">
+        <img id="eventContextImagePreview" th:src="${eventDetail.contextImageUrl}" th:alt="${eventDetail.contextImageAlt}">
+      </div>
     </div>
 
-    &lt;!&ndash; pagination &ndash;&gt;
-    <section th:replace="fragment/fragment.html :: pagination"></section>
-  </div>-->
+    <div class="admin-event-manage-title-wrapper">
+      <label for="title">이벤트 제목</label>
+      <input id="title" type="text" name="title" placeholder="이벤트 제목을 입력해주세요." th:value="${eventDetail.title}"/>
+    </div>
+
+    <div class="admin-event-manage-description-wrapper">
+      <label for="summernote">설명</label>
+      <div id="defaultDescription" class="hide" th:utext="${eventDetail.description}"></div>
+      <textarea id="summernote" name="description"></textarea>
+    </div>
+
+    <button class="admin-event-manage-submit-button" type="submit" id="submitButton">수정하기</button>
+  </form>
 </main>
+
 
 <script type="application/javascript">
   window.addEventListener("DOMContentLoaded", () => {
+    // 초기 이미지 활성화
+    document.getElementById("eventBannerPreviewWrapper").style.display = "block";
+    document.getElementById("eventContextImagePreviewWrapper").style.display = "block";
 
+    $("#summernote").summernote({
+      fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Noto Sans KR', 'Merriweather'],
+      placeholder: '이벤트 내용',
+      tabSize: 2,
+      lang: "ko-KR",
+      height: 200,
+      disableResizeEditor: true, // 크기 변경 비활성화
+      width: 500,
+      focus: true,
+      callbacks: {
+        onInit: function() {
+          // 기본 텍스트 설정
+          const text = document.getElementById("defaultDescription").innerHTML;
+          $('#summernote').summernote('code', text);
+        }
+      }
+    });
+
+    document.getElementById('eventBannerImage').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+
+      if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const imagePreview = document.getElementById('eventBannerImagePreview');
+          imagePreview.src = e.target.result;
+
+          document.getElementById("eventBannerPreviewWrapper").style.display = "block";
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert('이미지 파일을 올려주세요!!!');
+      }
+    });
+
+    document.getElementById('eventContextImage').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+
+      if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const imagePreview = document.getElementById('eventContextImagePreview');
+          imagePreview.src = e.target.result;
+
+          document.getElementById("eventContextImagePreviewWrapper").style.display = "block";
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert('이미지 파일을 올려주세요!!!');
+      }
+    });
+
+    document.getElementById("modifyForm").addEventListener("submit", e => {
+      const titleEl = document.getElementById("title");
+      const summernoteEl = document.getElementById("summernote");
+
+      if (titleEl.value.length <= 0) {
+        floatMessage("이벤트 제목을 추가해주세요!!!");
+        e.preventDefault();
+        return false;
+      }
+
+      if (summernoteEl.value.length <= 0) {
+        floatMessage("이벤트 내용을 추가해주세요!!!");
+        e.preventDefault();
+        return false;
+      }
+    })
   });
 </script>
 </html>

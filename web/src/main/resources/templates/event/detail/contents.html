@@ -1,0 +1,20 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<main class="event-detail-container">
+    <p class="event-detail-title">
+        <span th:text="${eventDetail.title}"></span> | <span>이벤트</span>
+    </p>
+
+    <div class="event-detail-image-wrapper" id="eventDetailImageWrapper">
+        <img th:src="${eventDetail.contextImageUrl}" th:alt="${eventDetail.contextImageAlt}" />
+    </div>
+</main>
+
+<script type="application/javascript">
+    window.addEventListener("DOMContentLoaded", () => {
+
+    });
+</script>
+</html>

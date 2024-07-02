@@ -16,6 +16,7 @@ public interface AttachmentFileRepository extends JpaRepository<AttachmentFile, 
             "from AttachmentFile file " +
             "where file.attachmentGroup.id = :attachmentGroupId " +
             "and file.attachmentFileType = :attachmentFileType " +
+            "and file.isDelete = false " +
             "order by file.id")
     List<AttachmentFile> findAllByGroupAndType(Long attachmentGroupId, AttachmentFileType attachmentFileType);
 

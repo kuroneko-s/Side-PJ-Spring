@@ -39,6 +39,10 @@ public class AppConstant {
         return id + "에 해당하는 알림이 존재하지 않습니다.";
     }
 
+    public static String getEventNotFoundErrorMessage(Long id) {
+        return id + "에 해당하는 이벤트가 존재하지 않습니다.";
+    }
+
     public static boolean isNotImageFile(String extension) {
         return !extension.equals("jpg") && !extension.equals("png") && !extension.equals("jpeg");
     }

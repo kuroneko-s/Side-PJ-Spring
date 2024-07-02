@@ -9,8 +9,8 @@ import com.choidh.service.common.FileUtils;
 import com.choidh.service.common.StringUtils;
 import com.choidh.service.common.exception.FileNotSavedException;
 import com.choidh.service.event.entity.Event;
+import com.choidh.service.event.repository.EventRepository;
 import com.choidh.service.event.service.EventService;
-import com.choidh.service.event.vo.RegEventVO;
 import com.choidh.service.notification.service.NotificationService;
 import com.choidh.service.notification.vo.NotificationType;
 import com.choidh.service.notification.vo.RegNotificationVO;
@@ -21,7 +21,6 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.SpringFactoriesLoader;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +31,7 @@ import java.util.List;
 @Component
 public class EventAppRunner implements ApplicationRunner {
     @Autowired private EventService eventService;
+    @Autowired private EventRepository eventRepository;
     @Autowired private AttachmentService attachmentService;
     @Autowired private AttachmentFileRepository attachmentFileRepository;
     @Autowired private NotificationService notificationService;
@@ -50,9 +50,11 @@ public class EventAppRunner implements ApplicationRunner {
             // 임의의 이미지 파일들 추가.
             createFile(attachmentGroup);
 
-            Event event = eventService.regEvent(RegEventVO.builder()
+            Event event = eventRepository.save(Event.builder()
                     .attachmentGroup(attachmentGroup)
                     .used(true)
+                    .title("sample Title")
+                    .description("sample Description")
                     .build());
 
             // 이벤트 생성 후 알림 추가해줘야함...

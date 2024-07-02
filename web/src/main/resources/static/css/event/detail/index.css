@@ -1,0 +1,19 @@
+.event-detail-container {
+    position: relative;
+    min-height: 85vh;
+    padding: 1.25rem 0;
+}
+
+.event-detail-title span {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.event-detail-image-wrapper {
+    width: 1250px;
+    margin-top: 1.25rem;
+}
+
+.event-detail-image-wrapper img {
+    width: 100%;
+}

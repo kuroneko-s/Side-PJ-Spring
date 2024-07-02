@@ -1,8 +1,13 @@
 package com.choidh.web.admin.controller;
 
+import com.choidh.service.event.entity.Event;
 import com.choidh.service.event.service.EventService;
+import com.choidh.service.event.vo.EventDetailResult;
 import com.choidh.service.event.vo.EventListResult;
+import com.choidh.service.event.vo.EventVO;
+import com.choidh.web.admin.vo.EventFormVO;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -11,6 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.choidh.service.common.AppConstant.getTitle;
 
@@ -18,7 +27,10 @@ import static com.choidh.service.common.AppConstant.getTitle;
 @Controller
 @RequestMapping(value = "/admin")
 public class AdminController {
-    @Autowired private EventService eventService;
+    @Autowired
+    private EventService eventService;
+    @Autowired
+    private ModelMapper modelMapper;
 
     /**
      * Get 관리자 대시보드 View
@@ -60,10 +72,31 @@ public class AdminController {
     }
 
     /**
+     * Post 이벤트 등록
+     */
+    @PostMapping("/event/create")
+    public String postRegEvent(EventFormVO eventVO,
+                               @RequestParam("banner") MultipartFile bannerFile,
+                               @RequestParam("context") MultipartFile contextFile) {
+        Map<String, MultipartFile> multipartFileMap = new HashMap<>();
+        multipartFileMap.put("banner", bannerFile);
+        multipartFileMap.put("context", contextFile);
+
+        // 이벤트 등록 처리.
+        eventService.regEvent(modelMapper.map(eventVO, EventVO.class), multipartFileMap);
+
+        return "redirect:/admin/event/list";
+    }
+
+    /**
      * Get 이벤트 수정 View
      */
     @GetMapping("/event/{eventId}")
     public String getEventModifyView(Model model, @PathVariable Long eventId) {
+        // 이벤트 정보 조회.
+        EventDetailResult eventDetail = eventService.getEventDetail(eventId);
+
+        model.addAttribute("eventDetail", eventDetail);
         model.addAttribute("pageTitle", getTitle("이벤트 등록"));
         model.addAttribute("pageContent", "admin/event/modify/contents");
 
@@ -71,11 +104,26 @@ public class AdminController {
     }
 
     /**
-     * Patch 이벤트 수정
+     * Post 이벤트 수정
      */
-    @PatchMapping("/event/{eventId}")
-    public String modEvent(Model model, @PathVariable Long eventId) {
-        return "redirect:/event/" + eventId;
+    @PostMapping("/event/modify")
+    public String modEvent(EventFormVO eventVO,
+                           @RequestParam(name = "banner", required = false) MultipartFile bannerFile,
+                           @RequestParam(name = "context", required = false) MultipartFile contextFile) {
+        // 이벤트 수정 동작.
+        Map<String, MultipartFile> multipartFileMap = new HashMap<>();
+        if (bannerFile != null && !bannerFile.isEmpty()) {
+            multipartFileMap.put("banner", bannerFile);
+        }
+
+        if (contextFile != null && !contextFile.isEmpty()) {
+            multipartFileMap.put("context", contextFile);
+        }
+
+        // 이벤트 수정 처리.
+        Event event = eventService.modEvent(modelMapper.map(eventVO, EventVO.class), multipartFileMap);
+
+        return "redirect:/event/" + event.getId();
     }
 
     /**
@@ -84,6 +132,7 @@ public class AdminController {
     @DeleteMapping("/event/{eventId}")
     public ResponseEntity delEvent(@PathVariable Long eventId) {
         // 삭제 동작.
+        eventService.delEvent(eventId);
 
         return ResponseEntity.ok("이벤트가 삭제되었어요!");
     }
