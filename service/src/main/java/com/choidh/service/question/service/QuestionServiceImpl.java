@@ -55,7 +55,7 @@ public class QuestionServiceImpl implements QuestionService {
                 .hasPrevious(questionPage.hasPrevious())
                 .number(questionPage.getNumber())
                 .paginationUrl(defaultButtonUrlBuilder)
-                .totalPages(questionPage.getTotalPages())
+                .totalPages(Math.max(questionPage.getTotalPages() - 1, 0))
                 .build();
 
         return QuestionListVO.builder()
@@ -76,7 +76,7 @@ public class QuestionServiceImpl implements QuestionService {
                 .hasPrevious(questionPage.hasPrevious())
                 .number(questionPage.getNumber())
                 .paginationUrl("/question/list?sort=questionTime,desc&page=")
-                .totalPages(questionPage.getTotalPages())
+                .totalPages(Math.max(questionPage.getTotalPages() - 1, 0))
                 .build();
 
         return QuestionListVO.builder()

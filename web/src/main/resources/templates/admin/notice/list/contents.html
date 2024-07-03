@@ -2,13 +2,100 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<main class="admin-container">
-  공지사항 목록 보여줌
+<section>
+  <link rel="stylesheet" href="/css/admin/notice/list/index.css"/>
+</section>
+
+<main class="admin-notice-container">
+  <!-- Modal start -->
+  <div class="modal-background hide" id="confirmDialog">
+    <div class="modal-content">
+      <p id="modalContext">modal 내용</p>
+      <button class="green" id="confirmYes">네!</button>
+      <button class="red" id="confirmNo">아니요</button>
+    </div>
+  </div>
+  <!-- Modal end -->
+
+  <div class="admin-notice-header">
+    <p class="admin-notice-title">공지사항 목록</p>
+    <a class="admin-notice-button green" href="#" th:href="@{'/admin/notice/create'}">신규 공지사항 등록</a>
+  </div>
+
+  <div class="admin-notice-item-container">
+    <div class="admin-notice-item-wrapper" th:if="${!noticeList.isEmpty()}">
+      <div class="admin-notice-item" th:each="notice : ${noticeList}" th:id="${notice.id}">
+        <div class="admin-notice-item-content-wrapper"
+             onmouseover="changeBackgroundColor(this.parentElement, '#f0f0f0')"
+             onmouseout="changeBackgroundColor(this.parentElement, '')"
+             onclick="eventClickHandler(this.parentElement)">
+          <div class="admin-notice-item-info-wrapper">
+            <p class="admin-notice-item-title" th:text="${notice.title}"></p>
+            <div class="admin-notice-item-description" th:utext="${notice.content}"></div>
+          </div>
+        </div>
+        <div class="admin-notice-item-button-wrapper">
+          <a class="admin-notice-button green" href="#" th:href="@{'/admin/notice/' + ${notice.id}}">공지사항 수정</a>
+          <p class="admin-notice-button red" th:onclick="|noticeDelete('${notice.id}')|">공지사항 삭제</p>
+        </div>
+      </div>
+    </div>
+
+    <div th:if="${noticeList.isEmpty()}">
+      <p>등록된 공지사항이 없습니다.</p>
+    </div>
+
+    <!-- pagination -->
+    <section th:replace="fragment/fragment.html :: pagination"></section>
+  </div>
 </main>
 
-<script type="application/javascript">
-  window.addEventListener("DOMContentLoaded", () => {
 
+<script type="application/javascript">
+  function noticeDelete(eventId) {
+    const noticeTitle = document.getElementById(eventId).querySelector(".admin-notice-item-title").textContent;
+
+    document.getElementById("modalContext").textContent = noticeTitle + "를 삭제하시겠어요 ?";
+    document.getElementById("confirmDialog").classList.remove("hide");
+    document.getElementById("confirmDialog").dataset.eventId = eventId;
+  }
+
+  function changeBackgroundColor(element, color) {
+    element.style.backgroundColor = color;
+  }
+
+  function eventClickHandler(element) {
+    location.href = "/notice/" + element.id;
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    // 모달 확인 이벤트
+    document.getElementById('confirmYes').addEventListener('click', function() {
+      document.getElementById("confirmDialog").classList.add("hide");
+      const targetEventId = document.getElementById("confirmDialog").dataset.eventId;
+
+      sendFetch(
+              "/admin/notice/" + targetEventId,
+              "DELETE",
+              {},
+              function() {
+                location.reload();
+              },
+              null
+      );
+    });
+
+    // 모달 취소 이벤트
+    document.getElementById('confirmNo').addEventListener('click', function() {
+      document.getElementById("confirmDialog").classList.add("hide");
+    });
+
+    // 모달 취소 글로벌 이벤트
+    window.onclick = function(event) {
+      if (event.target === document.getElementById('confirmDialog')) {
+        document.getElementById("confirmDialog").classList.add("hide");
+      }
+    }
   });
 </script>
 </html>

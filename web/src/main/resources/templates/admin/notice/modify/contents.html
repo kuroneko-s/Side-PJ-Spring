@@ -1,0 +1,102 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<section>
+  <link rel="stylesheet" href="/css/admin/notice/create_modify/index.css"/>
+</section>
+
+<main class="admin-notice-manage-container">
+  <p class="admin-notice-manage-title">공지사항 수정</p>
+
+  <form id="modifyForm" class="admin-notice-manage-content-wrapper" th:action="@{/admin/notice/modify}" method="POST"
+        enctype="multipart/form-data">
+    <input type="hidden" name="noticeId" th:value="${noticeDetail.noticeId}">
+    <div class="admin-notice-manage-title-wrapper">
+      <label for="title">공지사항 제목</label>
+      <input id="title" type="text" name="title" placeholder="공지사항 제목을 입력해주세요." th:value="${noticeDetail.title}"/>
+    </div>
+
+    <div class="admin-notice-manage-description-wrapper">
+      <div id="defaultContent" class="hide" th:utext="${noticeDetail.content}"></div>
+      <label for="summernote">공지사항 내용</label>
+      <textarea id="summernote" name="content"></textarea>
+    </div>
+
+    <button class="admin-notice-manage-submit-button" type="submit" id="submitButton">수정하기</button>
+  </form>
+</main>
+
+<script type="application/javascript">
+  window.addEventListener("DOMContentLoaded", () => {
+    $("#summernote").summernote({
+      fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Noto Sans KR', 'Merriweather'],
+      placeholder: '이벤트 내용',
+      tabSize: 2,
+      lang: "ko-KR",
+      height: 200,
+      disableResizeEditor: true, // 크기 변경 비활성화
+      width: 500,
+      focus: true,
+      callbacks: {
+        onInit: function() {
+          // 기본 텍스트 설정
+          const text = document.getElementById("defaultContent").innerHTML;
+          $('#summernote').summernote('code', text);
+        }
+      }
+    });
+
+    document.getElementById('eventBannerImage').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+
+      if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const imagePreview = document.getElementById('eventBannerImagePreview');
+          imagePreview.src = e.target.result;
+
+          document.getElementById("eventBannerPreviewWrapper").style.display = "block";
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert('이미지 파일을 올려주세요!!!');
+      }
+    });
+
+    document.getElementById('eventContextImage').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+
+      if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const imagePreview = document.getElementById('eventContextImagePreview');
+          imagePreview.src = e.target.result;
+
+          document.getElementById("eventContextImagePreviewWrapper").style.display = "block";
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert('이미지 파일을 올려주세요!!!');
+      }
+    });
+
+    document.getElementById("modifyForm").addEventListener("submit", e => {
+      const titleEl = document.getElementById("title");
+      const summernoteEl = document.getElementById("summernote");
+
+      if (titleEl.value.length <= 0) {
+        floatMessage("공지사항 제목을 추가해주세요!!!");
+        e.preventDefault();
+        return false;
+      }
+
+      if (summernoteEl.value.length <= 0) {
+        floatMessage("공지사항 내용을 추가해주세요!!!");
+        e.preventDefault();
+        return false;
+      }
+    })
+  });
+</script>
+</html>

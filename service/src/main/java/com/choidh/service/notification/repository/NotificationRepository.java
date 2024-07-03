@@ -26,4 +26,10 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
             "where n.id = :notificationId")
     @Modifying
     int updateById(Long notificationId);
+
+
+    @Query(value = "delete from Notification n " +
+            "where n.notice.id = :noticeId")
+    @Modifying
+    void deleteByNoticeId(Long noticeId);
 }

@@ -9,7 +9,7 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import java.util.List;
 
-public interface EventRepository extends JpaRepository<Event, Long>, QuerydslPredicateExecutor<Learning>, EventRepositoryExtension {
+public interface EventRepository extends JpaRepository<Event, Long>, QuerydslPredicateExecutor<Event>, EventRepositoryExtension {
     List<Event> findListByUsedIsTrue();
 
     @Query(value = "update from Event e " +

@@ -6,6 +6,7 @@ import com.choidh.service.annotation.Name;
 import com.choidh.service.attachment.entity.AttachmentGroup;
 import com.choidh.service.common.entity.BaseEntity;
 import com.choidh.service.joinTables.entity.LearningCartJoinTable;
+import com.choidh.service.joinTables.entity.LearningNoticeJoinTable;
 import com.choidh.service.joinTables.entity.LearningTagJoinTable;
 import com.choidh.service.notice.entity.Notice;
 import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
@@ -96,7 +97,7 @@ public class Learning extends BaseEntity {
 
     @OneToMany(mappedBy = "learning")
     @Name(name = "공지사항")
-    private Set<Notice> noticesList = new HashSet<>();
+    private Set<LearningNoticeJoinTable> notices = new HashSet<>();
 
     public void setTags(LearningTagJoinTable learningCartJoinTable) {
         this.tags.add(learningCartJoinTable);

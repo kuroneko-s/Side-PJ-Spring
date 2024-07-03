@@ -48,12 +48,11 @@ public class NotificationLearningEventListener {
         Set<Long> tags = newLearning.getTags().stream().map(LearningTagJoinTable::getId).collect(Collectors.toSet());
 
         Iterable<Account> accounts = accountRepository.findAll(accountPredicates.findByTags(tags));
+        createNotification(newLearning, null, "강의가 새롭게 생성되었습니다.", NotificationType.NOTICE);
+
         for (Account account : accounts) {
             if (account.isSiteMailNotification())
                 sendEmail(account, "강의가 새롭게 생성되었습니다.", "/learning/" + newLearning.getId(), newLearning.getTitle(), "강의 생성 알림");
-
-            if (account.isSiteWebNotification())
-                createNotification(newLearning, null, "강의가 새롭게 생성되었습니다.", NotificationType.NOTICE);
         }
     }
 
@@ -64,12 +63,11 @@ public class NotificationLearningEventListener {
         Set<Long> tags = newLearning.getTags().stream().map(LearningTagJoinTable::getId).collect(Collectors.toSet());
 
         Iterable<Account> accounts = accountRepository.findAll(accountPredicates.findByTags(tags));
+        createNotification(newLearning, null, "강의가 종료되었습니다.", NotificationType.NOTICE);
+
         for (Account account : accounts) {
             if (account.isSiteMailNotification())
                 sendEmail(account, "강의가 종료되었습니다.", "/learning/" + newLearning.getId(), newLearning.getTitle(), "강의 종료 알림");
-
-            if (account.isSiteWebNotification())
-                createNotification(newLearning, null, "강의가 종료되었습니다.", NotificationType.NOTICE);
         }
     }
 
@@ -81,12 +79,11 @@ public class NotificationLearningEventListener {
         Set<Long> tags = newLearning.getTags().stream().map(LearningTagJoinTable::getId).collect(Collectors.toSet());
 
         Iterable<Account> accounts = accountRepository.findAll(accountPredicates.findByTags(tags));
+        createNotification(newLearning, null, "강의 내용이 갱신되었습니다.", NotificationType.NOTICE);
+
         for (Account account : accounts) {
             if (account.isSiteMailNotification())
                 sendEmail(account, "강의 내용이 갱신되었습니다.", "/learning/" + newLearning.getId(), newLearning.getTitle(), "강의 변경 알림");
-
-            if (account.isSiteWebNotification())
-                createNotification(newLearning, null, "강의 내용이 갱신되었습니다.", NotificationType.NOTICE);
         }
     }
 

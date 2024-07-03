@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/layout.html :: head">
+    <title>Blank</title>
+</head>
+
+<section>
+    <link rel="stylesheet" href="/css/notice/list/index.css"/>
+</section>
+
+<body class="container">
+    <div th:replace="layout/layout.html :: body(pageContent='notice/list/contents')"></div>
+</body>
+
+</html>

@@ -2,24 +2,78 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<main class="admin-container">
-  <div>
-    <p>이벤트 등록</p>
-  </div>
-  <div>
-    <p>사이트 공지사항 등록</p>
-  </div>
-  <div>
-    <p>강의 제공자 등록</p>
-  </div>
-  <div>
-    <p>강의 제공자 해제</p>
-  </div>
+<section>
+  <link rel="stylesheet" href="/css/admin/notice/create_modify/index.css"/>
+</section>
+
+<main class="admin-notice-manage-container">
+  <p class="admin-notice-manage-title">공지사항 등록</p>
+
+  <form id="createForm" class="admin-notice-manage-content-wrapper" th:action="@{/admin/notice/create}" method="POST"
+        enctype="multipart/form-data">
+    <div class="admin-notice-manage-title-wrapper">
+      <label for="title">공지사항 제목</label>
+      <input id="title" type="text" name="title" placeholder="공지사항 제목을 입력해주세요."/>
+    </div>
+
+    <div class="admin-notice-manage-description-wrapper">
+      <label for="summernote">공지사항 내용</label>
+      <textarea id="summernote" name="content"></textarea>
+    </div>
+
+    <button class="admin-notice-manage-submit-button" type="submit" id="submitButton">등록하기</button>
+  </form>
 </main>
 
 <script type="application/javascript">
   window.addEventListener("DOMContentLoaded", () => {
-    console.log("관리자 대시보드")
+    $("#summernote").summernote({
+      fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Noto Sans KR', 'Merriweather'],
+      placeholder: '공지사항 내용',
+      tabSize: 2,
+      lang: "ko-KR",
+      height: 200,
+      disableResizeEditor: true, // 크기 변경 비활성화
+      width: 500,
+      focus: true,
+      toolbar: [
+        ['style', ['style']],
+        ['font', ['bold', 'italic', 'underline', 'clear']],
+        ['fontname', ['fontname']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['height', ['height']],
+        // 이미지와 비디오 버튼을 제외한 도구들을 나열합니다.
+      ],
+      // 이미지와 비디오 업로드 기능 비활성화
+      callbacks: {
+        onImageUpload: function(files) {
+          return false;
+        },
+        onMediaDelete: function(target) {
+          return false;
+        }
+      }
+    });
+
+    document.getElementById("createForm").addEventListener("submit", (e) => {
+        const titleEl = document.getElementById("title");
+        const summernoteEl = document.getElementById("summernote");
+
+        if (titleEl.value.length <= 0) {
+            floatMessage("공지사항 제목을 추가해주세요!!!");
+            e.preventDefault();
+            return false;
+        }
+
+        if (summernoteEl.value.length <= 0) {
+            floatMessage("공지사항 내용을 추가해주세요!!!");
+            e.preventDefault();
+            return false;
+        }
+
+        document.getElementById("content").value = document.getElementById("summernote").value;
+    })
   });
 </script>
 </html>

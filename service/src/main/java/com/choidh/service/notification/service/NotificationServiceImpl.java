@@ -29,9 +29,21 @@ import static com.choidh.service.common.AppConstant.getNotificationNotFoundError
 public class NotificationServiceImpl implements NotificationService{
     private final NotificationRepository notificationRepository;
     private final AccountService accountService;
-    private final MenuTypeServiceImpl menuTypeServiceImpl;
 
+    /**
+     * 알림 삭제 By Notice Id
+     */
     @Override
+    @Transactional
+    public void delNotificationByNoticeId(Long noticeId) {
+        notificationRepository.deleteByNoticeId(noticeId);
+    }
+
+    /**
+     * 알림 삭제
+     */
+    @Override
+    @Transactional
     public void delNotification(Long notificationId) {
         notificationRepository.updateById(notificationId);
     }

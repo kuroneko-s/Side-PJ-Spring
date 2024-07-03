@@ -72,7 +72,7 @@ public class EventServiceImpl implements EventService {
                 .hasNext(eventPage.hasNext())
                 .hasPrevious(eventPage.hasPrevious())
                 .number(eventPage.getNumber())
-                .totalPages(eventPage.getTotalPages())
+                .totalPages(Math.max(eventPage.getTotalPages() - 1, 0))
                 .paginationUrl(paginationUrl)
                 .build();
 

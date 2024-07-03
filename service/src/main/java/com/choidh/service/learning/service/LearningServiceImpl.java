@@ -377,7 +377,7 @@ public class LearningServiceImpl implements LearningService {
                 .hasNext(learningPage.hasNext())
                 .hasPrevious(learningPage.hasPrevious())
                 .number(learningPage.getNumber())
-                .totalPages(learningPage.getTotalPages())
+                .totalPages(Math.max(learningPage.getTotalPages() - 1, 0))
                 .paginationUrl(defaultButtonUrlBuilder)
                 .build();
 
@@ -450,7 +450,7 @@ public class LearningServiceImpl implements LearningService {
                 .hasNext(learningPage.hasNext())
                 .hasPrevious(learningPage.hasPrevious())
                 .number(learningPage.getNumber())
-                .totalPages(learningPage.getTotalPages())
+                .totalPages(Math.max(learningPage.getTotalPages() - 1, 0))
                 .paginationUrl(stringBuilder.toString())
                 .build();
 

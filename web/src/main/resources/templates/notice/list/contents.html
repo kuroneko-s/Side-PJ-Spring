@@ -1,0 +1,49 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<main class="notice-container">
+    <div class="notice-header">
+        <p class="notice-title">공지사항 목록</p>
+    </div>
+
+    <div class="notice-item-container">
+        <div class="notice-item-wrapper" th:if="${!noticeList.isEmpty()}">
+            <div class="notice-item" th:each="notice : ${noticeList}" th:id="${notice.id}">
+                <div class="notice-item-content-wrapper"
+                     onmouseover="changeBackgroundColor(this.parentElement, '#f0f0f0')"
+                     onmouseout="changeBackgroundColor(this.parentElement, '')"
+                     onclick="eventClickHandler(this.parentElement)">
+                    <div class="notice-item-info-wrapper">
+                        <p class="notice-item-title" th:text="${notice.title}"></p>
+                        <div class="notice-item-description" th:utext="${notice.content}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${noticeList.isEmpty()}">
+            <p>등록된 공지사항이 없습니다.</p>
+        </div>
+
+        <!-- pagination -->
+        <section th:replace="fragment/fragment.html :: pagination"></section>
+    </div>
+</main>
+
+
+<script type="application/javascript">
+    function changeBackgroundColor(element, color) {
+        element.style.backgroundColor = color;
+    }
+
+    function eventClickHandler(element) {
+        location.href = "/notice/" + element.id;
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+
+    });
+</script>
+
+</html>

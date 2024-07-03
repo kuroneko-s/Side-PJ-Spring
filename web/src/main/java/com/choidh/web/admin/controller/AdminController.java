@@ -5,7 +5,12 @@ import com.choidh.service.event.service.EventService;
 import com.choidh.service.event.vo.EventDetailResult;
 import com.choidh.service.event.vo.EventListResult;
 import com.choidh.service.event.vo.EventVO;
+import com.choidh.service.notice.service.NoticeService;
+import com.choidh.service.notice.vo.NoticeDetailResult;
+import com.choidh.service.notice.vo.NoticeListResult;
+import com.choidh.service.notice.vo.NoticeVO;
 import com.choidh.web.admin.vo.EventFormVO;
+import com.choidh.web.notice.vo.NoticeFormVO;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +36,9 @@ public class AdminController {
     private EventService eventService;
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private NoticeService noticeService;
 
     /**
      * Get 관리자 대시보드 View
@@ -97,7 +105,7 @@ public class AdminController {
         EventDetailResult eventDetail = eventService.getEventDetail(eventId);
 
         model.addAttribute("eventDetail", eventDetail);
-        model.addAttribute("pageTitle", getTitle("이벤트 등록"));
+        model.addAttribute("pageTitle", getTitle(eventDetail.getTitle() + " 수정"));
         model.addAttribute("pageContent", "admin/event/modify/contents");
 
         return "admin/index";
@@ -141,7 +149,12 @@ public class AdminController {
      * Get 공지사항 목록 View
      */
     @GetMapping("/notice/list")
-    public String getNoticeListView(Model model) {
+    public String getNoticeListView(Model model, @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        NoticeListResult noticeListResult = noticeService.getNoticeListResultForAdmin(pageable);
+
+        model.addAttribute("noticeList", noticeListResult.getNoticeList());
+        model.addAttribute(noticeListResult.getPaging());
+
         model.addAttribute("pageTitle", getTitle("공지사항 목록"));
         model.addAttribute("pageContent", "admin/notice/list/contents");
 
@@ -157,6 +170,52 @@ public class AdminController {
         model.addAttribute("pageContent", "admin/notice/create/contents");
 
         return "admin/index";
+    }
+
+    /**
+     * Post 공지사항 등록
+     */
+    @PostMapping("/notice/create")
+    public String regNotice(NoticeFormVO noticeFormVO) {
+        noticeService.regNotice(modelMapper.map(noticeFormVO, NoticeVO.class));
+
+        return "redirect:/admin/notice/list";
+    }
+
+    /**
+     * Get 공지사항 수정 View
+     */
+    @GetMapping("/notice/{noticeId}")
+    public String getNoticeModifyView(Model model, @PathVariable Long noticeId) {
+        NoticeDetailResult noticeDetail = noticeService.getNoticeDetail(noticeId);
+
+        model.addAttribute("noticeDetail", noticeDetail);
+        model.addAttribute("pageTitle", getTitle("공지사항 수정"));
+        model.addAttribute("pageContent", "admin/notice/modify/contents");
+
+        return "admin/index";
+    }
+
+    /**
+     * Post 공지사항 수정
+     */
+    @PostMapping("/notice/modify")
+    public String modNotice(NoticeFormVO noticeFormVO) {
+        // 공지사항 수정
+        noticeService.modNotice(modelMapper.map(noticeFormVO, NoticeVO.class));
+
+        return "redirect:/notice/" + noticeFormVO.getNoticeId();
+    }
+
+    /**
+     * Del 공지사항 삭제
+     */
+    @DeleteMapping("/notice/{noticeId}")
+    public ResponseEntity delNotice(@PathVariable Long noticeId) {
+        // 공지사항 삭제
+        noticeService.delNotice(noticeId);
+
+        return ResponseEntity.ok("공지사항이 삭제되었어요!");
     }
 
     /**

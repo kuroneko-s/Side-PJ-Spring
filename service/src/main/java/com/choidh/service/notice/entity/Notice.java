@@ -2,6 +2,7 @@ package com.choidh.service.notice.entity;
 
 import com.choidh.service.common.entity.BaseEntity;
 import com.choidh.service.learning.entity.Learning;
+import com.choidh.service.notice.vo.NoticeType;
 import lombok.*;
 
 import javax.persistence.*;
@@ -23,7 +24,6 @@ public class Notice extends BaseEntity {
 
     private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "learning_id")
-    private Learning learning;
+    @Enumerated(EnumType.STRING)
+    private NoticeType noticeType;
 }

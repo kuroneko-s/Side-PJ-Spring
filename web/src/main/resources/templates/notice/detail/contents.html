@@ -1,0 +1,22 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<main class="notice-detail-container">
+    <p class="notice-detail-title" th:text="${noticeDetail.title}"></p>
+
+    <hr />
+
+    <div th:utext="${noticeDetail.content}"></div>
+
+    <hr />
+
+    <a class="notice-button" href="#" th:href="@{/notice/list}">목록</a>
+</main>
+
+<script type="application/javascript">
+    window.addEventListener("DOMContentLoaded", () => {
+
+    });
+</script>
+</html>

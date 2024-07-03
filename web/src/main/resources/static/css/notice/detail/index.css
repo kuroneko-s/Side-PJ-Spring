@@ -1,0 +1,28 @@
+.notice-detail-container {
+    position: relative;
+    min-height: 85vh;
+    padding: 1.25rem 0;
+}
+
+.notice-detail-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.notice-button {
+    display: block;
+    width: fit-content;
+    color: #fff !important;
+    background-color: var(--green);
+    border-color: var(--green-border);
+    border-radius: 3px;
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 1.25rem;
+    padding: .75rem 1.5rem;
+}
+
+.notice-button:hover {
+    background-color: var(--event-green);
+    border-color: var(--event-green-border);
+}

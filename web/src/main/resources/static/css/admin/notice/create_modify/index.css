@@ -1,0 +1,58 @@
+.admin-notice-manage-container {
+    position: relative;
+    min-height: 85vh;
+    padding: 1.25rem 0;
+}
+
+.admin-notice-manage-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.admin-notice-manage-content-wrapper {
+    padding: 1.25rem 0;
+}
+
+.admin-notice-manage-title-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+
+    margin-bottom: 1rem;
+}
+
+.admin-notice-manage-title-wrapper label {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: .5rem;
+}
+
+.admin-notice-manage-title-wrapper input {
+    width: 35%;
+    border: rgba(159, 159, 159, 0.7) 1px solid;
+    border-radius: 3px;
+    padding: 0.5rem 1rem;
+}
+
+.admin-notice-manage-description-wrapper label {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: .5rem;
+}
+
+.admin-notice-manage-submit-button {
+    width: fit-content;
+    color: #fff;
+    background-color: var(--green);
+    border-color: var(--green-border);
+    border-radius: 3px;
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 1.25rem;
+    padding: .75rem 1.5rem;
+}
+
+.admin-notice-manage-submit-button:hover {
+    background-color: var(--event-green);
+    border-color: var(--event-green-border);
+}

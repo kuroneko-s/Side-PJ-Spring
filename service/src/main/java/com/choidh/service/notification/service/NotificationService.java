@@ -8,6 +8,11 @@ import java.util.List;
 
 public interface NotificationService {
     /**
+     * 알림 삭제 By Notice Id
+     */
+    void delNotificationByNoticeId(Long noticeId);
+
+    /**
      * 알림 삭제
      */
     void delNotification(Long notificationId);
