@@ -3,10 +3,12 @@ package com.choidh.service.learning.repository;
 import com.choidh.service.learning.entity.Learning;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Transactional
@@ -66,4 +68,18 @@ public interface LearningRepository extends JpaRepository<Learning, Long>, Query
             "from Learning l " +
             "where l.id IN :learningIdList")
     List<Learning> findLearningListByLearningIdList(List<Long> learningIdList);
+
+    @Query(value = "update from Learning l " +
+            "set l.opening = false, " +
+            "l.closingDate = :now " +
+            "where l.professionalAccount.id = :professionalId")
+    @Modifying
+    void delByProfessionalId(Long professionalId, LocalDateTime now);
+
+    @Query(value = "update from Learning l " +
+            "set l.opening = true, " +
+            "l.openingDate = :now " +
+            "where l.professionalAccount.id = :professionalId")
+    @Modifying
+    void modByProfessionalId(Long professionalId, LocalDateTime now);
 }

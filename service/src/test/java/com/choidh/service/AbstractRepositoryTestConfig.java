@@ -1,7 +1,7 @@
 package com.choidh.service;
 
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.account.entity.ProfessionalAccount;
+import com.choidh.service.professional.entity.ProfessionalAccount;
 import com.choidh.service.account.repository.AccountRepository;
 import com.choidh.service.account.repository.ProfessionalAccountRepository;
 import com.choidh.service.attachment.entity.AttachmentGroup;

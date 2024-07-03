@@ -1,7 +1,7 @@
 package com.choidh.web.learning;
 
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.account.entity.ProfessionalAccount;
+import com.choidh.service.professional.entity.ProfessionalAccount;
 import com.choidh.service.account.repository.AccountRepository;
 import com.choidh.service.account.repository.ProfessionalAccountRepository;
 import com.choidh.service.attachment.entity.AttachmentFile;
@@ -83,6 +83,7 @@ public class LearningAppRunner implements ApplicationRunner {
                 .name("강사 이름")
                 .description("개잘나가는 강사임")
                 .history("개쩌는 경력들")
+                .used(true)
                 .build());
     }
 

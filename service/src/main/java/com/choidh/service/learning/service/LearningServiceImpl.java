@@ -2,7 +2,7 @@ package com.choidh.service.learning.service;
 
 
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.account.entity.ProfessionalAccount;
+import com.choidh.service.professional.entity.ProfessionalAccount;
 import com.choidh.service.account.repository.ProfessionalAccountRepository;
 import com.choidh.service.account.service.AccountService;
 import com.choidh.service.attachment.entity.AttachmentFile;
@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
-import java.rmi.AccessException;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -458,5 +458,23 @@ public class LearningServiceImpl implements LearningService {
                 .learningList(resultList)
                 .paging(paging)
                 .build();
+    }
+
+    /**
+     * Del Learning 목록. By 강의 제공자 Id
+     */
+    @Override
+    @Transactional
+    public void delLearningByProfessionalId(Long professionalId) {
+        learningRepository.delByProfessionalId(professionalId, LocalDateTime.now());
+    }
+
+    /**
+     * mod Learning 활성화. By 강의 제공자 Id
+     */
+    @Override
+    @Transactional
+    public void modLearningByProfessionalId(Long professionalId) {
+        learningRepository.modByProfessionalId(professionalId, LocalDateTime.now());
     }
 }

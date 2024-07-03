@@ -2,7 +2,7 @@ package com.choidh.service.account.repository;
 
 import com.choidh.service.AbstractRepositoryTestConfig;
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.account.entity.ProfessionalAccount;
+import com.choidh.service.professional.entity.ProfessionalAccount;
 import com.choidh.service.cart.service.CartService;
 import com.choidh.service.config.WithAccount;
 import com.choidh.service.joinTables.entity.AccountTagJoinTable;

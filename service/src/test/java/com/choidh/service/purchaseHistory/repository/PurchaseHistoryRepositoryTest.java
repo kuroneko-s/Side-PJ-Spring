@@ -2,7 +2,7 @@ package com.choidh.service.purchaseHistory.repository;
 
 import com.choidh.service.AbstractRepositoryTestConfig;
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.account.entity.ProfessionalAccount;
+import com.choidh.service.professional.entity.ProfessionalAccount;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
 import com.choidh.service.purchaseHistory.entity.PurchaseStatus;

@@ -2,7 +2,6 @@ package com.choidh.service.question.entity;
 
 
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.account.entity.ProfessionalAccount;
 import com.choidh.service.annotation.Name;
 import com.choidh.service.common.entity.BaseEntity;
 import com.choidh.service.learning.entity.Learning;

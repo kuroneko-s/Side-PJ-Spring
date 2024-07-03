@@ -9,6 +9,8 @@ import com.choidh.service.notice.service.NoticeService;
 import com.choidh.service.notice.vo.NoticeDetailResult;
 import com.choidh.service.notice.vo.NoticeListResult;
 import com.choidh.service.notice.vo.NoticeVO;
+import com.choidh.service.professional.service.ProfessionalService;
+import com.choidh.service.professional.vo.ProfessionalListResult;
 import com.choidh.web.admin.vo.EventFormVO;
 import com.choidh.web.notice.vo.NoticeFormVO;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,9 +39,10 @@ public class AdminController {
     private EventService eventService;
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private NoticeService noticeService;
+    @Autowired
+    private ProfessionalService professionalService;
 
     /**
      * Get 관리자 대시보드 View
@@ -222,11 +226,37 @@ public class AdminController {
      * Get 강의 제공자 목록 View
      */
     @GetMapping("/professional/list")
-    public String getProfessionalListView(Model model) {
-        // 이화면에서 등록 및 해제가 가능하도록.
+    public String getProfessionalListView(Model model, @PageableDefault(sort = "createdAt", size = 9, direction = Sort.Direction.DESC) Pageable pageable) {
+        ProfessionalListResult professionalListResult = professionalService.getProfessionalList(pageable);
+
+        model.addAttribute("professionalAccountList", professionalListResult.getProfessionalAccountList());
+        model.addAttribute(professionalListResult.getPaging());
+
         model.addAttribute("pageTitle", getTitle("강의 제공자 목록"));
         model.addAttribute("pageContent", "admin/professional/list/contents");
 
         return "admin/index";
+    }
+
+    /**
+     * Post 강의 제공자 활성화
+     */
+    @PostMapping("/professional/{professionalId}")
+    public ResponseEntity modProfessional(@PathVariable Long professionalId) {
+        // 등록
+        professionalService.modProfessionalById(professionalId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Delete 강의 제공자 목록
+     */
+    @DeleteMapping("/professional/{professionalId}")
+    public ResponseEntity delProfessional(@PathVariable Long professionalId) {
+        // 삭제
+        professionalService.delProfessionalById(professionalId);
+
+        return ResponseEntity.ok().build();
     }
 }

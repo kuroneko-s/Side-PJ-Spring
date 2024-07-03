@@ -6,6 +6,7 @@ import com.choidh.service.annotation.Name;
 import com.choidh.service.cart.entity.Cart;
 import com.choidh.service.common.entity.BaseEntity;
 import com.choidh.service.joinTables.entity.AccountTagJoinTable;
+import com.choidh.service.professional.entity.ProfessionalAccount;
 import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
 import com.choidh.service.question.entity.Question;
 import com.choidh.service.review.entity.Review;

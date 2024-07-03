@@ -2,13 +2,109 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<main class="admin-container">
-  강의 제공자 목록 보여줌
+<section>
+  <link rel="stylesheet" href="/css/admin/professional/list/index.css"/>
+</section>
+
+<main class="admin-professional-container">
+  <!-- Modal start -->
+  <div class="modal-background hide" id="confirmDialog">
+    <div class="modal-content">
+      <p id="modalContext">modal 내용</p>
+      <button class="green" id="confirmYes">네!</button>
+      <button class="red" id="confirmNo">아니요</button>
+    </div>
+  </div>
+  <!-- Modal end -->
+
+  <div class="admin-professional-header">
+    <p class="admin-professional-title">강의 제공자 목록</p>
+  </div>
+
+  <div class="admin-professional-item-container">
+    <div class="admin-professional-item-wrapper" th:if="${!professionalAccountList.isEmpty()}">
+      <div class="admin-professional-item" th:each="pro : ${professionalAccountList}" th:id="${pro.id}">
+        <div class="admin-professional-item-content-wrapper"
+             onmouseover="changeBackgroundColor(this.parentElement, '#f0f0f0')"
+             onmouseout="changeBackgroundColor(this.parentElement, '')"
+             onclick="eventClickHandler(this.parentElement)">
+          <p class="admin-professional-item-title" th:text="${pro.name}"></p>
+          <div class="admin-professional-item-description" th:utext="${pro.description}"></div>
+          <div class="admin-professional-item-description" th:utext="${pro.history}"></div>
+        </div>
+        <div class="admin-professional-item-button-wrapper">
+          <p class="admin-professional-button green" th:if="${!pro.used}" th:onclick="|proAppend('${pro.id}')|">강의 제공자 등록</p>
+          <p class="admin-professional-button blue" th:if="${pro.used}" th:onclick="|proDelete('${pro.id}')|">강의 제공자 취소</p>
+        </div>
+      </div>
+    </div>
+
+    <div th:if="${professionalAccountList.isEmpty()}">
+      <p>등록된 공지사항이 없습니다.</p>
+    </div>
+
+    <!-- pagination -->
+    <section th:replace="fragment/fragment.html :: pagination"></section>
+  </div>
 </main>
 
-<script type="application/javascript">
-  window.addEventListener("DOMContentLoaded", () => {
 
+<script type="application/javascript">
+  function proAppend(id) {
+    const noticeTitle = document.getElementById(id).querySelector(".admin-professional-item-title").textContent;
+
+    document.getElementById("modalContext").textContent = noticeTitle + "를 새로운 강의 제공자로 등록하시겠어요 ?";
+    document.getElementById("confirmDialog").classList.remove("hide");
+    document.getElementById("confirmDialog").dataset.eventId = id;
+    document.getElementById("confirmDialog").dataset.type = "POST"
+  }
+
+  function proDelete(id) {
+    const noticeTitle = document.getElementById(id).querySelector(".admin-professional-item-title").textContent;
+
+    document.getElementById("modalContext").textContent = noticeTitle + "를 삭제하시겠어요 ?";
+    document.getElementById("confirmDialog").classList.remove("hide");
+    document.getElementById("confirmDialog").dataset.eventId = id;
+    document.getElementById("confirmDialog").dataset.type = "DELETE"
+  }
+
+  function changeBackgroundColor(element, color) {
+    element.style.backgroundColor = color;
+  }
+
+  function eventClickHandler(element) {
+    location.href = "/professional/" + element.id;
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    // 모달 확인 이벤트
+    document.getElementById('confirmYes').addEventListener('click', function() {
+      document.getElementById("confirmDialog").classList.add("hide");
+      const targetEventId = document.getElementById("confirmDialog").dataset.eventId;
+      const methodType = document.getElementById("confirmDialog").dataset.type;
+
+      sendFetch(
+              "/admin/professional/" + targetEventId,
+              methodType,
+              {},
+              function() {
+                location.reload();
+              },
+              null
+      );
+    });
+
+    // 모달 취소 이벤트
+    document.getElementById('confirmNo').addEventListener('click', function() {
+      document.getElementById("confirmDialog").classList.add("hide");
+    });
+
+    // 모달 취소 글로벌 이벤트
+    window.onclick = function(event) {
+      if (event.target === document.getElementById('confirmDialog')) {
+        document.getElementById("confirmDialog").classList.add("hide");
+      }
+    }
   });
 </script>
 </html>

@@ -1,7 +1,7 @@
 package com.choidh.service.learning.repository;
 
 import com.choidh.service.AbstractRepositoryTestConfig;
-import com.choidh.service.account.entity.ProfessionalAccount;
+import com.choidh.service.professional.entity.ProfessionalAccount;
 import com.choidh.service.joinTables.entity.LearningTagJoinTable;
 import com.choidh.service.joinTables.repository.LearningTagRepository;
 import com.choidh.service.learning.entity.Learning;

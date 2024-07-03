@@ -2,8 +2,7 @@ package com.choidh.service.cart.service;
 
 import com.choidh.service.AbstractServiceTestConfig;
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.account.entity.ProfessionalAccount;
-import com.choidh.service.account.service.AccountService;
+import com.choidh.service.professional.entity.ProfessionalAccount;
 import com.choidh.service.account.vo.RegAccountVO;
 import com.choidh.service.cart.entity.Cart;
 import com.choidh.service.learning.entity.Learning;

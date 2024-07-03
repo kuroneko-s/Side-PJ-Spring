@@ -1,16 +1,14 @@
-package com.choidh.service.account.entity;
+package com.choidh.service.professional.entity;
 
+import com.choidh.service.account.entity.Account;
 import com.choidh.service.annotation.Name;
 import com.choidh.service.common.entity.BaseEntity;
 import com.choidh.service.learning.entity.Learning;
-import com.choidh.service.question.entity.Question;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -42,6 +40,9 @@ public class ProfessionalAccount extends BaseEntity {
 
     @Name(name = "강사 경력")
     private String history;
+
+    @Name(name = "허가 유무")
+    private boolean used;
 
     @OneToMany
     private Set<Learning> learningList = new HashSet<>();

@@ -104,4 +104,14 @@ public interface LearningService {
      * Get Learning 목록. By View With keyword Learning Of API
      */
     LearningListAPIVO getLearningListByViewWithKeywordOfAPI(String mainCategory, String subCategory, Pageable pageable);
+
+    /**
+     * Del Learning 비활성화. By 강의 제공자 Id
+     */
+    void delLearningByProfessionalId(Long professionalId);
+
+    /**
+     * mod Learning 활성화. By 강의 제공자 Id
+     */
+    void modLearningByProfessionalId(Long professionalId);
 }

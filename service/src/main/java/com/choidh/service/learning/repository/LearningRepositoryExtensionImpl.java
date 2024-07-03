@@ -1,7 +1,6 @@
 package com.choidh.service.learning.repository;
 
 
-import com.choidh.service.common.StringUtils;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.tag.entity.Tag;
 import com.querydsl.core.types.Predicate;
