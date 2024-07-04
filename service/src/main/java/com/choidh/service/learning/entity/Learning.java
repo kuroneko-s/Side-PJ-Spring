@@ -2,7 +2,7 @@ package com.choidh.service.learning.entity;
 
 
 import com.choidh.service.professional.entity.ProfessionalAccount;
-import com.choidh.service.annotation.Name;
+import com.choidh.service.common.annotation.Name;
 import com.choidh.service.attachment.entity.AttachmentGroup;
 import com.choidh.service.common.entity.BaseEntity;
 import com.choidh.service.joinTables.entity.LearningCartJoinTable;

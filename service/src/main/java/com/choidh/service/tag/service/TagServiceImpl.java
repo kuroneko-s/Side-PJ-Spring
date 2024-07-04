@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.choidh.service.common.AppConstant.getLearningNotFoundErrorMessage;
+import static com.choidh.service.common.vo.AppConstant.getLearningNotFoundErrorMessage;
 
 @Slf4j
 @Service

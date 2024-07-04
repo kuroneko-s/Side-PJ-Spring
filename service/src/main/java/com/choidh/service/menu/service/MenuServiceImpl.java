@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.choidh.service.common.AppConstant.getMenuNotFoundErrorMessage;
+import static com.choidh.service.common.vo.AppConstant.getMenuNotFoundErrorMessage;
 
 @Service
 public class MenuServiceImpl implements MenuService {

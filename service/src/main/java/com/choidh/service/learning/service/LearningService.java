@@ -2,7 +2,7 @@ package com.choidh.service.learning.service;
 
 
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.attachment.entity.AttachmentFileType;
+import com.choidh.service.attachment.vo.AttachmentFileType;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.vo.*;
 import com.choidh.service.tag.entity.Tag;

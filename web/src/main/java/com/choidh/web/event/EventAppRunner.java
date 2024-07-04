@@ -1,12 +1,12 @@
 package com.choidh.web.event;
 
 import com.choidh.service.attachment.entity.AttachmentFile;
-import com.choidh.service.attachment.entity.AttachmentFileType;
+import com.choidh.service.attachment.vo.AttachmentFileType;
 import com.choidh.service.attachment.entity.AttachmentGroup;
 import com.choidh.service.attachment.repository.AttachmentFileRepository;
 import com.choidh.service.attachment.service.AttachmentService;
-import com.choidh.service.common.FileUtils;
-import com.choidh.service.common.StringUtils;
+import com.choidh.service.common.utiles.FileUtils;
+import com.choidh.service.common.utiles.StringUtils;
 import com.choidh.service.common.exception.FileNotSavedException;
 import com.choidh.service.event.entity.Event;
 import com.choidh.service.event.repository.EventRepository;

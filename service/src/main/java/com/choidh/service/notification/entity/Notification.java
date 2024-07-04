@@ -1,6 +1,6 @@
 package com.choidh.service.notification.entity;
 
-import com.choidh.service.annotation.Name;
+import com.choidh.service.common.annotation.Name;
 import com.choidh.service.common.entity.BaseDateEntity;
 import com.choidh.service.event.entity.Event;
 import com.choidh.service.learning.entity.Learning;

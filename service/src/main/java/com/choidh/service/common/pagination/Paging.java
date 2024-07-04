@@ -1,6 +1,6 @@
 package com.choidh.service.common.pagination;
 
-import com.choidh.service.annotation.Name;
+import com.choidh.service.common.annotation.Name;
 import lombok.*;
 
 @Getter @Setter

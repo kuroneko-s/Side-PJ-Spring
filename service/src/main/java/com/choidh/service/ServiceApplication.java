@@ -1,6 +1,6 @@
 package com.choidh.service;
 
-import com.choidh.service.security.AccountUser;
+import com.choidh.service.security.vo.AccountUser;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.NameTokenizers;
 import org.springframework.boot.SpringApplication;

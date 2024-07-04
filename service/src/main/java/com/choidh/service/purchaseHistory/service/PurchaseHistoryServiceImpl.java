@@ -5,7 +5,7 @@ import com.choidh.service.account.service.AccountService;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.service.LearningService;
 import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
-import com.choidh.service.purchaseHistory.entity.PurchaseStatus;
+import com.choidh.service.purchaseHistory.vo.PurchaseStatus;
 import com.choidh.service.purchaseHistory.repository.PurchaseHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

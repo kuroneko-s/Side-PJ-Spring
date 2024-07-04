@@ -3,6 +3,7 @@ package com.choidh.service.purchaseHistory.entity;
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.common.entity.BaseEntity;
 import com.choidh.service.learning.entity.Learning;
+import com.choidh.service.purchaseHistory.vo.PurchaseStatus;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 

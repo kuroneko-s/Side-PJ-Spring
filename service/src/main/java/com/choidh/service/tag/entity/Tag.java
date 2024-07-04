@@ -1,11 +1,11 @@
 package com.choidh.service.tag.entity;
 
-import com.choidh.service.joinTables.entity.LearningTagJoinTable;
 import lombok.*;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @Entity
 @EqualsAndHashCode(of = "id")

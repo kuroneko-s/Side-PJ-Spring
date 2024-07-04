@@ -2,7 +2,7 @@ package com.choidh.web.question.controller;
 
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.service.AccountService;
-import com.choidh.service.attachment.entity.AttachmentFileType;
+import com.choidh.service.attachment.vo.AttachmentFileType;
 import com.choidh.service.attachment.service.AttachmentService;
 import com.choidh.service.joinTables.service.LearningTagService;
 import com.choidh.service.learning.entity.Learning;
@@ -31,7 +31,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.choidh.service.common.AppConstant.getTitle;
+import static com.choidh.service.common.vo.AppConstant.getTitle;
 
 @Controller
 @RequestMapping(value = "/question")

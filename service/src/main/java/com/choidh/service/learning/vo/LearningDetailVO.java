@@ -1,7 +1,7 @@
 package com.choidh.service.learning.vo;
 
 import com.choidh.service.professional.entity.ProfessionalAccount;
-import com.choidh.service.annotation.Name;
+import com.choidh.service.common.annotation.Name;
 import com.choidh.service.attachment.entity.AttachmentFile;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.question.entity.Question;

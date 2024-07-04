@@ -3,14 +3,14 @@ package com.choidh.web.learning;
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.professional.entity.ProfessionalAccount;
 import com.choidh.service.account.repository.AccountRepository;
-import com.choidh.service.account.repository.ProfessionalAccountRepository;
+import com.choidh.service.professional.repository.ProfessionalAccountAccountRepository;
 import com.choidh.service.attachment.entity.AttachmentFile;
-import com.choidh.service.attachment.entity.AttachmentFileType;
+import com.choidh.service.attachment.vo.AttachmentFileType;
 import com.choidh.service.attachment.entity.AttachmentGroup;
 import com.choidh.service.attachment.repository.AttachmentFileRepository;
 import com.choidh.service.attachment.service.AttachmentService;
-import com.choidh.service.common.FileUtils;
-import com.choidh.service.common.StringUtils;
+import com.choidh.service.common.utiles.FileUtils;
+import com.choidh.service.common.utiles.StringUtils;
 import com.choidh.service.common.exception.FileNotSavedException;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.repository.LearningRepository;
@@ -41,7 +41,7 @@ public class LearningAppRunner implements ApplicationRunner {
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
-    private ProfessionalAccountRepository professionalAccountRepository;
+    private ProfessionalAccountAccountRepository professionalAccountRepository;
     @Autowired
     private LearningRepository learningRepository;
     @Autowired

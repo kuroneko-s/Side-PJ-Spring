@@ -2,8 +2,8 @@ package com.choidh.service.account.service;
 
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.vo.*;
-import com.choidh.service.security.AccountRoleType;
-import com.choidh.service.security.AccountUser;
+import com.choidh.service.security.vo.AccountRoleType;
+import com.choidh.service.security.vo.AccountUser;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;

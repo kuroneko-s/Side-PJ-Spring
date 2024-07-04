@@ -3,7 +3,7 @@ package com.choidh.web;
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.service.AccountService;
 import com.choidh.service.attachment.entity.AttachmentFile;
-import com.choidh.service.attachment.entity.AttachmentFileType;
+import com.choidh.service.attachment.vo.AttachmentFileType;
 import com.choidh.service.attachment.service.AttachmentService;
 import com.choidh.service.event.service.EventService;
 import com.choidh.service.joinTables.entity.AccountTagJoinTable;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.choidh.service.common.AppConstant.getTitle;
+import static com.choidh.service.common.vo.AppConstant.getTitle;
 
 @Controller
 @RequiredArgsConstructor

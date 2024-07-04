@@ -3,7 +3,7 @@ package com.choidh.service.cart.service;
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.service.AccountService;
 import com.choidh.service.attachment.entity.AttachmentFile;
-import com.choidh.service.attachment.entity.AttachmentFileType;
+import com.choidh.service.attachment.vo.AttachmentFileType;
 import com.choidh.service.attachment.service.AttachmentService;
 import com.choidh.service.cart.entity.Cart;
 import com.choidh.service.cart.repository.CartRepository;
@@ -21,8 +21,8 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.choidh.service.common.CodeConstant.DUPLICATED;
-import static com.choidh.service.common.CodeConstant.SUCCESS;
+import static com.choidh.service.common.vo.CodeConstant.DUPLICATED;
+import static com.choidh.service.common.vo.CodeConstant.SUCCESS;
 
 @Slf4j
 @Service

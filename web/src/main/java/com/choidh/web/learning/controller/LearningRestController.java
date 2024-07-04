@@ -1,7 +1,7 @@
 package com.choidh.web.learning.controller;
 
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.attachment.entity.AttachmentFileType;
+import com.choidh.service.attachment.vo.AttachmentFileType;
 import com.choidh.service.cart.service.CartService;
 import com.choidh.service.learning.service.LearningService;
 import com.choidh.service.tag.service.TagService;

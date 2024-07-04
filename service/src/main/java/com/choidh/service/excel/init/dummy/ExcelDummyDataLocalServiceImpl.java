@@ -1,7 +1,7 @@
 package com.choidh.service.excel.init.dummy;
 
-import com.choidh.service.excel.model.ExcelColumnKey;
-import com.choidh.service.excel.model.ExcelColumnVO;
+import com.choidh.service.excel.vo.ExcelColumnKey;
+import com.choidh.service.excel.vo.ExcelColumnVO;
 import com.choidh.service.excel.repository.ExcelColumnRepository;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;

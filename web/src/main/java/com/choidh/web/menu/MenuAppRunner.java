@@ -1,8 +1,8 @@
 package com.choidh.web.menu;
 
 import com.choidh.service.account.vo.AccountType;
-import com.choidh.service.menu.entity.MenuTypeJoinTable;
-import com.choidh.service.menu.service.MenuTypeService;
+import com.choidh.service.joinTables.entity.MenuTypeJoinTable;
+import com.choidh.service.joinTables.service.MenuTypeService;
 import com.choidh.service.menu.vo.RegMenuVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;

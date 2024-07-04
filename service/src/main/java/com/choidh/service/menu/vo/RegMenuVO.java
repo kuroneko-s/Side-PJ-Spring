@@ -1,7 +1,7 @@
 package com.choidh.service.menu.vo;
 
 import com.choidh.service.account.vo.AccountType;
-import com.choidh.service.annotation.Name;
+import com.choidh.service.common.annotation.Name;
 import lombok.*;
 
 import java.util.List;

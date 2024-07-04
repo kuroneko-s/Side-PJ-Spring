@@ -1,6 +1,6 @@
 package com.choidh.service.kakao.service;
 
-import com.choidh.service.common.AppConstant;
+import com.choidh.service.common.vo.AppConstant;
 import com.choidh.service.kakao.vo.KakaoPayReadyVO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

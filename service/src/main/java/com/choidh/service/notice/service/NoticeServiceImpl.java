@@ -19,7 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.choidh.service.common.AppConstant.getNoticeNotFoundErrorMessage;
+import static com.choidh.service.common.vo.AppConstant.getNoticeNotFoundErrorMessage;
 
 @Service
 public class NoticeServiceImpl implements NoticeService {

@@ -1,6 +1,6 @@
 package com.choidh.web.mail.validator;
 
-import com.choidh.service.excel.validator.IsValidator;
+import com.choidh.service.common.annotation.IsValidator;
 import com.choidh.web.mail.vo.EmailFormVO;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;

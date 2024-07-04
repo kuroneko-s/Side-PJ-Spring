@@ -4,7 +4,6 @@ package com.choidh.service.notification.service;
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.service.AccountService;
 import com.choidh.service.learning.entity.Learning;
-import com.choidh.service.menu.service.MenuTypeServiceImpl;
 import com.choidh.service.notification.entity.Notification;
 import com.choidh.service.notification.repository.NotificationRepository;
 import com.choidh.service.notification.vo.NotificationType;
@@ -17,11 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static com.choidh.service.common.AppConstant.getLearningNotFoundErrorMessage;
-import static com.choidh.service.common.AppConstant.getNotificationNotFoundErrorMessage;
 
 @Service
 @Transactional

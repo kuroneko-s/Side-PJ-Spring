@@ -2,7 +2,7 @@ package com.choidh.service.attachment.repository;
 
 import com.choidh.service.AbstractRepositoryTestConfig;
 import com.choidh.service.attachment.entity.AttachmentFile;
-import com.choidh.service.attachment.entity.AttachmentFileType;
+import com.choidh.service.attachment.vo.AttachmentFileType;
 import com.choidh.service.attachment.entity.AttachmentGroup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

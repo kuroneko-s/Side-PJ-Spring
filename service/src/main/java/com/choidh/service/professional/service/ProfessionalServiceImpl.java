@@ -3,7 +3,7 @@ package com.choidh.service.professional.service;
 import com.choidh.service.common.pagination.Paging;
 import com.choidh.service.learning.service.LearningService;
 import com.choidh.service.professional.entity.ProfessionalAccount;
-import com.choidh.service.professional.repository.ProfessionalRepository;
+import com.choidh.service.professional.repository.ProfessionalAccountAccountRepository;
 import com.choidh.service.professional.vo.ProfessionalListResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProfessionalServiceImpl implements ProfessionalService {
     @Autowired
-    private ProfessionalRepository professionalRepository;
+    private ProfessionalAccountAccountRepository professionalAccountRepository;
     @Autowired
     private LearningService learningService;
 
@@ -24,7 +24,7 @@ public class ProfessionalServiceImpl implements ProfessionalService {
      */
     @Override
     public ProfessionalListResult getProfessionalList(Pageable pageable) {
-        Page<ProfessionalAccount> professionalAccountPage = professionalRepository.findByList(pageable);
+        Page<ProfessionalAccount> professionalAccountPage = professionalAccountRepository.findByList(pageable);
 
         String paginationUrl = "/admin/professional/list?sort=createdAt,asc&page=";
         for (Sort.Order order : pageable.getSort()) {
@@ -58,7 +58,7 @@ public class ProfessionalServiceImpl implements ProfessionalService {
         // 강의 제공자의 강의들을 모두 비활성화
         learningService.delLearningByProfessionalId(professionalId);
 
-        professionalRepository.delById(professionalId);
+        professionalAccountRepository.delById(professionalId);
     }
 
     /**
@@ -69,6 +69,6 @@ public class ProfessionalServiceImpl implements ProfessionalService {
         // 강의 제공자의 강의들을 모두 활성화
         learningService.modLearningByProfessionalId(professionalId);
 
-        professionalRepository.modById(professionalId);
+        professionalAccountRepository.modById(professionalId);
     }
 }

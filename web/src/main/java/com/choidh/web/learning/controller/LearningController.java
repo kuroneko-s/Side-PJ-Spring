@@ -6,7 +6,6 @@ import com.choidh.service.account.service.AccountService;
 import com.choidh.service.attachment.entity.AttachmentFile;
 import com.choidh.service.attachment.service.AttachmentService;
 import com.choidh.service.cart.service.CartService;
-import com.choidh.service.joinTables.entity.LearningCartJoinTable;
 import com.choidh.service.joinTables.service.LearningCartService;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.service.LearningService;
@@ -15,7 +14,6 @@ import com.choidh.service.learning.vo.LearningListAPIVO;
 import com.choidh.service.learning.vo.LearningListVO;
 import com.choidh.service.learning.vo.LearningListenVO;
 import com.choidh.web.common.annotation.CurrentAccount;
-import com.choidh.web.kakao.vo.KakaoPayForm;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -25,13 +23,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static com.choidh.service.common.AppConstant.getTitle;
+import static com.choidh.service.common.vo.AppConstant.getTitle;
 
 @Controller
 @RequestMapping(value = "")

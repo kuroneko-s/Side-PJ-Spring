@@ -1,6 +1,7 @@
 package com.choidh.service.attachment.entity;
 
-import com.choidh.service.annotation.Name;
+import com.choidh.service.attachment.vo.AttachmentFileType;
+import com.choidh.service.common.annotation.Name;
 import com.choidh.service.common.entity.BaseDateEntity;
 import lombok.*;
 

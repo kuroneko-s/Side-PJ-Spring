@@ -1,9 +1,9 @@
 package com.choidh.web.common.config;
 
-import com.choidh.service.security.AccountDetailsService;
-import com.choidh.service.security.AccountRoleType;
-import com.choidh.service.security.CustomAuthenticationFailureHandler;
-import com.choidh.service.security.CustomAuthenticationSuccessHandler;
+import com.choidh.service.security.service.AccountDetailsService;
+import com.choidh.service.security.vo.AccountRoleType;
+import com.choidh.service.security.handler.CustomAuthenticationFailureHandler;
+import com.choidh.service.security.handler.CustomAuthenticationSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

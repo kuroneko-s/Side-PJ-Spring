@@ -2,7 +2,7 @@ package com.choidh.web.learning.controller;
 
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.attachment.entity.AttachmentFile;
-import com.choidh.service.attachment.entity.AttachmentFileType;
+import com.choidh.service.attachment.vo.AttachmentFileType;
 import com.choidh.service.attachment.service.AttachmentService;
 import com.choidh.service.joinTables.service.LearningTagService;
 import com.choidh.service.learning.entity.Learning;
@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.choidh.service.common.AppConstant.CREATE_LEARNING;
+import static com.choidh.service.common.vo.AppConstant.CREATE_LEARNING;
 
 @Slf4j
 @Controller

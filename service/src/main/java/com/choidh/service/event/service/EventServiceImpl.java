@@ -1,7 +1,7 @@
 package com.choidh.service.event.service;
 
 import com.choidh.service.attachment.entity.AttachmentFile;
-import com.choidh.service.attachment.entity.AttachmentFileType;
+import com.choidh.service.attachment.vo.AttachmentFileType;
 import com.choidh.service.attachment.entity.AttachmentGroup;
 import com.choidh.service.attachment.service.AttachmentService;
 import com.choidh.service.common.pagination.Paging;
@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.choidh.service.common.AppConstant.getEventNotFoundErrorMessage;
+import static com.choidh.service.common.vo.AppConstant.getEventNotFoundErrorMessage;
 
 @Service
 public class EventServiceImpl implements EventService {

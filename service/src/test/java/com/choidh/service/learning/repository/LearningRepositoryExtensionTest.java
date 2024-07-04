@@ -3,7 +3,7 @@ package com.choidh.service.learning.repository;
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.professional.entity.ProfessionalAccount;
 import com.choidh.service.account.repository.AccountRepository;
-import com.choidh.service.account.repository.ProfessionalAccountRepository;
+import com.choidh.service.professional.repository.ProfessionalAccountAccountRepository;
 import com.choidh.service.joinTables.entity.LearningTagJoinTable;
 import com.choidh.service.joinTables.repository.LearningTagRepository;
 import com.choidh.service.learning.entity.Learning;
@@ -46,7 +46,7 @@ public class LearningRepositoryExtensionTest {
     private final LearningRepository learningRepository;
     private final PasswordEncoder passwordEncoder;
     private final AccountRepository accountRepository;
-    private final ProfessionalAccountRepository professionalAccountRepository;
+    private final ProfessionalAccountAccountRepository professionalAccountRepository;
     private final EntityManager entityManager;
     private final TagService tagService;
     private final LearningTagRepository learningTagRepository;

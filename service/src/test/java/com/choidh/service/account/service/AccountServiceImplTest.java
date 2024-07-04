@@ -123,9 +123,7 @@ class AccountServiceImplTest extends AbstractServiceTestConfig {
 
         theLine();
 
-        Optional<Account> byId = accountRepository.findById(accountVO.getId());
-        assertFalse(byId.isEmpty());
-        Account account = byId.get();
+        Account account = accountRepository.findByAccountId(accountVO.getId());
         assertNotNull(account);
 
         assertNotNull(account.getCart());

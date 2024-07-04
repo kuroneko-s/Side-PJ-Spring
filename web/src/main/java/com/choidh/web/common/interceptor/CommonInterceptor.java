@@ -1,6 +1,6 @@
 package com.choidh.web.common.interceptor;
 
-import com.choidh.service.security.AccountUser;
+import com.choidh.service.security.vo.AccountUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

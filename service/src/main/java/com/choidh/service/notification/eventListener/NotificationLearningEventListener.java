@@ -2,9 +2,8 @@ package com.choidh.service.notification.eventListener;
 
 
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.account.repository.AccountPredicates;
 import com.choidh.service.account.repository.AccountRepository;
-import com.choidh.service.common.ServiceAppProperties;
+import com.choidh.service.common.vo.ServiceAppProperties;
 import com.choidh.service.joinTables.entity.LearningTagJoinTable;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.repository.LearningRepository;
@@ -24,10 +23,11 @@ import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.choidh.service.account.entity.QAccount.account;
 
 @Async
 @Component
@@ -39,7 +39,6 @@ public class NotificationLearningEventListener {
     private final EmailService emailService;
     private final TemplateEngine templateEngine;
     private final ServiceAppProperties serviceAppProperties;
-    private final AccountPredicates accountPredicates;
 
     @EventListener
     public void learningCreateListener(LearningCreateEvent event) {
@@ -47,7 +46,7 @@ public class NotificationLearningEventListener {
         Learning newLearning = learning.orElseThrow();
         Set<Long> tags = newLearning.getTags().stream().map(LearningTagJoinTable::getId).collect(Collectors.toSet());
 
-        Iterable<Account> accounts = accountRepository.findAll(accountPredicates.findByTags(tags));
+        Iterable<Account> accounts = accountRepository.findAll(account.tags.any().id.in(tags));
         createNotification(newLearning, null, "강의가 새롭게 생성되었습니다.", NotificationType.NOTICE);
 
         for (Account account : accounts) {
@@ -62,7 +61,7 @@ public class NotificationLearningEventListener {
         Learning newLearning = learning.orElseThrow();
         Set<Long> tags = newLearning.getTags().stream().map(LearningTagJoinTable::getId).collect(Collectors.toSet());
 
-        Iterable<Account> accounts = accountRepository.findAll(accountPredicates.findByTags(tags));
+        Iterable<Account> accounts = accountRepository.findAll(account.tags.any().id.in(tags));
         createNotification(newLearning, null, "강의가 종료되었습니다.", NotificationType.NOTICE);
 
         for (Account account : accounts) {
@@ -78,7 +77,7 @@ public class NotificationLearningEventListener {
         Learning newLearning = learning.orElseThrow();
         Set<Long> tags = newLearning.getTags().stream().map(LearningTagJoinTable::getId).collect(Collectors.toSet());
 
-        Iterable<Account> accounts = accountRepository.findAll(accountPredicates.findByTags(tags));
+        Iterable<Account> accounts = accountRepository.findAll(account.tags.any().id.in(tags));
         createNotification(newLearning, null, "강의 내용이 갱신되었습니다.", NotificationType.NOTICE);
 
         for (Account account : accounts) {

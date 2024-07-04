@@ -1,12 +1,12 @@
 package com.choidh.service.attachment.service;
 
 import com.choidh.service.attachment.entity.AttachmentFile;
-import com.choidh.service.attachment.entity.AttachmentFileType;
 import com.choidh.service.attachment.entity.AttachmentGroup;
 import com.choidh.service.attachment.repository.AttachmentFileRepository;
 import com.choidh.service.attachment.repository.AttachmentGroupRepository;
-import com.choidh.service.common.FileUtils;
-import com.choidh.service.common.StringUtils;
+import com.choidh.service.attachment.vo.AttachmentFileType;
+import com.choidh.service.common.utiles.FileUtils;
+import com.choidh.service.common.utiles.StringUtils;
 import com.choidh.service.common.exception.FileCantDeleteException;
 import com.choidh.service.common.exception.FileNotSavedException;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ import java.io.*;
 import java.nio.file.FileSystemNotFoundException;
 import java.util.List;
 
-import static com.choidh.service.common.AppConstant.isNotImageFile;
+import static com.choidh.service.common.vo.AppConstant.isNotImageFile;
 
 @Slf4j
 @Service

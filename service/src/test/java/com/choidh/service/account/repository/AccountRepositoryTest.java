@@ -63,7 +63,7 @@ class AccountRepositoryTest extends AbstractRepositoryTestConfig {
 
     @Test
     @DisplayName("Account 단건 조회 By Id With Tags")
-    public void findByIdWithTags() throws Exception {
+    public void findByAccountIdWithTags() throws Exception {
         Account account = createAccount("테스트냥이", "test@test.com");
 
         accountTagService.regTag(RegTagVO.builder()

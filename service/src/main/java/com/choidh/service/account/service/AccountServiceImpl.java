@@ -24,8 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.choidh.service.common.AppConstant.getAccountNotFoundErrorMessage;
-
 @Slf4j
 @Service
 @Transactional(readOnly = true)
@@ -42,8 +40,7 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public Account getAccountById(Long accountId) {
-        return accountRepository.findById(accountId)
-                .orElseThrow(() -> new IllegalArgumentException(getAccountNotFoundErrorMessage(accountId)));
+        return accountRepository.findByAccountId(accountId);
     }
 
     /**

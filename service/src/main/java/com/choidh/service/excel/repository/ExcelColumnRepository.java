@@ -1,7 +1,7 @@
 package com.choidh.service.excel.repository;
 
-import com.choidh.service.excel.model.ExcelColumnKey;
-import com.choidh.service.excel.model.ExcelColumnVO;
+import com.choidh.service.excel.vo.ExcelColumnKey;
+import com.choidh.service.excel.vo.ExcelColumnVO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

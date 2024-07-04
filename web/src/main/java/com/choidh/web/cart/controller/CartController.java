@@ -13,7 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import static com.choidh.service.common.AppConstant.getTitle;
+import static com.choidh.service.common.vo.AppConstant.getTitle;
 
 @Slf4j
 @Controller

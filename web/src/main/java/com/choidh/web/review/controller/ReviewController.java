@@ -1,8 +1,7 @@
 package com.choidh.web.review.controller;
 
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.common.CodeConstant;
-import com.choidh.service.common.StringUtils;
+import com.choidh.service.common.vo.CodeConstant;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.service.LearningService;
 import com.choidh.service.review.service.ReviewService;
@@ -14,13 +13,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-
-import static com.choidh.service.common.AppConstant.getTitle;
+import static com.choidh.service.common.vo.AppConstant.getTitle;
 
 @Controller
 @RequestMapping(value = "/review")

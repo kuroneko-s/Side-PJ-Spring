@@ -1,6 +1,6 @@
 package com.choidh.service.learning.vo;
 
-import com.choidh.service.annotation.Name;
+import com.choidh.service.common.annotation.Name;
 import lombok.*;
 
 import java.time.LocalDateTime;

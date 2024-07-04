@@ -1,6 +1,6 @@
 package com.choidh.service.excel.service;
 
-import com.choidh.service.excel.model.ExcelVO;
+import com.choidh.service.excel.vo.ExcelVO;
 import com.sun.istack.NotNull;
 
 import javax.servlet.http.HttpServletResponse;

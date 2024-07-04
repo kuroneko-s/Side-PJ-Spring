@@ -2,8 +2,9 @@ package com.choidh.service.menu.repository;
 
 import com.choidh.service.AbstractRepositoryTestConfig;
 import com.choidh.service.account.vo.AccountType;
+import com.choidh.service.joinTables.repository.MenuTypeRepository;
 import com.choidh.service.menu.entity.Menu;
-import com.choidh.service.menu.entity.MenuTypeJoinTable;
+import com.choidh.service.joinTables.entity.MenuTypeJoinTable;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

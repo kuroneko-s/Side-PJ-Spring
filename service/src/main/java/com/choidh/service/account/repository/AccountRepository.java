@@ -7,11 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
-import java.util.Optional;
-
 public interface AccountRepository extends JpaRepository<Account, Long>, QuerydslPredicateExecutor<Account> {
+    @Query(value = "select a " +
+            "from Account a " +
+            "where a.id = :accountId")
     @EntityGraph(attributePaths = {"cart", "professionalAccount"})
-    Optional<Account> findById(Long id);
+    Account findByAccountId(Long accountId);
 
     /**
      * Account 단건 조회. By Id With LearningCartJoinTable

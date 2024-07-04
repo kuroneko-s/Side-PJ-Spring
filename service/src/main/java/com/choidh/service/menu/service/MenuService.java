@@ -1,6 +1,5 @@
 package com.choidh.service.menu.service;
 
-import com.choidh.service.account.vo.AccountType;
 import com.choidh.service.menu.entity.Menu;
 import com.choidh.service.menu.vo.RegMenuVO;
 

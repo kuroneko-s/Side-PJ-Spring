@@ -2,7 +2,7 @@ package com.choidh.web.kakao.controller;
 
 
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.common.StringUtils;
+import com.choidh.service.common.utiles.StringUtils;
 import com.choidh.service.kakao.service.KakaoPayService;
 import com.choidh.service.kakao.vo.*;
 import com.choidh.service.learning.entity.Learning;
@@ -23,7 +23,7 @@ import javax.servlet.http.HttpSession;
 
 import java.util.List;
 
-import static com.choidh.service.common.AppConstant.getTitle;
+import static com.choidh.service.common.vo.AppConstant.getTitle;
 
 /**
  * @see <a href="https://developers.kakaopay.com">카카오페이</a>

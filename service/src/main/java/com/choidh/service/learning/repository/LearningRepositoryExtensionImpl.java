@@ -13,8 +13,8 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import java.util.List;
 import java.util.Set;
 
-import static com.choidh.service.common.StringUtils.isNotNullAndEmpty;
-import static com.choidh.service.common.StringUtils.isNullOrEmpty;
+import static com.choidh.service.common.utiles.StringUtils.isNotNullAndEmpty;
+import static com.choidh.service.common.utiles.StringUtils.isNullOrEmpty;
 import static com.choidh.service.learning.entity.QLearning.learning;
 
 public class LearningRepositoryExtensionImpl extends QuerydslRepositorySupport implements LearningRepositoryExtension {

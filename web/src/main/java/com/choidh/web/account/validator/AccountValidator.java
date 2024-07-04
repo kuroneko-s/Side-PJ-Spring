@@ -2,7 +2,7 @@ package com.choidh.web.account.validator;
 
 
 import com.choidh.service.account.repository.AccountRepository;
-import com.choidh.service.excel.validator.IsValidator;
+import com.choidh.service.common.annotation.IsValidator;
 import com.choidh.web.account.vo.AccountVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

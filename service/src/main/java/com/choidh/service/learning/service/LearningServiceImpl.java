@@ -3,13 +3,13 @@ package com.choidh.service.learning.service;
 
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.professional.entity.ProfessionalAccount;
-import com.choidh.service.account.repository.ProfessionalAccountRepository;
+import com.choidh.service.professional.repository.ProfessionalAccountAccountRepository;
 import com.choidh.service.account.service.AccountService;
 import com.choidh.service.attachment.entity.AttachmentFile;
-import com.choidh.service.attachment.entity.AttachmentFileType;
+import com.choidh.service.attachment.vo.AttachmentFileType;
 import com.choidh.service.attachment.entity.AttachmentGroup;
 import com.choidh.service.attachment.service.AttachmentService;
-import com.choidh.service.common.StringUtils;
+import com.choidh.service.common.utiles.StringUtils;
 import com.choidh.service.common.pagination.Paging;
 import com.choidh.service.joinTables.entity.AccountTagJoinTable;
 import com.choidh.service.joinTables.entity.LearningTagJoinTable;
@@ -37,7 +37,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.choidh.service.common.AppConstant.getLearningNotFoundErrorMessage;
+import static com.choidh.service.common.vo.AppConstant.getLearningNotFoundErrorMessage;
 
 @Slf4j
 @Service
@@ -45,7 +45,7 @@ import static com.choidh.service.common.AppConstant.getLearningNotFoundErrorMess
 @RequiredArgsConstructor
 public class LearningServiceImpl implements LearningService {
     private final LearningRepository learningRepository;
-    private final ProfessionalAccountRepository professionalAccountRepository;
+    private final ProfessionalAccountAccountRepository professionalAccountRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
     private final AttachmentService attachmentService;
     private final AccountTagService accountTagService;

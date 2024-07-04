@@ -1,6 +1,7 @@
 package com.choidh.service.excel.validator;
 
-import com.choidh.service.excel.model.ExcelVO;
+import com.choidh.service.common.annotation.IsValidator;
+import com.choidh.service.excel.vo.ExcelVO;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;

@@ -1,7 +1,7 @@
 package com.choidh.service.attachment.service;
 
 import com.choidh.service.attachment.entity.AttachmentFile;
-import com.choidh.service.attachment.entity.AttachmentFileType;
+import com.choidh.service.attachment.vo.AttachmentFileType;
 import com.choidh.service.attachment.entity.AttachmentGroup;
 import org.springframework.web.multipart.MultipartFile;
 

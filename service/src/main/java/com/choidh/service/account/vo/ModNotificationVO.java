@@ -1,6 +1,6 @@
 package com.choidh.service.account.vo;
 
-import com.choidh.service.annotation.Name;
+import com.choidh.service.common.annotation.Name;
 import lombok.*;
 
 @Getter

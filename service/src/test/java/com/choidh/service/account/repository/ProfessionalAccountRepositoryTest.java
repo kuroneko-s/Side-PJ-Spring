@@ -4,6 +4,7 @@ import com.choidh.service.AbstractRepositoryTestConfig;
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.professional.entity.ProfessionalAccount;
 import com.choidh.service.learning.entity.Learning;
+import com.choidh.service.professional.repository.ProfessionalAccountAccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 //@Rollback(value = false)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class ProfessionalAccountRepositoryTest extends AbstractRepositoryTestConfig {
-    private final ProfessionalAccountRepository professionalAccountRepository;
+    private final ProfessionalAccountAccountRepository professionalAccountRepository;
 
     @Test
     @DisplayName("ProfessionalAccount 단건 조회 By Account Id.")

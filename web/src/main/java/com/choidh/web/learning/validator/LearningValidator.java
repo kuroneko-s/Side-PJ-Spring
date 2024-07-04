@@ -1,6 +1,6 @@
 package com.choidh.web.learning.validator;
 
-import com.choidh.service.excel.validator.IsValidator;
+import com.choidh.service.common.annotation.IsValidator;
 import com.choidh.web.learning.vo.LearningFormVO;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;

@@ -5,7 +5,7 @@ import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.repository.AccountRepository;
 import com.choidh.service.cart.entity.Cart;
 import com.choidh.service.cart.service.CartService;
-import com.choidh.service.security.AccountDetailsService;
+import com.choidh.service.security.service.AccountDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

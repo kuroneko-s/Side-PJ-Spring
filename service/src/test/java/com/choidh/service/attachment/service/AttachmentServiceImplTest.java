@@ -2,7 +2,7 @@ package com.choidh.service.attachment.service;
 
 import com.choidh.service.AbstractServiceTestConfig;
 import com.choidh.service.attachment.entity.AttachmentFile;
-import com.choidh.service.attachment.entity.AttachmentFileType;
+import com.choidh.service.attachment.vo.AttachmentFileType;
 import com.choidh.service.attachment.entity.AttachmentGroup;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;

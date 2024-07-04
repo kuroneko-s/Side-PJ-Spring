@@ -7,17 +7,17 @@ import com.choidh.service.account.vo.ModNotificationVO;
 import com.choidh.service.account.vo.ModPasswordVO;
 import com.choidh.service.account.vo.ProfileVO;
 import com.choidh.service.attachment.entity.AttachmentFile;
-import com.choidh.service.attachment.entity.AttachmentFileType;
+import com.choidh.service.attachment.vo.AttachmentFileType;
 import com.choidh.service.attachment.service.AttachmentService;
-import com.choidh.service.common.StringUtils;
+import com.choidh.service.common.utiles.StringUtils;
 import com.choidh.service.joinTables.entity.AccountTagJoinTable;
 import com.choidh.service.joinTables.service.AccountTagService;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.notification.entity.Notification;
 import com.choidh.service.notification.service.NotificationService;
 import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
-import com.choidh.service.security.AccountRoleType;
-import com.choidh.service.security.AccountUser;
+import com.choidh.service.security.vo.AccountRoleType;
+import com.choidh.service.security.vo.AccountUser;
 import com.choidh.service.tag.service.TagService;
 import com.choidh.service.tag.vo.RegTagVO;
 import com.choidh.web.common.annotation.CurrentAccount;
@@ -48,7 +48,7 @@ import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.choidh.service.common.AppConstant.getTitle;
+import static com.choidh.service.common.vo.AppConstant.getTitle;
 
 @Controller
 @RequestMapping(value = "/profile")

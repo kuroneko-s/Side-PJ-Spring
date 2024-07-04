@@ -3,7 +3,7 @@ package com.choidh.service;
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.professional.entity.ProfessionalAccount;
 import com.choidh.service.account.repository.AccountRepository;
-import com.choidh.service.account.repository.ProfessionalAccountRepository;
+import com.choidh.service.professional.repository.ProfessionalAccountAccountRepository;
 import com.choidh.service.cart.entity.Cart;
 import com.choidh.service.cart.service.CartService;
 import com.choidh.service.learning.entity.Learning;
@@ -28,7 +28,7 @@ public abstract class AbstractServiceTestConfig {
     @Autowired protected EntityManager entityManager;
     @Autowired protected PasswordEncoder passwordEncoder;
     @Autowired protected LearningRepository learningRepository;
-    @Autowired protected ProfessionalAccountRepository professionalAccountRepository;
+    @Autowired protected ProfessionalAccountAccountRepository professionalAccountRepository;
     @Autowired protected CartService cartService;
 
     protected Account createAccount() {

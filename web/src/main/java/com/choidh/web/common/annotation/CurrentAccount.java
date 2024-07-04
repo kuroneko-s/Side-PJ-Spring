@@ -1,6 +1,6 @@
 package com.choidh.web.common.annotation;
 
-import com.choidh.service.security.AccountUser;
+import com.choidh.service.security.vo.AccountUser;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.lang.annotation.ElementType;

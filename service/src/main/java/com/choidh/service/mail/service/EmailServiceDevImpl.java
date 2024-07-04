@@ -1,7 +1,7 @@
 package com.choidh.service.mail.service;
 
 
-import com.choidh.service.common.ServiceAppProperties;
+import com.choidh.service.common.vo.ServiceAppProperties;
 import com.choidh.service.mail.vo.EmailForAuthenticationVO;
 import com.choidh.service.mail.vo.EmailMessageVO;
 import lombok.RequiredArgsConstructor;

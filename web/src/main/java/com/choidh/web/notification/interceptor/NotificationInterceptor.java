@@ -3,7 +3,7 @@ package com.choidh.web.notification.interceptor;
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.notification.repository.NotificationRepository;
 import com.choidh.service.notification.service.NotificationService;
-import com.choidh.service.security.AccountUser;
+import com.choidh.service.security.vo.AccountUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

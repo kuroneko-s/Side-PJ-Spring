@@ -1,6 +1,6 @@
 package com.choidh.service.menu.entity;
 
-import com.choidh.service.annotation.Name;
+import com.choidh.service.common.annotation.Name;
 import com.choidh.service.common.entity.BaseEntity;
 import lombok.*;
 

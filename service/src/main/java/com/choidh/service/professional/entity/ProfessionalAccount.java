@@ -1,7 +1,7 @@
 package com.choidh.service.professional.entity;
 
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.annotation.Name;
+import com.choidh.service.common.annotation.Name;
 import com.choidh.service.common.entity.BaseEntity;
 import com.choidh.service.learning.entity.Learning;
 import lombok.*;
