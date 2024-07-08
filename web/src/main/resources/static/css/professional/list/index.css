@@ -16,17 +16,29 @@
     font-weight: 600;
 }
 
-.professional-learning-item-button-wrapper {
-    justify-self: end;
+.professional-learning-button-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .5rem 1rem;
+}
+
+.professional-learning-button-wrapper .professional-learning-button {
+    flex: 1;
+}
+.professional-learning-button-wrapper .professional-learning-button:not(:last-child) {
+    margin-right: .5rem;
 }
 
 .professional-learning-button {
+    display: block;
     color: #fff !important;
     text-align: center;
+    line-height: 21px;
 
     padding: .75rem 1.25rem;
     border-radius: 4px;
-    margin: 0 .5rem;
 
     cursor: pointer;
     user-select: none;
@@ -44,7 +56,6 @@
 }
 
 .professional-learning-button.blue {
-    margin-top: .5rem;
     background-color: #6e6efa;
     border: #6e6efa;
 }
@@ -52,6 +63,16 @@
 .professional-learning-button.blue:hover {
     background-color: #5454ff;
     border: #5454ff;
+}
+
+.professional-learning-button.red {
+    background-color: #ff0000;
+    border: #ff0000;
+}
+
+.professional-learning-button.red:hover {
+    background-color: #bf0000;
+    border: #bf0000;
 }
 
 .professional-learning-item-container {
@@ -114,7 +135,7 @@
 
 .professional-learning-item-card-body {
     padding: 1rem;
-    flex: 1;
+    flex: 2;
 }
 
 .professional-learning-item-card-body-title {

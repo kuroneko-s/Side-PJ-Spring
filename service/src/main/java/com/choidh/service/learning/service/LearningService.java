@@ -84,7 +84,11 @@ public interface LearningService {
     LearningListenVO getLearningListen(Long accountId, Long learningId);
 
     // 강의 활성화.
-    void isOpeningLearning(Long accountId, Long learningId, boolean isOpening);
+
+    /**
+     * 강의 opening 수정.
+     */
+    void modOpeningLearning(Long accountId, Long learningId);
 
     void removeVideo(Long learningId, Long accountId, List<Long> fileIdList);
 

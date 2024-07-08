@@ -28,10 +28,8 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -214,6 +212,16 @@ public class ProfessionalController {
                                            @RequestParam("order") Integer order,
                                            @RequestPart("video") MultipartFile videoFile) {
         learningService.modLearningVideo(learningId, title, order, videoFile);
+
+        return ResponseEntity.ok(CodeConstant.SUCCESS);
+    }
+
+    /**
+     * Post 강의 영상 공개
+     */
+    @PostMapping("/learning/opening/{learningId}")
+    public ResponseEntity modLearningVideo(@CurrentAccount Account account, @PathVariable("learningId") Long learningId) {
+        learningService.modOpeningLearning(account.getId(), learningId);
 
         return ResponseEntity.ok(CodeConstant.SUCCESS);
     }

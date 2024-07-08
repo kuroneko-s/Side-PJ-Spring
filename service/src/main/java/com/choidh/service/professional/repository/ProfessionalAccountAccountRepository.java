@@ -22,8 +22,9 @@ public interface ProfessionalAccountAccountRepository extends JpaRepository<Prof
      */
     @Query(value = "select pa " +
             "from ProfessionalAccount pa " +
+            "left outer join pa.learningList " +
+            "left outer join pa.account.cart " +
             "where pa.account.id = :accountId")
-    @EntityGraph(attributePaths = {"account.cart", "learningList"}, type = EntityGraph.EntityGraphType.LOAD)
     ProfessionalAccount findByAccountIdWithLearningList(Long accountId);
 
     @Query(value = "update from ProfessionalAccount p " +

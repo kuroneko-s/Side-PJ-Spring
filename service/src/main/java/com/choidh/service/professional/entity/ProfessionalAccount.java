@@ -44,7 +44,7 @@ public class ProfessionalAccount extends BaseEntity {
     @Name(name = "허가 유무")
     private boolean used;
 
-    @OneToMany
+    @OneToMany(mappedBy = "professionalAccount")
     private Set<Learning> learningList = new HashSet<>();
 
     public void setLearningList(Learning learning) {

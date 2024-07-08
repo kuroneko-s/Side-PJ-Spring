@@ -41,8 +41,12 @@
               <span class="professional-learning-item-card-body-rating-number">(<span th:text="${learning.rating}"></span>)</span>
             </p>
           </div>
-          <a class="professional-learning-button green" href="#" th:href="@{'/professional/learning/' + ${learning.id}}">강의 설명 수정</a>
-          <a class="professional-learning-button blue" href="#" th:href="@{'/professional/learning/video/' + ${learning.id}}">강의 영상 수정</a>
+          <div class="professional-learning-button-wrapper">
+            <a class="professional-learning-button green" href="#" th:href="@{'/professional/learning/' + ${learning.id}}">설명 수정</a>
+            <a class="professional-learning-button blue" href="#" th:href="@{'/professional/learning/video/' + ${learning.id}}">영상 수정</a>
+            <div class="professional-learning-button green" th:if="${learning.opening}" onclick="openingClickHandler(event, this)">공개</div>
+            <div class="professional-learning-button red" th:if="${!learning.opening}" onclick="openingClickHandler(event, this)">비공개</div>
+          </div>
         </div>
       </div>
     </div>
@@ -57,12 +61,18 @@
 </main>
 
 <script type="application/javascript">
-  function eventDelete(eventId) {
-    const eventTitle = document.getElementById(eventId).querySelector(".professional-learning-item-title").textContent;
+  function openingClickHandler(e, element) {
+    const {learningId} = element.parentNode.parentNode.dataset;
+    console.log(learningId);
 
-    document.getElementById("modalContext").textContent = eventTitle + "를 삭제하시겠어요 ?";
-    document.getElementById("confirmDialog").classList.remove("hide");
-    document.getElementById("confirmDialog").dataset.eventId = eventId;
+    sendFetch(
+            "/professional/learning/opening/" + learningId,
+            "POST",
+            {},
+            function() { location.reload() },
+            null
+    )
+    e.stopPropagation();
   }
 
   function changeBackgroundColor(element, color) {

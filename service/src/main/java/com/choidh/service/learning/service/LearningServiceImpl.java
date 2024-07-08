@@ -398,7 +398,7 @@ public class LearningServiceImpl implements LearningService {
     // 강의 활성화
     @Override
     @Transactional
-    public void isOpeningLearning(Long accountId, Long learningId, boolean isOpening) {
+    public void modOpeningLearning(Long accountId, Long learningId) {
         ProfessionalAccount professionalAccount = professionalAccountRepository.findByAccountIdWithLearningList(accountId);
         Learning learning = this.getLearningById(learningId);
 
@@ -409,9 +409,10 @@ public class LearningServiceImpl implements LearningService {
             throw new AccessDeniedException("접근 권한이 없습니다.");
         }
 
-        learning.setOpening(isOpening);
+        learning.setOpening(!learning.isOpening());
+        learning.setOpeningDate(LocalDateTime.now());
 
-        if (isOpening) applicationEventPublisher.publishEvent(new LearningCreateEvent(learning));
+        if (learning.isOpening()) applicationEventPublisher.publishEvent(new LearningCreateEvent(learning));
         else applicationEventPublisher.publishEvent(new LearningClosedEvent(learning));
     }
 
