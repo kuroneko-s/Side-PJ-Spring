@@ -45,10 +45,10 @@ public class ProfessionalAccount extends BaseEntity {
     private boolean used;
 
     @OneToMany(mappedBy = "professionalAccount")
-    private Set<Learning> learningList = new HashSet<>();
+    private Set<Learning> learningSet = new HashSet<>();
 
-    public void setLearningList(Learning learning) {
-        this.learningList.add(learning);
+    public void setLearningSet(Learning learning) {
+        this.learningSet.add(learning);
 
         if (learning.getProfessionalAccount() == null) {
             learning.setProfessionalAccount(this);

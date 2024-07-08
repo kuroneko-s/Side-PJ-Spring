@@ -1,0 +1,114 @@
+package com.choidh.web;
+
+import com.choidh.service.account.entity.Account;
+import com.choidh.service.account.repository.AccountRepository;
+import com.choidh.service.account.service.AccountService;
+import com.choidh.service.account.vo.RegAccountVO;
+import com.choidh.service.cart.service.CartService;
+import com.choidh.service.learning.entity.Learning;
+import com.choidh.service.learning.repository.LearningRepository;
+import com.choidh.service.learning.service.LearningService;
+import com.choidh.service.learning.vo.RegLearningVO;
+import com.choidh.service.professional.entity.ProfessionalAccount;
+import com.choidh.service.professional.repository.ProfessionalAccountAccountRepository;
+import com.choidh.service.professional.service.ProfessionalService;
+import com.choidh.service.professional.vo.RegProfessionalAccountVO;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+
+@Slf4j
+@ActiveProfiles("local")
+@Transactional
+@SpringBootTest
+@AutoConfigureMockMvc
+public class AbstractControllerTestConfig {
+    @Autowired
+    protected AccountRepository accountRepository;
+    @Autowired
+    protected EntityManager entityManager;
+    @Autowired
+    protected PasswordEncoder passwordEncoder;
+    @Autowired
+    protected LearningRepository learningRepository;
+    @Autowired
+    protected ProfessionalAccountAccountRepository professionalAccountRepository;
+    @Autowired
+    protected CartService cartService;
+    @Autowired
+    protected AccountService accountService;
+    @Autowired
+    protected ProfessionalService professionalService;
+    @Autowired
+    protected LearningService learningService;
+
+    protected Account createAccount() {
+        return this.createAccount("테스트냥이", "test@test.com");
+    }
+
+    /**
+     * 샘플 계정 생성
+     */
+    protected Account createAccount(String nickname, String email) {
+        return accountService.regAccount(RegAccountVO.builder()
+                .nickname(nickname)
+                .email(email)
+                .password("1234567890")
+                .passwordcheck("1234567890")
+                .build());
+    }
+
+    /**
+     * 샘플 강의 제공자 생성
+     */
+    protected ProfessionalAccount createProfessionalAccount(Account account) {
+        return professionalService.regProfessionalAccount(RegProfessionalAccountVO.builder()
+                .account(account)
+                .name("강사 이름")
+                .description("개잘나가는 강사임")
+                .history("개쩌는 경력들")
+                .build());
+    }
+
+    /**
+     * 샘플 강의 생성
+     */
+    protected Learning createLearning(Account account) {
+        return learningService.regLearning(RegLearningVO.builder()
+                        .title("샘플 강의 1")
+                        .simpleSubscription("간단한 강의 설명")
+                        .subscription("장황한 강의 설명글")
+                        .price(10000)
+                        .mainCategory("자바")
+                        .skills("[{\"value\":\"sample\"},{\"value\":\"java\"},{\"value\":\"hello\"}]")
+                        .build(),
+                account.getId());
+    }
+
+    protected void persistClear() {
+        entityManager.flush();
+        entityManager.clear();
+    }
+
+    protected void theLine() {
+        persistClear();
+
+        log.info("################## THE LINE ##################");
+        log.info("################## THE LINE ##################");
+        log.info("################## THE LINE ##################");
+        log.info("################## THE LINE ##################");
+        log.info("################## THE LINE ##################");
+        log.info("################## THE LINE ##################");
+        log.info("################## THE LINE ##################");
+        log.info("################## THE LINE ##################");
+        log.info("################## THE LINE ##################");
+        log.info("################## THE LINE ##################");
+        log.info("################## THE LINE ##################");
+    }
+}

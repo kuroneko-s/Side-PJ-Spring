@@ -2,27 +2,25 @@ package com.choidh.service.learning.service;
 
 
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.attachment.vo.VideoFileInfo;
-import com.choidh.service.event.entity.Event;
-import com.choidh.service.joinTables.service.LearningTagService;
-import com.choidh.service.professional.entity.ProfessionalAccount;
-import com.choidh.service.professional.repository.ProfessionalAccountAccountRepository;
 import com.choidh.service.account.service.AccountService;
 import com.choidh.service.attachment.entity.AttachmentFile;
-import com.choidh.service.attachment.vo.AttachmentFileType;
 import com.choidh.service.attachment.entity.AttachmentGroup;
 import com.choidh.service.attachment.service.AttachmentService;
-import com.choidh.service.common.utiles.StringUtils;
+import com.choidh.service.attachment.vo.AttachmentFileType;
+import com.choidh.service.attachment.vo.VideoFileInfo;
 import com.choidh.service.common.pagination.Paging;
+import com.choidh.service.common.utiles.StringUtils;
 import com.choidh.service.joinTables.entity.AccountTagJoinTable;
 import com.choidh.service.joinTables.entity.LearningTagJoinTable;
 import com.choidh.service.joinTables.service.AccountTagService;
+import com.choidh.service.joinTables.service.LearningTagService;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.repository.LearningRepository;
 import com.choidh.service.learning.vo.*;
 import com.choidh.service.notification.eventListener.vo.LearningClosedEvent;
 import com.choidh.service.notification.eventListener.vo.LearningCreateEvent;
 import com.choidh.service.notification.eventListener.vo.LearningUpdateEvent;
+import com.choidh.service.professional.entity.ProfessionalAccount;
 import com.choidh.service.professional.service.ProfessionalService;
 import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
 import com.choidh.service.tag.entity.Tag;
@@ -44,7 +42,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -57,7 +54,6 @@ import static com.choidh.service.common.vo.AppConstant.getLearningNotFoundErrorM
 @RequiredArgsConstructor
 public class LearningServiceImpl implements LearningService {
     @Autowired private LearningRepository learningRepository;
-    @Autowired private ProfessionalAccountAccountRepository professionalAccountRepository;
     @Autowired private ApplicationEventPublisher applicationEventPublisher;
     @Autowired private AttachmentService attachmentService;
     @Autowired private AccountTagService accountTagService;
@@ -119,7 +115,8 @@ public class LearningServiceImpl implements LearningService {
     @Override
     @Transactional
     public Learning regLearning(RegLearningVO regLearningVO, Long accountId) {
-        ProfessionalAccount professionalAccount = professionalAccountRepository.findByAccountId(accountId);
+        ProfessionalAccount professionalAccount = professionalService.getProfessionalByAccountId(accountId);
+
         AttachmentGroup attachmentGroup = attachmentService.createAttachmentGroup();
 
         // 태그 입력값 분석
@@ -294,27 +291,6 @@ public class LearningServiceImpl implements LearningService {
         return learningRepository.findLearningByIdWithQuestions(learningId);
     }
 
-    @Transactional
-    public void fileUpdate(List<MultipartFile> multipartFileList, Account account, Long learningId, AttachmentFileType attachmentFileType) {
-        Learning learning = learningRepository.findById(learningId)
-                .orElseThrow(() -> new IllegalArgumentException(getLearningNotFoundErrorMessage(learningId)));
-
-        // 첨부파일 그룹 생성
-        AttachmentGroup attachmentGroup = attachmentService.createAttachmentGroup();
-
-        // 첨부파일 파일 DB 생성 및 파일 저장.
-        for (MultipartFile multipartFile : multipartFileList) {
-            attachmentService.saveFile(attachmentGroup, multipartFile, attachmentFileType);
-        }
-
-        learning.setAttachmentGroup(attachmentGroup);
-    }
-
-    @Override
-    public Learning getLearningDetailForUpdate(Long learningId) {
-        return learningRepository.findByIdWithTags(learningId);
-    }
-
     /**
      * Get 강의 상세. By View
      */
@@ -399,13 +375,10 @@ public class LearningServiceImpl implements LearningService {
     @Override
     @Transactional
     public void modOpeningLearning(Long accountId, Long learningId) {
-        ProfessionalAccount professionalAccount = professionalAccountRepository.findByAccountIdWithLearningList(accountId);
+        ProfessionalAccount professionalAccount = professionalService.getProfessionalByAccountId(accountId);
         Learning learning = this.getLearningById(learningId);
 
-        if (
-                professionalAccount == null ||
-                !professionalAccount.getLearningList().contains(learning)
-        ) {
+        if (!professionalAccount.getLearningSet().contains(learning)) {
             throw new AccessDeniedException("접근 권한이 없습니다.");
         }
 
@@ -414,24 +387,6 @@ public class LearningServiceImpl implements LearningService {
 
         if (learning.isOpening()) applicationEventPublisher.publishEvent(new LearningCreateEvent(learning));
         else applicationEventPublisher.publishEvent(new LearningClosedEvent(learning));
-    }
-
-    // 영상 삭제.
-    @Override
-    @Transactional
-    public void removeVideo(Long learningId, Long accountId, List<Long> fileIdList) {
-        ProfessionalAccount professionalAccount = professionalAccountRepository.findByAccountId(accountId);
-        if (professionalAccount == null) throw new IllegalArgumentException("Not Found Professional Account Id is " + accountId);
-
-        Learning learning = this.getLearningById(learningId);
-        Long attachmentGroupId = learning.getAttachmentGroup().getId();
-
-        for (Long fileId : fileIdList) {
-            // 파일 삭제.
-            if (attachmentService.delAttachmentFile(fileId) <= 0) {
-                throw new EntityNotFoundException("AttachmentGroup Id is " + attachmentGroupId + "AttachmentFile Id is " + fileId);
-            }
-        }
     }
 
     // 강의 정보 수정.

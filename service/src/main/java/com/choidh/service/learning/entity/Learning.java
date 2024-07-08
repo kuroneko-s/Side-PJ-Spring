@@ -121,7 +121,7 @@ public class Learning extends BaseEntity {
     public void setProfessionalAccount(ProfessionalAccount professionalAccount) {
         this.professionalAccount = professionalAccount;
 
-        professionalAccount.getLearningList().add(this);
+        professionalAccount.getLearningSet().add(this);
     }
 
     public void setReviews(Review review) {

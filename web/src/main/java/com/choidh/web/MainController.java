@@ -3,8 +3,8 @@ package com.choidh.web;
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.service.AccountService;
 import com.choidh.service.attachment.entity.AttachmentFile;
-import com.choidh.service.attachment.vo.AttachmentFileType;
 import com.choidh.service.attachment.service.AttachmentService;
+import com.choidh.service.attachment.vo.AttachmentFileType;
 import com.choidh.service.event.service.EventService;
 import com.choidh.service.joinTables.entity.AccountTagJoinTable;
 import com.choidh.service.learning.entity.Learning;
@@ -30,7 +30,7 @@ public class MainController {
     private final AttachmentService attachmentService;
 
     @GetMapping("/")
-    public String indexGet(@CurrentAccount Account account, Model model) {
+    public String home(@CurrentAccount Account account, Model model) {
         List<Learning> learningList;
         List<Learning> newLearningList;
 

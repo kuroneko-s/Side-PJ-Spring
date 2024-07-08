@@ -1,8 +1,6 @@
 package com.choidh.service.learning.service;
 
 
-import com.choidh.service.account.entity.Account;
-import com.choidh.service.attachment.vo.AttachmentFileType;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.vo.*;
 import com.choidh.service.tag.entity.Tag;
@@ -69,10 +67,6 @@ public interface LearningService {
      */
     Learning getLearningByIdWithQuestion(Long learningId);
 
-    void fileUpdate(List<MultipartFile> videoFileList, Account account, Long learningId, AttachmentFileType attachmentFileType);
-
-    Learning getLearningDetailForUpdate(Long learningId);
-
     /**
      * Get 강의 상세. By View
      */
@@ -83,14 +77,10 @@ public interface LearningService {
      */
     LearningListenVO getLearningListen(Long accountId, Long learningId);
 
-    // 강의 활성화.
-
     /**
      * 강의 opening 수정.
      */
     void modOpeningLearning(Long accountId, Long learningId);
-
-    void removeVideo(Long learningId, Long accountId, List<Long> fileIdList);
 
     /**
      * 강의 내용 수정

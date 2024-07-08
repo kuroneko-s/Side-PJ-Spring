@@ -29,7 +29,7 @@ public class WithAccountSecurityContextFactory implements WithSecurityContextFac
         String email = withAccount.value();
 
         AccountVO accountVO = new AccountVO();
-        accountVO.setNickname("테스트냥이");
+        accountVO.setNickname(email.split("@")[0]);
         accountVO.setEmail(email);
         accountVO.setPassword("1234567890");
         accountVO.setPasswordcheck("1234567890");

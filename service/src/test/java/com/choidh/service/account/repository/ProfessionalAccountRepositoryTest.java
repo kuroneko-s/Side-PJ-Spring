@@ -40,7 +40,7 @@ class ProfessionalAccountRepositoryTest extends AbstractRepositoryTestConfig {
 
         for (int i = 0; i < 10; i++) {
             Learning learning = createLearning(testProfessionalAccount);
-            testProfessionalAccount.setLearningList(learning);
+            testProfessionalAccount.setLearningSet(learning);
         }
 
         Account testAccount2 = createAccount("sample2", "sample2@test.com");
@@ -48,15 +48,15 @@ class ProfessionalAccountRepositoryTest extends AbstractRepositoryTestConfig {
 
         for (int i = 0; i < 15; i++) {
             Learning learning = createLearning(testProfessionalAccount2);
-            testProfessionalAccount2.setLearningList(learning);
+            testProfessionalAccount2.setLearningSet(learning);
         }
 
         theLine();
 
         ProfessionalAccount professionalAccount_1 = professionalAccountRepository.findByAccountIdWithLearningList(testAccount.getId());
-        assertEquals(professionalAccount_1.getLearningList().size(), 10);
+        assertEquals(professionalAccount_1.getLearningSet().size(), 10);
 
         ProfessionalAccount professionalAccount_2 = professionalAccountRepository.findByAccountIdWithLearningList(testAccount2.getId());
-        assertEquals(professionalAccount_2.getLearningList().size(), 15);
+        assertEquals(professionalAccount_2.getLearningSet().size(), 15);
     }
 }

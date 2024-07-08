@@ -5,12 +5,15 @@ import com.choidh.service.learning.service.LearningService;
 import com.choidh.service.professional.entity.ProfessionalAccount;
 import com.choidh.service.professional.repository.ProfessionalAccountAccountRepository;
 import com.choidh.service.professional.vo.ProfessionalListResult;
+import com.choidh.service.professional.vo.RegProfessionalAccountVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashSet;
 
 @Service
 public class ProfessionalServiceImpl implements ProfessionalService {
@@ -77,6 +80,27 @@ public class ProfessionalServiceImpl implements ProfessionalService {
      */
     @Override
     public ProfessionalAccount getProfessionalByAccountId(Long accountId) {
-        return professionalAccountRepository.findByAccountId(accountId);
+        ProfessionalAccount professionalAccount = professionalAccountRepository.findByAccountId(accountId);
+
+        if (professionalAccount == null) {
+            throw new IllegalArgumentException(accountId + "에 해당하는 강의 제공자를 찾을 수 없습니다.");
+        }
+
+        return professionalAccount;
+    }
+
+    /**
+     * 강의 제공자 생성
+     */
+    @Override
+    public ProfessionalAccount regProfessionalAccount(RegProfessionalAccountVO regProfessionalAccountVO) {
+        return professionalAccountRepository.save(ProfessionalAccount.builder()
+                .account(regProfessionalAccountVO.getAccount())
+                .name(regProfessionalAccountVO.getName())
+                .history(regProfessionalAccountVO.getHistory())
+                .description(regProfessionalAccountVO.getDescription())
+                .learningSet(new HashSet<>())
+                .used(false)
+                .build());
     }
 }
