@@ -71,4 +71,12 @@ public class ProfessionalServiceImpl implements ProfessionalService {
 
         professionalAccountRepository.modById(professionalId);
     }
+
+    /**
+     * 강의 제공자 단건 조회. By Account Id
+     */
+    @Override
+    public ProfessionalAccount getProfessionalByAccountId(Long accountId) {
+        return professionalAccountRepository.findByAccountId(accountId);
+    }
 }

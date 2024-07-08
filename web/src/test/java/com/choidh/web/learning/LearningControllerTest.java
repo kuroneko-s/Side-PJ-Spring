@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.choidh.service.common.vo.AppConstant.CREATE_LEARNING;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -55,6 +54,8 @@ class LearningControllerTest {
     private ObjectMapper objectMapper;
     @Autowired
     private ModelMapper modelMapper;
+
+    private final static String CREATE_LEARNING = "professional/learning/create/contents";
 
     @Test
     @DisplayName("강의 만들기 뷰")
@@ -217,9 +218,9 @@ class LearningControllerTest {
         LearningFormVO learningFormVO = new LearningFormVO();
         learningFormVO.setTitle("테스트_1");
         learningFormVO.setSubscription("테스트_1 설명입니다.");
-        learningFormVO.setSimplesubscription("테스트_ 심플 설명입니다.");
+        learningFormVO.setSimpleSubscription("테스트_ 심플 설명입니다.");
         learningFormVO.setPrice(10000);
-        learningFormVO.setKategorie("알고리즘");
+        learningFormVO.setMainCategory("알고리즘");
 
         return learningService.regLearning(modelMapper.map(learningFormVO, RegLearningVO.class), account.getId());
     }

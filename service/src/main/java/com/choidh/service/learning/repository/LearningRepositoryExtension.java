@@ -48,4 +48,9 @@ public interface LearningRepositoryExtension {
      * Learning 목록 조회. Top 12 By Tags Order By Rating DESC
      */
     List<Learning> findTop12LearningListByTagsOrderByRating(Set<Tag> tags);
+
+    /**
+     * 강의 페이징. (강의 제작자 기준.)
+     */
+    Page<Learning> findByProfessionalAccountId(Long id, Pageable pageable);
 }

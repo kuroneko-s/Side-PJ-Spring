@@ -64,7 +64,7 @@
                 <p class="learning-item-card-body-tags">
                   <i class="fas fa-tasks"></i>
                   <span th:each="tag : ${learning.tags}">
-                      <span th:text="${tag.getTitle()}"></span>
+                      <span th:text="${tag.getTag().getTitle()}"></span>
                   </span>
                 </p>
                 <p class="learning-item-card-body-rating">
@@ -125,7 +125,7 @@
                 <p class="learning-item-card-body-tags">
                   <i class="fas fa-tasks"></i>
                   <span th:each="tag : ${learning.tags}">
-                                          <span th:text="${tag.getTitle()}"></span>
+                                          <span th:text="${tag.getTag().getTitle()}"></span>
                                       </span>
                 </p>
                 <p class="learning-item-card-body-rating">

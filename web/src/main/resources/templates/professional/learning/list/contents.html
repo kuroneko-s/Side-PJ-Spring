@@ -2,13 +2,86 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<main class="professional-container">
-  <p>강의 목록</p>
+<section>
+  <link rel="stylesheet" href="/css/professional/list/index.css">
+</section>
+
+<main class="professional-learning-container">
+  <div class="professional-learning-header">
+    <p class="professional-learning-title">내 강의 목록</p>
+    <a class="professional-learning-button green" href="#" th:href="@{'/professional/learning/create'}">신규 강의 등록</a>
+  </div>
+
+  <div class="professional-learning-item-container">
+    <div class="professional-learning-item-wrapper" th:if="${!learningList.isEmpty()}">
+      <div class="professional-learning-item" th:each="learning : ${learningList}" th:id="${learning.id}" th:data-image-upload="${imageUploadMap[learning.id]}">
+        <div class="professional-learning-item-card" th:data-learning-id="${learning.id}"
+             onmouseover="changeBackgroundColor(this.parentElement, '#f0f0f0')"
+             onmouseout="changeBackgroundColor(this.parentElement, '')"
+             onclick="clickHandler(this.parentElement)">
+          <img class="professional-learning-item-card-image" th:src="${learningImageMap[learning.id][0]}" th:alt="${learningImageMap[learning.id][1]}" />
+          <div class="professional-learning-item-card-body">
+            <p class="professional-learning-item-card-body-title" th:text="${learning.title}"></p>
+            <p class="professional-learning-item-card-body-tags">
+              <i class="fas fa-tasks"></i>
+              <span th:each="tag : ${learning.tags}">
+                <span th:text="${tag.getTag().getTitle()}"></span>
+            </span>
+            </p>
+            <p class="professional-learning-item-card-body-rating">
+             <span class="full-star star" th:each="num : ${#numbers.sequence(0, learning.getRatingInt() - 1)}" th:if="${learning.getRatingInt() > 0}">
+                 <i class="fas fa-star"></i>
+             </span>
+              <span class="half-star star" th:if="${learning.checkRatingBoolean()}">
+                <i class="fas fa-star-half-alt"></i>
+            </span>
+              <span class="empty-star star" th:each="num : ${#numbers.sequence(1, learning.emptyRating())}" th:if="${learning.emptyRating() > 0}">
+                <i class="far fa-star"></i>
+            </span>
+              <span class="professional-learning-item-card-body-rating-number">(<span th:text="${learning.rating}"></span>)</span>
+            </p>
+          </div>
+          <a class="professional-learning-button green" href="#" th:href="@{'/professional/learning/' + ${learning.id}}">강의 설명 수정</a>
+          <a class="professional-learning-button blue" href="#" th:href="@{'/professional/learning/video/' + ${learning.id}}">강의 영상 수정</a>
+        </div>
+      </div>
+    </div>
+
+    <div th:if="${learningList.isEmpty()}">
+      <p>등록된 강의가 없습니다.</p>
+    </div>
+
+    <!-- pagination -->
+    <section th:replace="fragment/fragment.html :: pagination"></section>
+  </div>
 </main>
 
 <script type="application/javascript">
-  window.addEventListener("DOMContentLoaded", () => {
+  function eventDelete(eventId) {
+    const eventTitle = document.getElementById(eventId).querySelector(".professional-learning-item-title").textContent;
 
+    document.getElementById("modalContext").textContent = eventTitle + "를 삭제하시겠어요 ?";
+    document.getElementById("confirmDialog").classList.remove("hide");
+    document.getElementById("confirmDialog").dataset.eventId = eventId;
+  }
+
+  function changeBackgroundColor(element, color) {
+    element.style.backgroundColor = color;
+  }
+
+  function clickHandler(element) {
+    if (element.dataset.imageUpload === "true") {
+      location.href = "/learning/" + element.id;
+    } else {
+      location.href = "/professional/learning/video/" + element.id;
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    moment.locale('ko');
+    $(".date-time").text(function (index, dateTime) {
+      return moment(dateTime, "YYYY-MM-DD'T'hh:mm").format("LL");
+    })
   });
 </script>
 </html>

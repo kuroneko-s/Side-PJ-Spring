@@ -64,7 +64,7 @@ class AttachmentServiceImplTest extends AbstractServiceTestConfig {
     @DisplayName("파일 저장 (성공 - 영상)")
     public void saveFile_성공_1() throws Exception {
         AttachmentGroup attachmentGroup = attachmentService.createAttachmentGroup();
-        Resource resource = new PathResource(Path.of("/Users/kuroneko/Documents/PJ-java/web/src/main/resources/static/sampleData/video/test_movie_2.mov"));
+        Resource resource = new PathResource(Path.of("/Users/kuroneko/Documents/PJ-java/web/src/main/resources/static/sampleData/video/sample_1.mp4"));
 
         MockMultipartFile multipartFile = new MockMultipartFile(
                 "test_movie-1.mov",

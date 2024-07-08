@@ -47,8 +47,16 @@ public class AttachmentServiceImpl implements AttachmentService {
      * 파일 저장
      */
     @Override
-    @Transactional
     public void saveFile(AttachmentGroup attachmentGroup, MultipartFile multipartFile, AttachmentFileType attachmentFileType) {
+        this.saveFile(attachmentGroup, multipartFile, attachmentFileType, multipartFile.getOriginalFilename());
+    }
+
+    /**
+     * 파일 저장
+     */
+    @Override
+    @Transactional
+    public void saveFile(AttachmentGroup attachmentGroup, MultipartFile multipartFile, AttachmentFileType attachmentFileType, String originalFileName) {
         AttachmentFile beforeAttachmentFile = new AttachmentFile(attachmentGroup);
         AttachmentFile newAttachmentFile = attachmentFileRepository.save(beforeAttachmentFile);
         String groupSn = StringUtils.padLeftUsingFormat(attachmentGroup.getId().toString(), 7, '0');
@@ -60,13 +68,13 @@ public class AttachmentServiceImpl implements AttachmentService {
 
         if (
                 attachmentFileType.equals(AttachmentFileType.BANNER) &&
-                isNotImageFile(fileExtension)
+                        isNotImageFile(fileExtension)
         ) {
             throw new IllegalArgumentException("이미지 파일이 아닙니다.");
         }
 
         newAttachmentFile.setFileSize(multipartFile.getSize());
-        newAttachmentFile.setOriginalFileName(multipartFile.getOriginalFilename());
+        newAttachmentFile.setOriginalFileName(originalFileName);
         newAttachmentFile.setFileName(fileName);
         newAttachmentFile.setPath(filePath);
         newAttachmentFile.setExtension(fileExtension);

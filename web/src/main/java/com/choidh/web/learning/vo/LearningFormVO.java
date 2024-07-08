@@ -15,21 +15,18 @@ public class LearningFormVO {
     @Length(max = 255)
     private String title;
 
-    @NotBlank @NotNull
-    private String simplesubscription;
+    @NotNull
+    private int price;
 
     @NotBlank @NotNull
     private String subscription;
 
-    @NotNull @NotBlank
-    private String lecturerName;
+    @NotBlank @NotNull
+    private String simpleSubscription;
 
     @NotNull @NotBlank
-    private String lecturerDescription;
+    private String mainCategory;
 
     @NotNull
-    private int price;
-
-    @NotNull
-    private String kategorie;
+    private String skills;
 }

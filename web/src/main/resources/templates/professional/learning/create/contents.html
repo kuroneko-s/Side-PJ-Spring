@@ -2,13 +2,171 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<main class="professional-container">
-  <p>전문가 대시보드임.</p>
+<section>
+  <link rel="stylesheet" href="/css/professional/create_modify/index.css"/>
+  <script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
+  <link rel="stylesheet" href="/node_modules/@yaireo/tagify/dist/tagify.css">
+</section>
+
+<main class="professional-learning-manage-container">
+  <p class="professional-learning-manage-title">신규 강의 등록</p>
+
+  <!-- toast message start -->
+  <div class="professional-learning-manage-toast-message-container" id="professional-learning-manage-toast-message-container" th:if="${param.error}">
+    <div class="professional-learning-manage-toast-message">
+      <p th:if="${param.error.toString().equals('username')}">옳바르지 않은 이메일과 패스워드입니다.</p>
+      <p th:if="${param.error.toString().equals('bad_credentials')}">이메일과 패스워드를 다시 입력해주세요.</p>
+      <p th:if="${param.error.toString().equals('email_credentials_expired')}">이메일 인증이 완료되지 않았습니다. <a href="#" th:href="@{/registerSuccess}">이메일 인증 화면</a></p>
+      <p th:if="${param.error.toString().equals('true')}">이메일과 패스워드를 다시 입력해주세요.</p>
+      <button type="button" class="professional-learning-manage-toast-message-close-button" id="professional-learning-manage-toast-message-close-button">
+        <span>&times;</span>
+      </button>
+    </div>
+  </div>
+  <!-- toast message end -->
+
+  <form id="createForm" class="form professional-learning-manage-form needs-validation" action="#" th:action="@{/professional/learning/create}" method="POST">
+    <label for="title">강의 제목</label>
+    <input id="title" type="text" name="title" placeholder="흑우냥이의 자바 특강" required minlength="2" maxlength="255">
+    <small class="invalid-feedback">강의명을 입력해주세요.</small>
+
+    <label for="price">강의 가격</label>
+    <input id="price" type="number" name="price" placeholder="3000" required minlength="0" maxlength="20">
+    <small class="professional-learning-manage-form-help-message">0으로 설정하시면 무료 강의로 설정됩니다</small>
+    <small class="invalid-feedback">0으로 설정하시면 무료 강의로 설정됩니다.</small>
+
+    <label for="subscription">강의 소개글</label>
+    <textarea id="subscription" name="subscription"></textarea>
+
+    <label for="simpleSubscription">강의 간단 소개글</label>
+    <textarea id="simpleSubscription" name="simpleSubscription"></textarea>
+
+    <label for="mainCategory">메인 카테고리</label>
+    <select class="custom-select form-control" id="mainCategory" name="mainCategory">
+      <option selected value="Web">Web</option>
+      <option value="Algorithm">Algorithm</option>
+    </select>
+
+    <div class="professional-learning-manage-contents" role="tabpanel">
+      <div th:text="${whiteList}" id="whitelist" hidden></div>
+      <label class="professional-learning-manage-contents-label" for="skills">분야 설정</label>
+      <input class="professional-learning-manage-contents-input tag-input" id="skills" name="skills" type="text"/>
+    </div>
+
+    <button type="submit" class="button professional-learning-manage-form-button">저장하기</button>
+  </form>
+
+  <div th:replace="fragment/fragment.html :: form-validation"></div>
 </main>
+
 
 <script type="application/javascript">
   window.addEventListener("DOMContentLoaded", () => {
-    console.log("전문가 대시보드")
+    // toast message button click event
+    document.getElementById("professional-learning-manage-toast-message-close-button")?.addEventListener("click", () => {
+      document.getElementById("professional-learning-manage-toast-message-container").classList.add("hide");
+    });
+
+    const input = document.getElementById('skills')
+    const tagify = new Tagify(input, {
+      whitelist: JSON.parse(document.querySelector('#whitelist').textContent),
+      focusable: false,
+      dropdown: {
+        enabled: 0,
+        position: 'input',
+      }
+    })
+
+    // add a class to Tagify's input element
+    tagify.DOM.input.classList.add('form-control');
+    tagify.DOM.input.classList.add('form-control-custom');
+    // re-place Tagify's input element outside of the  element (tagify.DOM.scope), just before it
+    tagify.DOM.scope.parentNode.insertBefore(tagify.DOM.input, tagify.DOM.scope);
+
+    $("#subscription").summernote({
+      fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Noto Sans KR', 'Merriweather'],
+      placeholder: '이벤트 내용',
+      tabSize: 2,
+      lang: "ko-KR",
+      height: 200,
+      disableResizeEditor: true, // 크기 변경 비활성화
+      width: 500,
+      focus: true,
+      toolbar: [
+        ['style', ['style']],
+        ['font', ['bold', 'italic', 'underline', 'clear']],
+        ['fontname', ['fontname']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['height', ['height']],
+        // 이미지와 비디오 버튼을 제외한 도구들을 나열합니다.
+      ],
+      // 이미지와 비디오 업로드 기능 비활성화
+      callbacks: {
+        onImageUpload: function(files) {
+          return false;
+        },
+        onMediaDelete: function(target) {
+          return false;
+        }
+      }
+    });
+
+    $("#simpleSubscription").summernote({
+      fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Noto Sans KR', 'Merriweather'],
+      placeholder: '이벤트 내용',
+      tabSize: 2,
+      lang: "ko-KR",
+      height: 200,
+      disableResizeEditor: true, // 크기 변경 비활성화
+      width: 500,
+      focus: true,
+      toolbar: [
+        ['style', ['style']],
+        ['font', ['bold', 'italic', 'underline', 'clear']],
+        ['fontname', ['fontname']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['height', ['height']],
+        // 이미지와 비디오 버튼을 제외한 도구들을 나열합니다.
+      ],
+      // 이미지와 비디오 업로드 기능 비활성화
+      callbacks: {
+        onImageUpload: function(files) {
+          return false;
+        },
+        onMediaDelete: function(target) {
+          return false;
+        }
+      }
+    });
+
+    document.getElementById("createForm").addEventListener("submit", e => {
+      const subscription = document.getElementById("subscription");
+      const simpleSubscription = document.getElementById("simpleSubscription");
+      const skills = document.getElementById("skills");
+
+      if (subscription.value.length === 0) {
+        $('#subscription').summernote('focus');
+        floatMessage("강의 소개글을 입력해주세요.");
+        e.preventDefault();
+        return false;
+      }
+
+      if (simpleSubscription.value.length === 0) {
+        $('#simpleSubscription').summernote('focus');
+        floatMessage("강의 소개글을 입력해주세요.");
+        e.preventDefault();
+        return false;
+      }
+
+      if (skills.value.length === 0) {
+        floatMessage("강의의 분야를 설정해주세요.");
+        e.preventDefault();
+        return false;
+      }
+
+    })
   });
 </script>
 </html>

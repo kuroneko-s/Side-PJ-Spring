@@ -7,8 +7,8 @@ import com.choidh.service.account.vo.ModNotificationVO;
 import com.choidh.service.account.vo.ModPasswordVO;
 import com.choidh.service.account.vo.ProfileVO;
 import com.choidh.service.attachment.entity.AttachmentFile;
-import com.choidh.service.attachment.vo.AttachmentFileType;
 import com.choidh.service.attachment.service.AttachmentService;
+import com.choidh.service.attachment.vo.AttachmentFileType;
 import com.choidh.service.common.utiles.StringUtils;
 import com.choidh.service.joinTables.entity.AccountTagJoinTable;
 import com.choidh.service.joinTables.service.AccountTagService;
@@ -27,7 +27,6 @@ import com.choidh.web.profile.vo.NotificationUpdateVO;
 import com.choidh.web.profile.vo.PasswordUpdateVO;
 import com.choidh.web.profile.vo.ProfileUpdateVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +54,6 @@ import static com.choidh.service.common.vo.AppConstant.getTitle;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ProfileController {
     private final ModelMapper modelMapper;
-    private final ObjectMapper objectMapper;
     private final ProfileNicknameValidator profileNicknameValidator;
     private final ProfilePasswordValidator profilePasswordValidator;
     private final AccountService accountService;
@@ -177,11 +175,11 @@ public class ProfileController {
 
         Set<AccountTagJoinTable> tagListByAccountId = accountTagService.getTagListByAccountId(account.getId());
         List<String> tagtitleList = tagListByAccountId.stream().map(accountTagJoinTable -> accountTagJoinTable.getTag().getTitle()).collect(Collectors.toList());
-        List<String> tagAllTitleList = tagService.getTitleList();
+        String whiteList = StringUtils.translationListToString(tagService.getTitleList());
 
         model.addAttribute("tags", tagtitleList);
-        model.addAttribute("whiteList", objectMapper.writeValueAsString(tagAllTitleList));
-        model.addAttribute("tagList", objectMapper.writeValueAsString(tagtitleList));
+        model.addAttribute("whiteList", whiteList);
+        model.addAttribute("tagList", StringUtils.translationListToString(tagtitleList));
 
         model.addAttribute("pageTitle", getTitle("설정"));
         model.addAttribute("pageContent", "profile/setting/contents");

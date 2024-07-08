@@ -1,0 +1,163 @@
+.professional-learning-container {
+    position: relative;
+    min-height: 85vh;
+    padding: 1.25rem 0;
+}
+
+.professional-learning-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.professional-learning-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.professional-learning-item-button-wrapper {
+    justify-self: end;
+}
+
+.professional-learning-button {
+    color: #fff !important;
+    text-align: center;
+
+    padding: .75rem 1.25rem;
+    border-radius: 4px;
+    margin: 0 .5rem;
+
+    cursor: pointer;
+    user-select: none;
+}
+
+.professional-learning-button.green {
+    background-color: var(--green);
+    border: var(--green-border);
+}
+
+.professional-learning-button.green:hover {
+    color: #fff;
+    background-color: var(--event-green);
+    border-color: var(--event-green-border);
+}
+
+.professional-learning-button.blue {
+    margin-top: .5rem;
+    background-color: #6e6efa;
+    border: #6e6efa;
+}
+
+.professional-learning-button.blue:hover {
+    background-color: #5454ff;
+    border: #5454ff;
+}
+
+.professional-learning-item-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 1.25rem 0 4rem 0;
+}
+
+.professional-learning-item-wrapper {
+    height: 100%;
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.professional-learning-item {
+    width: 100%;
+    height: 360px;
+
+    margin-right: 8px;
+}
+
+.professional-learning-item-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    border: rgba(115, 115, 115, 0.25) 1px solid;
+    border-radius: 3px;
+
+    background: whitesmoke;
+    box-shadow: 0 .25rem .25rem rgba(0,0,0,.075);
+    padding-bottom: 1rem;
+
+    cursor: pointer;
+}
+
+.professional-learning-item-card-anchor {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.professional-learning-item-card-image {
+    width: 100%;
+    height: 192px;
+
+    border: none;
+
+    user-select: none;
+    pointer-events: none;
+}
+
+.professional-learning-item-card-body {
+    padding: 1rem;
+    flex: 1;
+}
+
+.professional-learning-item-card-body-title {
+    display: block;
+    max-width: 100%;
+
+    font-size: 1.5rem;
+    font-weight: 600;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+
+    margin-bottom: 0.25rem;
+}
+
+.professional-learning-item-card-body-tags {
+    display: inline-block;
+    max-width: 260px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    margin-bottom: 0.25rem;
+}
+
+.professional-learning-item-card-body-rating {
+    margin-bottom: 0.25rem;
+    letter-spacing: -2px;
+}
+
+.professional-learning-item-card-body-rating .star {
+    color: #FDCC11;
+}
+
+.professional-learning-item-card-body-rating-number {
+    letter-spacing: 0;
+    opacity: .5;
+    font-weight: 600;
+}
+
+.professional-learning-item-empty-title {
+    margin-top: .75rem;
+    font-size: 1.25rem;
+}

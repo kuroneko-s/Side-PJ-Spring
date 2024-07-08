@@ -22,7 +22,7 @@
                 </p>
 
                 <span th:each="tag : ${learning.tags}">
-                    <span th:text="${tag.getTitle()}"></span>
+                    <span th:text="${tag.getTag().getTitle()}"></span>
                 </span>
 
                 <p class="learning-detail-banner-professional-wrapper">

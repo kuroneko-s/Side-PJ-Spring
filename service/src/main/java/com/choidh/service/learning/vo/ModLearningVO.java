@@ -10,15 +10,13 @@ import lombok.*;
 public class ModLearningVO {
     private String title;
 
-    private String simplesubscription;
+    private String simpleSubscription;
 
     private String subscription;
 
-    private String lecturerName;
-
-    private String lecturerDescription;
-
     private int price;
 
-    private String kategorie;
+    private String mainCategory;
+
+    private String skills;
 }

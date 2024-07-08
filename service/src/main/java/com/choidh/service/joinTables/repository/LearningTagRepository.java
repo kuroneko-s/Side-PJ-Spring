@@ -24,5 +24,11 @@ public interface LearningTagRepository extends JpaRepository<LearningTagJoinTabl
     @Query(value = "delete from LearningTagJoinTable ltjt " +
             "where ltjt.id = :learningTagJoinTableId ")
     @Modifying
-    int deleteByLearningIdAndTagTitle(Long learningTagJoinTableId);
+    int deleteByLearningId(Long learningTagJoinTableId);
+
+    @Query(value = "select ltjt " +
+            "from LearningTagJoinTable ltjt " +
+            "where ltjt.learning.id = :learningId " +
+            "and ltjt.tag.id = :tagId")
+    LearningTagJoinTable findByLearningIdAndTagId(Long learningId, Long tagId);
 }

@@ -1,0 +1,332 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<section>
+  <link rel="stylesheet" href="/css/professional/create_modify/index.css"/>
+</section>
+
+<main class="professional-learning-manage-container">
+  <p class="professional-learning-manage-title">강의 영상 수정</p>
+  <p class="professional-learning-manage-subTitle">이미지 및 영상을 등록 후 업로드 버튼을 각각 눌러주셔야합니다.</p>
+
+  <!-- banner upload start -->
+  <form id="imageForm" class="professional-learning-form-wrapper" method="POST" action="/professional/learning/banner/upload" enctype="multipart/form-data">
+    <input type="hidden" id="learningId" name="learningId" th:value="${learning.id}" />
+    <div class="professional-learning-input-wrapper">
+      <span class="professional-learning-input-title">배너 이미지</span>
+      <label for="bannerImage"><i class="professional-learning-input-image fa-solid fa-upload"></i></label>
+    </div>
+    <input class="professional-learning-input" name="banner" type="file" id="bannerImage" accept="image/*"/>
+    <div class="professional-learning-banner-image-preview-wrapper" th:classappend="${learningModifyVO.bannerFile == null ? 'hide' : ''}" id="bannerPreviewWrapper">
+      <img id="bannerImagePreview" th:src="${learningModifyVO.bannerFile != null ? learningModifyVO.bannerFile.getFullPath('') : ''}" alt="Image Preview">
+    </div>
+    <div class="professional-learning-form-progress-container hide">
+      <div class="professional-learning-form-progress-bar"></div>
+    </div>
+    <button type="button" class="professional-learning-form-button green hide" id="bannerImageButton"
+            onclick="bannerUploadWithProgress(this)">업로드</button>
+  </form>
+  <!-- banner upload end -->
+
+  <!-- video 바인딩 할 값 정렬 -->
+  <div class="hide" id="videoInfo">
+    <div class="info" th:each="file : ${learningModifyVO.videoFiles}">
+      <span th:text="${file.videoSrc}"></span>
+      <span th:text="${file.videoName}"></span>
+      <span th:text="${file.contents}"></span>
+      <span th:text="${file.order}"></span>
+    </div>
+  </div>
+
+  <!-- video upload start -->
+  <form class="professional-learning-form-wrapper hide" method="POST" action="/professional/learning/video/upload">
+    <div class="professional-learning-input-wrapper">
+      <label class="professional-learning-contents-label" for="videoTitle1">목차</label>
+      <input type="text" class="professional-learning-contents-input" placeholder="영상 제목" name="videoTitle" id="videoTitle1" />
+      <label for="video"><i class="professional-learning-input-image fa-solid fa-upload"></i></label>
+    </div>
+    <input id="video" class="professional-learning-input" name="video" type="file" accept="video/*" onchange="videoUploadEventHandler(this)"/>
+    <video class="professional-learning-banner-image-preview-wrapper hide" id="videoPreview" width="600" controls>
+      <source id="videoSource" src="" type="">
+    </video>
+    <div class="professional-learning-form-progress-container hide">
+      <div class="professional-learning-form-progress-bar"></div>
+    </div>
+    <button type="button" class="professional-learning-form-button green hide" onclick="videoUploadWithProgress(this)">업로드</button>
+  </form>
+  <!-- video upload start -->
+
+  <div class="professional-learning-video-form-container" id="videoUploadFormWrapper">
+    <div class="professional-learning-video-form-header">
+      <p class="professional-learning-input-title">영상 업로드</p>
+      <button id="appendVideoInput" class="professional-learning-form-button blue" type="button">입력란 추가</button>
+    </div>
+  </div>
+  <button id="listButton" type="button" class="professional-learning-form-button green">목록으로 가기</button>
+</main>
+
+<script type="application/javascript">
+  const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+  const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+  function bannerUploadWithProgress(el) {
+    const parentNode = el.parentNode;
+    const url = parentNode.action;
+
+    const fileInput = parentNode.querySelector('input[name=banner]');
+    const file = fileInput.files[0];
+    const learningId = document.getElementById("learningId").value;
+
+    const formData = new FormData();
+    formData.append('banner', file);
+    formData.append("learningId", learningId);
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', url, true);
+    xhr.setRequestHeader(csrfHeader, csrfToken);
+
+    xhr.upload.onprogress = function(event) {
+      if (event.lengthComputable) {
+        const percentComplete = (event.loaded / event.total) * 100;
+        parentNode.querySelector('.professional-learning-form-progress-container').classList.remove('hide');
+        const progressBar = parentNode.querySelector('.professional-learning-form-progress-bar');
+        progressBar.style.width = percentComplete + '%';
+      }
+    };
+
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        alert('업로드 완료!');
+      } else {
+        alert('업로드 실패!');
+      }
+    };
+
+    xhr.onerror = function() {
+      alert('업로드 중 오류 발생!');
+    };
+
+    xhr.send(formData);
+  }
+
+  function videoUploadWithProgress(el) {
+    const parentNode = el.parentNode;
+    const titleEl = parentNode.querySelector("input[name=videoTitle]");
+    if (titleEl.value.length === 0) {
+      floatMessage("목차를 입력해주세요.");
+      titleEl.focus();
+      return false;
+    }
+
+    const url = parentNode.action;
+
+    const fileInput = parentNode.querySelector('input[name=video]');
+    const file = fileInput.files[0];
+
+    const videoTitle = parentNode.querySelector('input[name=videoTitle]').value;
+    const learningId = document.getElementById("learningId").value;
+
+    const order = parentNode.dataset.count;
+
+    const formData = new FormData();
+    formData.append('video', file);
+    formData.append('title', videoTitle);
+    formData.append('order', order + "");
+    formData.append("learningId", learningId);
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', url, true);
+    xhr.setRequestHeader(csrfHeader, csrfToken);
+
+    xhr.upload.onprogress = function(event) {
+      if (event.lengthComputable) {
+        const percentComplete = (event.loaded / event.total) * 100;
+        parentNode.querySelector('.professional-learning-form-progress-container').classList.remove('hide');
+        const progressBar = parentNode.querySelector('.professional-learning-form-progress-bar');
+        progressBar.style.width = percentComplete + '%';
+      }
+    };
+
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        alert('업로드 완료!');
+      } else {
+        alert('업로드 실패!');
+      }
+    };
+
+    xhr.onerror = function() {
+      alert('업로드 중 오류 발생!');
+    };
+
+    xhr.send(formData);
+  }
+
+  function videoUploadEventHandler(e) {
+    const file = e.target.files[0];
+    if (file) {
+      const parentNode = e.target.parentNode;
+      const videoPreview = parentNode.querySelector('.professional-learning-banner-image-preview-wrapper');
+      const videoSource = parentNode.querySelector('.videoSource');
+      const url = URL.createObjectURL(file);
+
+      videoSource.src = url;
+      videoSource.type = file.type;
+
+      videoPreview.load();
+      videoPreview.classList.remove("hide");
+      parentNode.querySelector("button").classList.remove("hide");
+    }
+  }
+
+  function createVideoFormTemplate(cnt) {
+    const form = document.createElement("form");
+    form.classList.add("professional-learning-form-wrapper");
+    form.method = "POST";
+    form.action = "/professional/learning/video/upload";
+    form.dataset.count = cnt;
+
+    const inputWrapper = document.createElement("div");
+    inputWrapper.classList.add("professional-learning-input-wrapper");
+    const contentsLabel = document.createElement("label");
+    contentsLabel.classList.add("professional-learning-contents-label");
+    contentsLabel.htmlFor = "videoTitle" + cnt;
+    contentsLabel.textContent = "목차";
+    const contentsInput = document.createElement("input");
+    contentsInput.type = "text";
+    contentsInput.classList.add("professional-learning-contents-input");
+    contentsInput.placeholder = "영상 제목";
+    contentsInput.name = "videoTitle";
+    contentsInput.id = "videoTitle" + cnt;
+    contentsInput.required = true;
+    const videoLabel = document.createElement("label");
+    videoLabel.htmlFor = "video" + cnt;
+    videoLabel.innerHTML = `<i class="professional-learning-input-image fa-solid fa-upload"></i>`;
+    inputWrapper.appendChild(contentsLabel);
+    inputWrapper.appendChild(contentsInput);
+    inputWrapper.appendChild(videoLabel);
+    form.appendChild(inputWrapper);
+
+    const videoInput = document.createElement("input");
+    videoInput.id = "video" + cnt;
+    videoInput.classList.add("professional-learning-input");
+    videoInput.name = "video";
+    videoInput.type = "file";
+    videoInput.accept = "video/*";
+    videoInput.addEventListener('change', e => {
+      videoUploadEventHandler(e);
+    });
+    form.appendChild(videoInput);
+
+    const video = document.createElement("video");
+    video.classList.add("professional-learning-banner-image-preview-wrapper")
+    video.classList.add("hide")
+    video.controls = true;
+    const source = document.createElement("source");
+    source.classList.add("videoSource")
+    source.src = "";
+    source.type = "";
+    video.appendChild(source);
+    form.appendChild(video);
+
+    const progressContainer = document.createElement("div");
+    progressContainer.classList.add("professional-learning-form-progress-container");
+    progressContainer.classList.add("hide");
+    const progressBar = document.createElement("div");
+    progressBar.classList.add("professional-learning-form-progress-bar");
+    progressContainer.appendChild(progressBar);
+    form.appendChild(progressContainer);
+
+    const submitButton = document.createElement("button");
+    submitButton.type = "button";
+    submitButton.classList.add("professional-learning-form-button", "green", "hide");
+    submitButton.textContent = "업로드";
+    submitButton.addEventListener("click", e => {
+      videoUploadWithProgress(e.target);
+    });
+    form.appendChild(submitButton);
+
+    return form;
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    // toast message button click event
+    document.getElementById("professional-learning-manage-toast-message-close-button")?.addEventListener("click", () => {
+      document.getElementById("professional-learning-manage-toast-message-container").classList.add("hide");
+    });
+
+    document.getElementById('bannerImage').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+
+      if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const imagePreview = document.getElementById('bannerImagePreview');
+          imagePreview.src = e.target.result;
+
+          document.getElementById("bannerPreviewWrapper").classList.remove("hide");
+          document.getElementById("bannerImageButton").classList.remove("hide");
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert('이미지 파일을 올려주세요!!!');
+      }
+    });
+
+    document.getElementById("appendVideoInput").addEventListener("click", e => {
+      const wrapper = document.getElementById("videoUploadFormWrapper");
+      const el = document.querySelectorAll("#videoUploadFormWrapper form");
+      wrapper.appendChild(createVideoFormTemplate(el.length + 1));
+    })
+
+    document.getElementById("listButton").addEventListener("click", e => {
+      location.href = "/professional/learning/list";
+    })
+
+    const videoInfoEl = document.getElementById("videoInfo");
+    let maxOrder = 0;
+    const infoObj = {};
+    videoInfoEl.querySelectorAll(".info").forEach(el => {
+      const spanEls = el.querySelectorAll("span")
+      const order = spanEls[3].textContent; // order
+      maxOrder = Math.max(+order, maxOrder);
+
+      infoObj[order] = {
+        "src": spanEls[0].textContent,
+        "fullName": spanEls[1].textContent,
+        "contents": spanEls[2].textContent,
+      }
+    });
+
+    // 비디오 입력란 생성
+    for (let i = maxOrder; i > 0; i--) {
+      const wrapper = document.getElementById("videoUploadFormWrapper");
+      const el = document.querySelectorAll("#videoUploadFormWrapper form");
+      wrapper.appendChild(createVideoFormTemplate(el.length + 1));
+    }
+
+    const formEls = document.querySelectorAll("#videoUploadFormWrapper .professional-learning-form-wrapper");
+
+    Object.keys(infoObj).forEach(order => {
+      const {src, fullName, contents} = infoObj[order];
+      const split = fullName.split(".");
+
+      const targetFormEl = formEls[order - 1];
+      const videoContentsEl = targetFormEl.querySelector("input[name=videoTitle]");
+      videoContentsEl.value = contents;
+
+      const videoPreview = targetFormEl.querySelector('.professional-learning-banner-image-preview-wrapper');
+      const videoSource = targetFormEl.querySelector('.videoSource');
+
+      videoSource.src = src;
+      videoSource.type = "video/" + split[1];
+
+      videoPreview.load();
+      videoPreview.classList.remove("hide");
+    })
+
+    videoInfoEl.remove();
+  });
+</script>
+</html>

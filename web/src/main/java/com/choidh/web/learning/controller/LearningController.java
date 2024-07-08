@@ -5,8 +5,6 @@ import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.service.AccountService;
 import com.choidh.service.attachment.entity.AttachmentFile;
 import com.choidh.service.attachment.service.AttachmentService;
-import com.choidh.service.cart.service.CartService;
-import com.choidh.service.joinTables.service.LearningCartService;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.service.LearningService;
 import com.choidh.service.learning.vo.LearningDetailVO;
@@ -14,7 +12,6 @@ import com.choidh.service.learning.vo.LearningListAPIVO;
 import com.choidh.service.learning.vo.LearningListVO;
 import com.choidh.service.learning.vo.LearningListenVO;
 import com.choidh.web.common.annotation.CurrentAccount;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -32,8 +29,6 @@ import static com.choidh.service.common.vo.AppConstant.getTitle;
 public class LearningController {
     private final LearningService learningService;
     private final AttachmentService attachmentService;
-    private final CartService cartService;
-    private final LearningCartService learningCartService;
     private final AccountService accountService;
 
     /**
@@ -47,7 +42,7 @@ public class LearningController {
 
         model.addAttribute("mainCategory", mainCategory);
         model.addAttribute("subCategory", subCategory);
-        model.addAttribute("learningList", learningListVO.getLearningPage().getContent());
+        model.addAttribute("learningList", learningListVO.getLearningList());
         model.addAttribute("learningImageMap", learningListVO.getLearningImageMap());
         model.addAttribute("pageTitle", getTitle("검색"));
         model.addAttribute(learningListVO.getPaging());
@@ -62,7 +57,7 @@ public class LearningController {
     @ResponseBody
     public ResponseEntity postLearningListByKeyword(@PathVariable("keyword") String mainCategory,
                                                     @RequestBody(required = false) String keyword,
-                                                    @PageableDefault(size = 16, sort = "openingDate", direction = Sort.Direction.DESC) Pageable pageable) throws JsonProcessingException {
+                                                    @PageableDefault(size = 16, sort = "openingDate", direction = Sort.Direction.DESC) Pageable pageable) {
         LearningListAPIVO learningListAPIVO = learningService.getLearningListByViewWithKeywordOfAPI(mainCategory, keyword, pageable);
 
         return ResponseEntity.ok().body(learningListAPIVO);

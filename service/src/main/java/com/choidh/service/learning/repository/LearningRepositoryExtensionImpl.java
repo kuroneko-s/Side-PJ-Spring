@@ -3,13 +3,16 @@ package com.choidh.service.learning.repository;
 
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.tag.entity.Tag;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -180,5 +183,31 @@ public class LearningRepositoryExtensionImpl extends QuerydslRepositorySupport i
                 .limit(12)
                 .distinct()
                 .fetch();
+    }
+
+    /**
+     * 강의 페이징. (강의 제작자 기준.)
+     */
+    @Override
+    public Page<Learning> findByProfessionalAccountId(Long id, Pageable pageable) {
+        JPQLQuery<Learning> eventJPQLQuery = from(learning)
+                .where(learning.professionalAccount.id.eq(id));
+        OrderSpecifier<LocalDateTime> orderSpecifier = learning.createdAt.asc();
+
+        for (Sort.Order order : pageable.getSort()) {
+            Sort.Direction direction = order.getDirection();
+
+            if (direction.isDescending()) {
+                orderSpecifier = learning.createdAt.desc();
+            }
+        }
+
+        List<Learning> learningList = eventJPQLQuery
+                .orderBy(orderSpecifier)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        return new PageImpl<>(learningList, pageable, eventJPQLQuery.fetchCount());
     }
 }

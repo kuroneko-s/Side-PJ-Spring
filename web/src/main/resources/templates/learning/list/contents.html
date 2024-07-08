@@ -61,7 +61,7 @@
               <p class="learning-contents-body-card-description-tag-wrapper">
                 <i class="fas fa-tasks"></i>
                 <span th:each="tag : ${learning.tags}">
-                                        <span th:text="${tag.getTitle()}"></span>
+                                        <span th:text="${tag.getTag().getTitle()}"></span>
                                     </span>
               </p>
               <p class="learning-contents-body-card-description-rating">

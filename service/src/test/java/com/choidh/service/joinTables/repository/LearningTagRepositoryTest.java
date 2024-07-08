@@ -55,7 +55,7 @@ class LearningTagRepositoryTest extends AbstractRepositoryTestConfig {
 
     @Test
     @DisplayName("LearningTagJoinTable 삭제. By LearningTagJoinTable Id")
-    public void deleteByLearningIdAndTagTitle() throws Exception {
+    public void deleteByLearningId() throws Exception {
         Account account = createAccount();
         ProfessionalAccount professionalAccount = createProfessionalAccount(account);
         Learning learning = createLearning(professionalAccount);
@@ -79,7 +79,7 @@ class LearningTagRepositoryTest extends AbstractRepositoryTestConfig {
 
         theLine();
 
-        int deleteResult = learningTagRepository.deleteByLearningIdAndTagTitle(target.getId());
+        int deleteResult = learningTagRepository.deleteByLearningId(target.getId());
         assertEquals(deleteResult, 1);
 
         Set<LearningTagJoinTable> learningTagJoinTableSet = learningTagRepository.findListByLearningId(learning.getId());

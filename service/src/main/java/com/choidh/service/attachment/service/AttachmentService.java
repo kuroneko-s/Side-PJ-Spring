@@ -19,6 +19,11 @@ public interface AttachmentService {
     void saveFile(AttachmentGroup attachmentGroup, MultipartFile multipartFile, AttachmentFileType attachmentFileType);
 
     /**
+     * 파일 저장
+     */
+    void saveFile(AttachmentGroup attachmentGroup, MultipartFile multipartFile, AttachmentFileType attachmentFileType, String originalFileName);
+
+    /**
      * 파일 목록조회 By 그룹 ID 및 타입
      */
     List<AttachmentFile> getAttachmentFiles(Long attachmentGroupId, AttachmentFileType attachmentFileType);

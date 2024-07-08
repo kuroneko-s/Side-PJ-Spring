@@ -2,6 +2,9 @@ package com.choidh.service.learning.service;
 
 
 import com.choidh.service.account.entity.Account;
+import com.choidh.service.attachment.vo.VideoFileInfo;
+import com.choidh.service.event.entity.Event;
+import com.choidh.service.joinTables.service.LearningTagService;
 import com.choidh.service.professional.entity.ProfessionalAccount;
 import com.choidh.service.professional.repository.ProfessionalAccountAccountRepository;
 import com.choidh.service.account.service.AccountService;
@@ -20,13 +23,22 @@ import com.choidh.service.learning.vo.*;
 import com.choidh.service.notification.eventListener.vo.LearningClosedEvent;
 import com.choidh.service.notification.eventListener.vo.LearningCreateEvent;
 import com.choidh.service.notification.eventListener.vo.LearningUpdateEvent;
+import com.choidh.service.professional.service.ProfessionalService;
 import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
 import com.choidh.service.tag.entity.Tag;
+import com.choidh.service.tag.service.TagService;
+import com.choidh.service.tag.vo.RegTagVO;
+import com.choidh.service.tag.vo.TagBinder;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,12 +56,18 @@ import static com.choidh.service.common.vo.AppConstant.getLearningNotFoundErrorM
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class LearningServiceImpl implements LearningService {
-    private final LearningRepository learningRepository;
-    private final ProfessionalAccountAccountRepository professionalAccountRepository;
-    private final ApplicationEventPublisher applicationEventPublisher;
-    private final AttachmentService attachmentService;
-    private final AccountTagService accountTagService;
-    private final AccountService accountService;
+    @Autowired private LearningRepository learningRepository;
+    @Autowired private ProfessionalAccountAccountRepository professionalAccountRepository;
+    @Autowired private ApplicationEventPublisher applicationEventPublisher;
+    @Autowired private AttachmentService attachmentService;
+    @Autowired private AccountTagService accountTagService;
+    @Autowired private AccountService accountService;
+    @Autowired private ProfessionalService professionalService;
+    @Autowired private LearningTagService learningTagService;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @Autowired
+    private TagService tagService;
 
     /**
      * Learning 목록 조회 By Account's Tags
@@ -102,16 +120,43 @@ public class LearningServiceImpl implements LearningService {
     @Transactional
     public Learning regLearning(RegLearningVO regLearningVO, Long accountId) {
         ProfessionalAccount professionalAccount = professionalAccountRepository.findByAccountId(accountId);
+        AttachmentGroup attachmentGroup = attachmentService.createAttachmentGroup();
 
-        Learning learning = Learning.builder()
+        // 태그 입력값 분석
+        List<TagBinder> tagBinderList;
+        try {
+            tagBinderList = objectMapper.readValue(regLearningVO.getSkills(), new TypeReference<>() {
+            });
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException(regLearningVO.getSkills());
+        }
+
+        // 강의 생성
+        Learning learning = learningRepository.save(Learning.builder()
                 .title(regLearningVO.getTitle())
                 .subscription(regLearningVO.getSubscription())
                 .price(regLearningVO.getPrice())
-                .mainCategory(regLearningVO.getKategorie())
-                .simpleSubscription(regLearningVO.getSimplesubscription())
-                .build();
-        learning.setProfessionalAccount(professionalAccount);
-        learningRepository.save(learning);
+                .mainCategory(regLearningVO.getMainCategory())
+                .simpleSubscription(regLearningVO.getSimpleSubscription())
+                .attachmentGroup(attachmentGroup)
+                .tags(new HashSet<>())
+                .questions(new HashSet<>())
+                .reviews(new HashSet<>())
+                .purchaseHistories(new HashSet<>())
+                .carts(new HashSet<>())
+                .notices(new HashSet<>())
+                .professionalAccount(professionalAccount)
+                .build());
+
+        // 태그 강의에 추가 및 조인 테이블 생성
+        for (TagBinder tagBinder : tagBinderList) {
+            Tag tag = tagService.regTag(RegTagVO.builder()
+                    .title(tagBinder.getValue())
+                    .build());
+
+            LearningTagJoinTable learningTagJoinTable = learningTagService.regLearningTagJointable(learning, tag);
+            learning.setTags(learningTagJoinTable);
+        }
 
         return learning;
     }
@@ -120,14 +165,75 @@ public class LearningServiceImpl implements LearningService {
      * 강의 목록조회 By Account Id
      */
     @Override
-    public Set<Learning> getLearningListByProfessionalAccount(Long accountId) {
-        ProfessionalAccount professionalAccount = professionalAccountRepository.findByAccountIdWithLearningList(accountId);
+    public LearningListVO getLearningListByProfessionalAccount(Long accountId, Pageable pageable) {
+        ProfessionalAccount professionalAccount = professionalService.getProfessionalByAccountId(accountId);
 
         if (professionalAccount == null) {
             throw new AccessDeniedException("접근 권한이 없는 계정입니다.");
         }
 
-        return professionalAccount.getLearningList();
+        Page<Learning> learningPage = learningRepository.findByProfessionalAccountId(professionalAccount.getId(), pageable);
+        List<Learning> learningList = learningPage.getContent();
+
+        // 강의 영상 등록 유무
+        Map<Long, Boolean> imageUploadMap = new HashMap<>();
+        // 강의 이미지 목록 조회
+        Map<Long, List<String>> learningImageMap = new HashMap<>();
+        for (Learning learning : learningList) {
+            List<AttachmentFile> attachmentFiles = attachmentService.getAttachmentFiles(learning.getAttachmentGroup().getId(), AttachmentFileType.BANNER);
+
+            // 강의 이미지 정보가 없으면 갓 생성한 경우니 대응해줘야함.
+            List<String> valueList = learningImageMap.getOrDefault(learning.getId(), new ArrayList<>());
+
+            if (attachmentFiles.size() != 1) {
+                // 기본 이미지 지정
+                learningImageMap.put(learning.getId(), valueList);
+                valueList.add("/images/logo.png");
+                valueList.add("기본 이미지");
+                learningImageMap.put(learning.getId(), valueList);
+            } else {
+                AttachmentFile attachmentFile = attachmentFiles.get(0);
+                valueList.add(attachmentFile.getFullPath(""));
+                valueList.add(attachmentFile.getOriginalFileName());
+                learningImageMap.put(learning.getId(), valueList);
+            }
+
+            if (attachmentFiles.isEmpty()) {
+                imageUploadMap.put(learning.getId(), false);
+            } else {
+                List<AttachmentFile> videoFiles = attachmentService.getAttachmentFiles(learning.getAttachmentGroup().getId(), AttachmentFileType.VIDEO);
+                if (videoFiles.isEmpty()) {
+                    imageUploadMap.put(learning.getId(), false);
+                } else {
+                    imageUploadMap.put(learning.getId(), true);
+                }
+            }
+        }
+
+        // 페이지네이션 기본 url
+        String paginationUrl = "/professional/learning/list?sort=createdAt,asc&page=";
+        for (Sort.Order order : pageable.getSort()) {
+            Sort.Direction direction = order.getDirection();
+
+            if (direction.isDescending()) {
+                paginationUrl = "/professional/learning/list?sort=createdAt,desc&page=";
+            }
+        }
+
+        Paging paging = Paging.builder()
+                .hasNext(learningPage.hasNext())
+                .hasPrevious(learningPage.hasPrevious())
+                .number(learningPage.getNumber())
+                .totalPages(Math.max(learningPage.getTotalPages() - 1, 0))
+                .paginationUrl(paginationUrl)
+                .build();
+
+        return LearningListVO.builder()
+                .learningList(learningPage.getContent())
+                .learningImageMap(learningImageMap)
+                .imageUploadMap(imageUploadMap)
+                .paging(paging)
+                .build();
     }
 
     /**
@@ -137,6 +243,47 @@ public class LearningServiceImpl implements LearningService {
     public Learning getLearningById(Long learningId) {
         return learningRepository.findById(learningId)
                 .orElseThrow(() -> new IllegalArgumentException(getLearningNotFoundErrorMessage(learningId)));
+    }
+
+    /**
+     * 강의 단건 조회 with Tags By Learning Id
+     */
+    @Override
+    public Learning getLearningWithTagsById(Long learningId) {
+        return learningRepository.findByIdWithTags(learningId);
+    }
+
+    /**
+     * 강의 영상 조회 By Learning Id
+     */
+    @Override
+    public LearningModifyVO getLearningFilesByLearningId(Long learningId) {
+        Learning learning = this.getLearningById(learningId);
+        AttachmentGroup attachmentGroup = learning.getAttachmentGroup();
+
+        List<AttachmentFile> bannerFiles = attachmentService.getAttachmentFiles(attachmentGroup.getId(), AttachmentFileType.BANNER);
+        List<AttachmentFile> videoFiles = attachmentService.getAttachmentFiles(attachmentGroup.getId(), AttachmentFileType.VIDEO);
+
+        LearningModifyVO learningModifyVO = new LearningModifyVO();
+        if (!bannerFiles.isEmpty()) {
+            learningModifyVO.setBannerFile(bannerFiles.get(0));
+        }
+
+        List<VideoFileInfo> videoFileInfoList = new ArrayList<>();
+        for (AttachmentFile attachmentFile : videoFiles) {
+            String originalFileName = attachmentFile.getOriginalFileName();
+            String[] split = originalFileName.split("_");
+            videoFileInfoList.add(VideoFileInfo.builder()
+                    .videoSrc(attachmentFile.getFullPath(""))
+                    .videoName(originalFileName)
+                    .order(split[0])
+                    .contents(split[1])
+                    .build());
+        }
+
+        learningModifyVO.setVideoFiles(videoFileInfoList);
+        learningModifyVO.setLearning(learning);
+        return learningModifyVO;
     }
 
     /**
@@ -289,20 +436,53 @@ public class LearningServiceImpl implements LearningService {
     // 강의 정보 수정.
     @Override
     @Transactional
-    public void modLearning(ModLearningVO modLearningVO, Long accountId, Long learningId) {
-        Learning learning = this.getLearningById(learningId);
-        learning.setTitle(modLearningVO.getTitle());
-        learning.setSubscription(modLearningVO.getSubscription());
-        learning.setSimpleSubscription(modLearningVO.getSimplesubscription());
-        learning.setPrice(modLearningVO.getPrice());
-        learning.setMainCategory(modLearningVO.getKategorie());
+    public Learning modLearningContext(ModLearningVO modLearningVO, Long accountId, Long learningId) {
+        // 기본 정보들만 수정됨.
+        Learning learning = this.getLearningWithTagsById(learningId);
 
-        // TODO: 배너 이미지도 넘겨주는지 확인 필요.
+        learning.setTitle(modLearningVO.getTitle());
+        learning.setPrice(modLearningVO.getPrice());
+        learning.setSubscription(modLearningVO.getSubscription());
+        learning.setSimpleSubscription(modLearningVO.getSimpleSubscription());
+        learning.setMainCategory(modLearningVO.getMainCategory());
+
+        List<String> inputTagTitleList;
+        try {
+            // 태그 입력값 분석
+            List<TagBinder> tagBinderList = objectMapper.readValue(modLearningVO.getSkills(), new TypeReference<>() {});
+            inputTagTitleList = tagBinderList.stream().map(TagBinder::getValue).collect(Collectors.toList());
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException(modLearningVO.getSkills());
+        }
+
+        Set<LearningTagJoinTable> tags = learning.getTags();
+        for (LearningTagJoinTable learningTagJoinTable : tags) {
+            String title = learningTagJoinTable.getTag().getTitle();
+
+            // 필요없는 태그들은 삭제.
+            if (!inputTagTitleList.contains(title)) {
+                inputTagTitleList.remove(title);
+                tags.remove(learningTagJoinTable);
+                learningTagService.delLearningTagJoinTable(learningTagJoinTable);
+            }
+        }
+
+        // 기존에 없던 태그들.
+        for (String tagTitle : inputTagTitleList) {
+            Tag tag = tagService.regTag(RegTagVO.builder()
+                    .title(tagTitle)
+                    .build());
+
+            LearningTagJoinTable learningTagJoinTable = learningTagService.regLearningTagJointable(learning, tag);
+            learning.setTags(learningTagJoinTable);
+        }
 
         // 강의가 공개되었다면, 이벤트 발생.
         if (learning.isOpening()) {
             applicationEventPublisher.publishEvent(new LearningUpdateEvent(learning));
         }
+
+        return learning;
     }
 
     /**
@@ -382,7 +562,7 @@ public class LearningServiceImpl implements LearningService {
                 .build();
 
         return LearningListVO.builder()
-                .learningPage(learningPage)
+                .learningList(learningPage.getContent())
                 .learningImageMap(learningImageMap)
                 .paging(paging)
                 .build();
@@ -476,5 +656,46 @@ public class LearningServiceImpl implements LearningService {
     @Transactional
     public void modLearningByProfessionalId(Long professionalId) {
         learningRepository.modByProfessionalId(professionalId, LocalDateTime.now());
+    }
+
+    /**
+     * 강의 배너 이미지 수정
+     */
+    @Override
+    @Transactional
+    public void modLearningBannerImage(Long learningId, MultipartFile bannerFile) {
+        Learning learning = this.getLearningById(learningId);
+        AttachmentGroup attachmentGroup = learning.getAttachmentGroup();
+        List<AttachmentFile> attachmentFiles = attachmentService.getAttachmentFiles(attachmentGroup.getId(), AttachmentFileType.BANNER);
+
+        // 배너 이미지 존재하면 일단 지움
+        for (AttachmentFile attachmentFile : attachmentFiles) {
+            attachmentService.delAttachmentFile(attachmentFile.getId());
+        }
+
+        attachmentService.saveFile(attachmentGroup, bannerFile, AttachmentFileType.BANNER);
+    }
+
+    /**
+     * 강의 영상 비디오 수정
+     */
+    @Override
+    @Transactional
+    public void modLearningVideo(Long learningId, String title, Integer order, MultipartFile videoFile) {
+        Learning learning = this.getLearningById(learningId);
+        AttachmentGroup attachmentGroup = learning.getAttachmentGroup();
+        List<AttachmentFile> attachmentFiles = attachmentService.getAttachmentFiles(attachmentGroup.getId(), AttachmentFileType.VIDEO);
+
+        // 파일 제목에 order 를 붙힌 값이 존재할 경우 그 값만 삭제.
+        for (AttachmentFile attachmentFile : attachmentFiles) {
+            String originalFileName = attachmentFile.getOriginalFileName();
+            String[] split = originalFileName.split("_");
+
+            if (Integer.valueOf(split[0]).equals(order)) {
+                attachmentService.delAttachmentFile(attachmentFile.getId());
+            }
+        }
+
+        attachmentService.saveFile(attachmentGroup, videoFile, AttachmentFileType.VIDEO, order + "_" + videoFile.getOriginalFilename());
     }
 }

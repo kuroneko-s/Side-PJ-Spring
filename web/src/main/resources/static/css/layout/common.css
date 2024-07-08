@@ -214,3 +214,20 @@ a:hover {
     margin-right: 1rem;
 }
 /* toast message end */
+
+/* Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* 추가 스타일 (선택 사항) */
+input[type="number"] {
+    appearance: none; /* 기타 브라우저 호환성을 위해 appearance 속성을 사용할 수도 있습니다 */
+}

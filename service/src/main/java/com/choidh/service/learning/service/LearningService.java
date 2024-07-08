@@ -45,14 +45,24 @@ public interface LearningService {
     Learning regLearning(RegLearningVO regLearningVO, Long accountId);
 
     /**
-     * 강의 목록조회 (내가 만든 강의들) By Account Id
+     * 강의 목록 페이징 (내가 만든 강의들) By Account Id
      */
-    Set<Learning> getLearningListByProfessionalAccount(Long accountId);
+    LearningListVO getLearningListByProfessionalAccount(Long accountId, Pageable pageable);
 
     /**
-     * 강의 단건 조회 By
+     * 강의 단건 조회 By Learning Id
      */
     Learning getLearningById(Long learningId);
+
+    /**
+     * 강의 단건 조회 with Tags By Learning Id
+     */
+    Learning getLearningWithTagsById(Long learningId);
+
+    /**
+     * 강의 영상 조회 By Learning Id
+     */
+    LearningModifyVO getLearningFilesByLearningId(Long learningId);
 
     /**
      * 강의 단건 조회 By Id With Question
@@ -78,7 +88,10 @@ public interface LearningService {
 
     void removeVideo(Long learningId, Long accountId, List<Long> fileIdList);
 
-    void modLearning(ModLearningVO modLearningVO, Long accountId, Long learningId);
+    /**
+     * 강의 내용 수정
+     */
+    Learning modLearningContext(ModLearningVO modLearningVO, Long accountId, Long learningId);
 
     /**
      * 강의 목록조회 By Id List
@@ -114,4 +127,14 @@ public interface LearningService {
      * mod Learning 활성화. By 강의 제공자 Id
      */
     void modLearningByProfessionalId(Long professionalId);
+
+    /**
+     * 강의 배너 이미지 수정
+     */
+    void modLearningBannerImage(Long learningId, MultipartFile bannerFile);
+
+    /**
+     * 강의 영상 비디오 수정
+     */
+    void modLearningVideo(Long learningId, String title, Integer order, MultipartFile videoFile);
 }

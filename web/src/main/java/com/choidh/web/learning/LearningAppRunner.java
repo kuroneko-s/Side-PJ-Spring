@@ -208,7 +208,7 @@ public class LearningAppRunner implements ApplicationRunner {
     }
 
     private void createVideoFile1(AttachmentGroup attachmentGroup) throws IOException {
-        Resource resource = new PathResource(Path.of("/Users/kuroneko/Documents/PJ-java/web/src/main/resources/static/sampleData/video/test_movie_2.mov"));
+        Resource resource = new PathResource(Path.of("/Users/kuroneko/Documents/PJ-java/web/src/main/resources/static/sampleData/video/sample_1.mp4"));
         File file = resource.getFile();
 
         AttachmentFile beforeAttachmentFile = new AttachmentFile(attachmentGroup);
@@ -244,7 +244,7 @@ public class LearningAppRunner implements ApplicationRunner {
     }
 
     private void createVideoFile2(AttachmentGroup attachmentGroup) throws IOException {
-        Resource resource = new PathResource(Path.of("/Users/kuroneko/Documents/PJ-java/web/src/main/resources/static/sampleData/video/test_movie_3.mov"));
+        Resource resource = new PathResource(Path.of("/Users/kuroneko/Documents/PJ-java/web/src/main/resources/static/sampleData/video/sample_1.mp4"));
         File file = resource.getFile();
 
         AttachmentFile beforeAttachmentFile = new AttachmentFile(attachmentGroup);

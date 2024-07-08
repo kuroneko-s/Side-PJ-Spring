@@ -36,21 +36,21 @@ public class Learning extends BaseEntity {
     @Name(name = "강의 제목")
     private String title;
 
-    @Name(name = "간단 간단 소개")
-    private String simpleSubscription;
-
     @Lob
     @Name(name = "강의 소개")
     private String subscription;
+
+    @Name(name = "간단 간단 소개")
+    private String simpleSubscription;
+
+    @Name(name = "가격")
+    private int price;
 
     @Name(name = "대분류 카테고리")
     private String mainCategory;
 
     @Name(name = "소분류 카테고리")
     private String subCategory;
-
-    @Name(name = "가격")
-    private int price;
 
     @Name(name = "강의 공개 시작 일시")
     private LocalDateTime openingDate = null;
@@ -68,6 +68,11 @@ public class Learning extends BaseEntity {
     @Name(name = "강의에 해당하는 파일들.", description = "AttachmentFile 의 Type 으로 구분.")
     private AttachmentGroup attachmentGroup;
 
+    @ManyToOne
+    @JoinColumn(name = "professional_account_id")
+    @Name(name = "강의자")
+    private ProfessionalAccount professionalAccount;
+
     @OneToMany(mappedBy = "learning")
     @Name(name = "강의 관련 태그들")
     private Set<LearningTagJoinTable> tags = new HashSet<>();
@@ -83,11 +88,6 @@ public class Learning extends BaseEntity {
     @OneToMany(mappedBy = "learning")
     @Name(name = "구매이력")
     private Set<PurchaseHistory> purchaseHistories = new HashSet<>();
-
-    @ManyToOne
-    @JoinColumn(name = "professional_account_id")
-    @Name(name = "강의자")
-    private ProfessionalAccount professionalAccount;
 
     @OneToMany(mappedBy = "learning")
     @Name(name = "카트에 추가되어 있는 수.", description = "유저가 카트에 추가한 강의들을 나타냄.")

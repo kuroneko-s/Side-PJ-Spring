@@ -10,15 +10,13 @@ import lombok.*;
 public class RegLearningVO {
     private String title;
 
-    private String simplesubscription;
+    private int price;
 
     private String subscription;
 
-    private String lecturerName;
+    private String simpleSubscription;
 
-    private String lecturerDescription;
+    private String mainCategory;
 
-    private int price;
-
-    private String kategorie;
+    private String skills;
 }
