@@ -1,6 +1,6 @@
 .learning-search-container {
     display: flex;
-    min-height: 85vh;
+    min-height: calc(100vh - 60px - 180px);
     width: 100%;
 
     padding: 1.25rem 0;

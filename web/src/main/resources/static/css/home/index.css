@@ -1,5 +1,5 @@
 .home-container {
-    min-height: 85vh;
+    min-height: calc(100vh - 60px - 180px);
     padding-top: 1.25rem;
     padding-bottom: 1.25rem;
 }

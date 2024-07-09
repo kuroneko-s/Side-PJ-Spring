@@ -1,5 +1,5 @@
 .notice-container {
-    height: 85vh;
+    min-height: calc(100vh - 60px - 180px);
     position: relative;
     padding: 1.25rem 0;
 }

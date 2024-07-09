@@ -1,6 +1,6 @@
 .login-container {
     position: relative;
-    height: 85vh;
+    min-height: calc(100vh - 60px - 180px);
 
     display: flex;
     flex-direction: column;

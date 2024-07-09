@@ -1,6 +1,6 @@
 .register-container {
     position: relative;
-    height: 78.5vh;
+    min-height: calc(100vh - 60px - 180px);
 
     display: flex;
     flex-direction: column;

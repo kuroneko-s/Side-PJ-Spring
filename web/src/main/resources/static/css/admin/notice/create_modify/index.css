@@ -1,6 +1,6 @@
 .admin-notice-manage-container {
     position: relative;
-    min-height: 85vh;
+    min-height: calc(100vh - 60px - 180px);
     padding: 1.25rem 0;
 }
 
