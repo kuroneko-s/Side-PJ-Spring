@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import static com.choidh.service.common.vo.AppConstant.getTitle;
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -31,11 +33,14 @@ public class EmailController {
      */
     @GetMapping("/registerSuccess")
     public String registerSuccess(Model model) {
-        return "registerSuccess";
+        model.addAttribute("pageTitle", getTitle("이메일 재인증"));
+        model.addAttribute("pageContent", "security/login/register");
+
+        return "security/index";
     }
 
     /**
-     * Get 이메일 인증 화면
+     * Get 이메일 인증 처리
      */
     @GetMapping("/mailAuth")
     public String getEmailAuthentication(String token, String email, Model model, RedirectAttributes attributes) {
@@ -50,7 +55,7 @@ public class EmailController {
             model.addAttribute("email", email);
             model.addAttribute(new EmailFormVO());
 
-            return "navbar/token_validation";
+            return "security/index";
         }
     }
 
@@ -75,5 +80,17 @@ public class EmailController {
         }
 
         return "registerSuccess";
+    }
+
+    /**
+     * Get 메일인증 화면 View (Test용)
+     */
+//    @GetMapping("/test/registerSuccess")
+    public String getRegisterSuccessView(Model model) {
+        model.addAttribute("message", "인증용 메일이 전송 되었습니다. 확인해주세요");
+        model.addAttribute("pageTitle", getTitle("메일 인증"));
+        model.addAttribute("pageContent", "security/register/registerSuccessContents");
+
+        return "security/index";
     }
 }

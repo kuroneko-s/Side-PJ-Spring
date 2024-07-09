@@ -1,6 +1,7 @@
 package com.choidh.service.joinTables.repository;
 
 import com.choidh.service.joinTables.entity.LearningTagJoinTable;
+import com.choidh.service.tag.entity.Tag;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -31,4 +32,12 @@ public interface LearningTagRepository extends JpaRepository<LearningTagJoinTabl
             "where ltjt.learning.id = :learningId " +
             "and ltjt.tag.id = :tagId")
     LearningTagJoinTable findByLearningIdAndTagId(Long learningId, Long tagId);
+
+    /**
+     * Learning Tag 목록 조회 By Tags Ids
+     */
+    @Query(value = "select ltjt " +
+            "from LearningTagJoinTable ltjt " +
+            "where ltjt.tag.id in (:tags)")
+    Set<LearningTagJoinTable> findListByTags(Set<Tag> tags);
 }

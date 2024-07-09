@@ -7,6 +7,7 @@ import com.choidh.service.tag.entity.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -14,14 +15,23 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class LearningTagServiceImpl implements LearningTagService {
     private final LearningTagRepository learningTagRepository;
 
     @Override
-    public List<Tag> findListByLearningId(Long learningId) {
+    public List<Tag> getListByLearningId(Long learningId) {
         Set<LearningTagJoinTable> LearningTagJoinTableList = learningTagRepository.findListByLearningId(learningId);
         return LearningTagJoinTableList.stream().map(learningTagJoinTable -> learningTagJoinTable.getTag()).collect(Collectors.toList());
+    }
+
+    /**
+     * Learning Tag 목록 조회 By Tags Ids
+     */
+    @Override
+    public Set<LearningTagJoinTable> getListByTags(Set<Tag> tags) {
+        return learningTagRepository.findListByTags(tags);
     }
 
     /**

@@ -127,7 +127,7 @@ public class QuestionController {
     @GetMapping("/learning/question/{learningId}")
     public String getLearningQuestionView(@CurrentAccount Account account, Model model, @PathVariable("learningId") Long id){
         Learning learning = learningService.getLearningByIdWithQuestion(id);
-        List<Tag> tagList = learningTagService.findListByLearningId(id);
+        List<Tag> tagList = learningTagService.getListByLearningId(id);
         int videoCount = attachmentService.cntAttachmentFiles(learning.getAttachmentGroup().getId(), AttachmentFileType.VIDEO);
 
         model.addAttribute("account", account);

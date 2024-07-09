@@ -2,6 +2,7 @@ package com.choidh.service.account.repository;
 
 import com.choidh.service.AbstractRepositoryTestConfig;
 import com.choidh.service.account.entity.Account;
+import com.choidh.service.account.service.AccountService;
 import com.choidh.service.professional.entity.ProfessionalAccount;
 import com.choidh.service.cart.service.CartService;
 import com.choidh.service.config.WithAccount;
@@ -22,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 // @Rollback(value = false)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class AccountRepositoryTest extends AbstractRepositoryTestConfig {
-    private final AccountRepository accountRepository;
+    private final AccountService accountService;
     private final CartService cartService;
     private final AccountTagService accountTagService;
 
@@ -147,43 +148,10 @@ class AccountRepositoryTest extends AbstractRepositoryTestConfig {
     }
 
     @Test
-    @DisplayName("Account 단건 조회 (성공). By Nickname. Token checked is true")
-    @WithAccount("test@test.com")
-    public void getAccountByNicknameAndCheckedIsTrue() throws Exception {
-        theLine();
-
-        Account account = accountRepository.findByNicknameAndChecked("테스트냥이", true);
-
-        assertNotNull(account);
-    }
-
-    @Test
-    @DisplayName("Account 단건 조회 (실패). By Nickname. Token checked is false")
-    @WithAccount("test@test.com")
-    public void getAccountByNicknameAndCheckedIsFalse() throws Exception {
-        theLine();
-
-        Account account = accountRepository.findByNicknameAndChecked("테스트냥이", false);
-
-        assertNull(account);
-    }
-
-    @Test
-    @DisplayName("Account 단건 조회 By Nickname and Email Authenticated (실패)")
-    @WithAccount("test@test.com")
-    public void getAccountByNicknameAndEmailAuthenticated_Fail() throws Exception {
-        theLine();
-
-        Account account = accountRepository.findByNicknameAndChecked("테스트냥이2", false);
-
-        assertNull(account);
-    }
-
-    @Test
     @DisplayName("Account 단건 조회 with learning (성공) - 쿼리 확인용")
     @WithAccount("test@test.com")
     public void findAccountWithLearnings_Success() throws Exception {
-        Account testAccount = accountRepository.findByNicknameAndChecked("테스트냥이", true);
+        Account testAccount = accountRepository.findByEmailAndChecked("test@test.com", true);
         theLine();
 
         Account account = accountRepository.findAccountWithLearnings(testAccount.getId());
@@ -202,7 +170,7 @@ class AccountRepositoryTest extends AbstractRepositoryTestConfig {
     @DisplayName("Account 단건 조회 with Questions (성공) - 쿼리 확인용")
     @WithAccount("test@test.com")
     public void findAccountWithQuestion_Success() throws Exception {
-        Account testAccount = accountRepository.findByNicknameAndChecked("테스트냥이", true);
+        Account testAccount = accountService.getAccountByEmailAndChecked("test@test.com", true);
 
         theLine();
 
@@ -219,7 +187,7 @@ class AccountRepositoryTest extends AbstractRepositoryTestConfig {
     @DisplayName("Account 단건 조회 with Tags (성공) - 쿼리 확인용")
     @WithAccount("test@test.com")
     public void findAccountWithTags_Success() throws Exception {
-        Account testAccount = accountRepository.findByNicknameAndChecked("테스트냥이", true);
+        Account testAccount = accountService.getAccountByEmailAndChecked("test@test.com", true);
 
         theLine();
 
@@ -237,7 +205,7 @@ class AccountRepositoryTest extends AbstractRepositoryTestConfig {
     @DisplayName("Account 단건 조회 For 프로필 화면용 (성공) - 쿼리 확인용")
     @WithAccount("test@test.com")
     public void findAccountWithAll_Success() throws Exception {
-        Account testAccount = accountRepository.findByNicknameAndChecked("테스트냥이", true);
+        Account testAccount = accountService.getAccountByEmailAndChecked("test@test.com", true);
 
         theLine();
 
@@ -267,7 +235,7 @@ class AccountRepositoryTest extends AbstractRepositoryTestConfig {
     @DisplayName("Account 단건 조회 By Account Id With PurchaseHistories")
     @WithAccount("test@test.com")
     public void findAccountWithPurchaseHistories() throws Exception {
-        Account testAccount = accountRepository.findByNicknameAndChecked("테스트냥이", true);
+        Account testAccount = accountService.getAccountByEmailAndChecked("test@test.com", true);
         theLine();
 
         Account account = accountRepository.findAccountWithPurchaseHistories(testAccount.getId());

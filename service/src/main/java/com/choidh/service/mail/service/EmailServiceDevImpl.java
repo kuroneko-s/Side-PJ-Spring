@@ -2,7 +2,6 @@ package com.choidh.service.mail.service;
 
 
 import com.choidh.service.common.vo.ServiceAppProperties;
-import com.choidh.service.mail.vo.EmailForAuthenticationVO;
 import com.choidh.service.mail.vo.EmailMessageVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,13 +35,21 @@ public class EmailServiceDevImpl implements EmailService {
      */
     @Override
     public void sendEmail(EmailMessageVO emailMessageVO) {
+        Context context = new Context();
+        context.setVariable("nickname", emailMessageVO.getNickname());
+        context.setVariable("linkName", emailMessageVO.getLinkName());
+        context.setVariable("message", emailMessageVO.getMessage());
+        context.setVariable("link", emailMessageVO.getLink());
+        context.setVariable("host", serviceAppProperties.getHost());
+
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "UTF-8"); //첨부파일시 true
             mimeMessageHelper.setTo(emailMessageVO.getTo());
             mimeMessageHelper.setSubject(emailMessageVO.getSubject());
-            mimeMessageHelper.setText(emailMessageVO.getMessage(), true);
-            mimeMessageHelper.setFrom("kuronekospi@gmail.com");
+            mimeMessageHelper.setText(templateEngine.process(emailMessageVO.getTemplatePath(), context), true);
+            mimeMessageHelper.setFrom(serviceAppProperties.getEmailSender());
+
             javaMailSender.send(mimeMessage);
 
             log.info("sent email: {}", emailMessageVO.getMessage());
@@ -50,27 +57,5 @@ public class EmailServiceDevImpl implements EmailService {
             log.error("failed to send email", e);
             throw new RuntimeException(e);
         }
-    }
-
-    /**
-     * 확인용 메일 전송
-     */
-    @Override
-    public void sendEmailForAuthentication(EmailForAuthenticationVO emailForAuthenticationVO) {
-        Context context = new Context();
-        context.setVariable("nickname", emailForAuthenticationVO.getNickname());
-        context.setVariable("linkName", "이메일 인증하기");
-        context.setVariable("message", "이메일 인증을 마치시려면 링크를 클릭해주세요.");
-        context.setVariable("host", serviceAppProperties.getHost());
-        context.setVariable("link", "/mailAuth?token=" + emailForAuthenticationVO.getEmailAuthenticationToken() + "&email=" + emailForAuthenticationVO.getEmail());
-
-        this.sendEmail(EmailMessageVO.builder()
-                .to(emailForAuthenticationVO.getEmail())
-                .subject("회원 가입 안내 메일")
-                .message(templateEngine.process("mail/simplemail", context))
-                .build()
-        );
-
-        log.info("/mailAuth?token={}&email={}", emailForAuthenticationVO.getEmailAuthenticationToken(), emailForAuthenticationVO.getEmail());
     }
 }

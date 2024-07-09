@@ -1,6 +1,7 @@
 package com.choidh.service.joinTables.repository;
 
 import com.choidh.service.joinTables.entity.AccountTagJoinTable;
+import com.choidh.service.tag.entity.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -24,4 +25,12 @@ public interface AccountTagRepository extends JpaRepository<AccountTagJoinTable,
             "and atjt.account.id = :accountId")
     @Modifying
     int deleteByAccountIdAndTagId(Long accountId, Long tagId);
+
+    /**
+     * 유저 목록조회 By Tag ids
+     */
+    @Query(value = "select atjt " +
+            "from AccountTagJoinTable atjt " +
+            "where atjt.tag.id IN (:tags)")
+    Set<AccountTagJoinTable> findAccountListByTags(Set<Tag> tags);
 }

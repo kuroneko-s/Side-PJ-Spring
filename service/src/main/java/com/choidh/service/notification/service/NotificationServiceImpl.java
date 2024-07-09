@@ -3,6 +3,9 @@ package com.choidh.service.notification.service;
 
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.service.AccountService;
+import com.choidh.service.joinTables.entity.AccountTagJoinTable;
+import com.choidh.service.joinTables.entity.LearningTagJoinTable;
+import com.choidh.service.joinTables.service.LearningTagService;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.notification.entity.Notification;
 import com.choidh.service.notification.repository.NotificationRepository;
@@ -16,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,6 +28,7 @@ import java.util.stream.Collectors;
 public class NotificationServiceImpl implements NotificationService{
     private final NotificationRepository notificationRepository;
     private final AccountService accountService;
+    private final LearningTagService learningTagService;
 
     /**
      * 알림 삭제 By Notice Id
@@ -59,12 +64,18 @@ public class NotificationServiceImpl implements NotificationService{
 
         if (account.isLearningWebNotification()) {
             typeList.add(NotificationType.NOTICE);
+            typeList.add(NotificationType.LEARNING_UPDATE);
+            typeList.add(NotificationType.LEARNING_CLOSE);
         }
+
+        // 내가 관심이 있는 태그들의 목록과 강의들의 태그들간의 합집합
+        Set<LearningTagJoinTable> learningTags = learningTagService.getListByTags(account.getTags().stream().map(AccountTagJoinTable::getTag).collect(Collectors.toSet()));
 
         // NOTICE 를 구독하느냐 마냐에 따라서 learningId를 무력화 할 수 있음.
         return notificationRepository.findListByTypeAndLearning(
                 typeList,
-                learningList.stream().map(Learning::getId).collect(Collectors.toList())
+                learningList.stream().map(Learning::getId).collect(Collectors.toList()),
+                learningTags
         );
     }
 

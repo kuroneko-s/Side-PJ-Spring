@@ -5,9 +5,8 @@ import com.choidh.service.account.entity.Account;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
-public interface AccountRepository extends JpaRepository<Account, Long>, QuerydslPredicateExecutor<Account> {
+public interface AccountRepository extends JpaRepository<Account, Long> {
     @Query(value = "select a " +
             "from Account a " +
             "where a.id = :accountId")
@@ -55,18 +54,6 @@ public interface AccountRepository extends JpaRepository<Account, Long>, Queryds
     Account findByEmailAndChecked(String email, boolean checked);
 
     /**
-     * Account 단건 조회 By 닉네임 and Email Token Checked
-     */
-    @EntityGraph(attributePaths = {"professionalAccount", "cart"}, type = EntityGraph.EntityGraphType.LOAD)
-    Account findByNicknameAndChecked(String nickname, boolean check);
-
-    /**
-     * Account 단건 조회 By 닉네임 and Email Token Checked
-     */
-    @EntityGraph(attributePaths = {"professionalAccount", "cart"}, type = EntityGraph.EntityGraphType.LOAD)
-    Account findByIdAndChecked(Long id, boolean check);
-
-    /**
      * Account 단건 조회 By Id with Learning
      */
     @Query("select a " +
@@ -110,4 +97,6 @@ public interface AccountRepository extends JpaRepository<Account, Long>, Queryds
             "where a.id = :accountId")
     @EntityGraph(attributePaths = {"cart", "professionalAccount", "purchaseHistories"}, type = EntityGraph.EntityGraphType.LOAD)
     Account findAccountWithPurchaseHistories(Long accountId);
+
+    Account findByEmail(String email);
 }

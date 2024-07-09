@@ -2,117 +2,101 @@ package com.choidh.service.notification.eventListener;
 
 
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.account.repository.AccountRepository;
-import com.choidh.service.common.vo.ServiceAppProperties;
+import com.choidh.service.joinTables.entity.AccountTagJoinTable;
 import com.choidh.service.joinTables.entity.LearningTagJoinTable;
+import com.choidh.service.joinTables.service.AccountTagService;
 import com.choidh.service.learning.entity.Learning;
-import com.choidh.service.learning.repository.LearningRepository;
+import com.choidh.service.learning.service.LearningService;
 import com.choidh.service.mail.service.EmailService;
 import com.choidh.service.mail.vo.EmailMessageVO;
-import com.choidh.service.notice.entity.Notice;
-import com.choidh.service.notification.entity.Notification;
+import com.choidh.service.mail.vo.NotificationMailType;
 import com.choidh.service.notification.eventListener.vo.LearningClosedEvent;
 import com.choidh.service.notification.eventListener.vo.LearningCreateEvent;
 import com.choidh.service.notification.eventListener.vo.LearningUpdateEvent;
-import com.choidh.service.notification.repository.NotificationRepository;
+import com.choidh.service.notification.service.NotificationService;
 import com.choidh.service.notification.vo.NotificationType;
+import com.choidh.service.notification.vo.RegNotificationVO;
+import com.choidh.service.tag.entity.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.choidh.service.account.entity.QAccount.account;
-
 @Async
 @Component
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class NotificationLearningEventListener {
-    private final AccountRepository accountRepository;
-    private final LearningRepository learningRepository;
-    private final NotificationRepository notificationRepository;
+    private final LearningService learningService;
+    private final NotificationService notificationService;
+    private final AccountTagService accountTagService;
     private final EmailService emailService;
-    private final TemplateEngine templateEngine;
-    private final ServiceAppProperties serviceAppProperties;
 
     @EventListener
     public void learningCreateListener(LearningCreateEvent event) {
-        Optional<Learning> learning = learningRepository.findById(event.getLearning().getId());
-        Learning newLearning = learning.orElseThrow();
-        Set<Long> tags = newLearning.getTags().stream().map(LearningTagJoinTable::getId).collect(Collectors.toSet());
+        Learning learning = learningService.getLearningById(event.getLearning().getId());
+        Set<Tag> tags = learning.getTags().stream().map(LearningTagJoinTable::getTag).collect(Collectors.toSet());
+        Set<AccountTagJoinTable> accountListByTagIds = accountTagService.getAccountListByTagIds(tags);
 
-        Iterable<Account> accounts = accountRepository.findAll(account.tags.any().id.in(tags));
-        createNotification(newLearning, null, "강의가 새롭게 생성되었습니다.", NotificationType.NOTICE);
+        notificationService.regNotification(RegNotificationVO.builder()
+                        .title(learning.getTitle() + " 강의가 새롭게 생성되었습니다.")
+                        .description(learning.getSimpleSubscription())
+                        .notificationType(NotificationType.LEARNING_CREATE)
+                        .learning(learning)
+                        .used(true)
+                .build());
 
-        for (Account account : accounts) {
+        for (AccountTagJoinTable accountTagJoinTable : accountListByTagIds) {
+            Account account = accountTagJoinTable.getAccount();
             if (account.isSiteMailNotification())
-                sendEmail(account, "강의가 새롭게 생성되었습니다.", "/learning/" + newLearning.getId(), newLearning.getTitle(), "강의 생성 알림");
-        }
-    }
-
-    @EventListener
-    public void learningClosedListener(LearningClosedEvent event) {
-        Optional<Learning> learning = learningRepository.findById(event.getLearning().getId());
-        Learning newLearning = learning.orElseThrow();
-        Set<Long> tags = newLearning.getTags().stream().map(LearningTagJoinTable::getId).collect(Collectors.toSet());
-
-        Iterable<Account> accounts = accountRepository.findAll(account.tags.any().id.in(tags));
-        createNotification(newLearning, null, "강의가 종료되었습니다.", NotificationType.NOTICE);
-
-        for (Account account : accounts) {
-            if (account.isSiteMailNotification())
-                sendEmail(account, "강의가 종료되었습니다.", "/learning/" + newLearning.getId(), newLearning.getTitle(), "강의 종료 알림");
+                emailService.sendEmail(EmailMessageVO.getInstanceForLearning(account, learning, NotificationMailType.CREATE));
         }
     }
 
     // 강의 갱신 시 동작하는 이벤트 리스너.
     @EventListener
     public void learningUpdateListener(LearningUpdateEvent event) {
-        Optional<Learning> learning = learningRepository.findById(event.getLearning().getId());
-        Learning newLearning = learning.orElseThrow();
-        Set<Long> tags = newLearning.getTags().stream().map(LearningTagJoinTable::getId).collect(Collectors.toSet());
+        Learning learning = learningService.getLearningById(event.getLearning().getId());
+        Set<Tag> tags = learning.getTags().stream().map(LearningTagJoinTable::getTag).collect(Collectors.toSet());
+        Set<AccountTagJoinTable> accountListByTagIds = accountTagService.getAccountListByTagIds(tags);
 
-        Iterable<Account> accounts = accountRepository.findAll(account.tags.any().id.in(tags));
-        createNotification(newLearning, null, "강의 내용이 갱신되었습니다.", NotificationType.NOTICE);
+        notificationService.regNotification(RegNotificationVO.builder()
+                .title(learning.getTitle() + " 강의 내용이 갱신되었습니다.")
+                .description(learning.getSimpleSubscription())
+                .notificationType(NotificationType.LEARNING_UPDATE)
+                .learning(learning)
+                .used(true)
+                .build());
 
-        for (Account account : accounts) {
+        for (AccountTagJoinTable accountTagJoinTable : accountListByTagIds) {
+            Account account = accountTagJoinTable.getAccount();
             if (account.isSiteMailNotification())
-                sendEmail(account, "강의 내용이 갱신되었습니다.", "/learning/" + newLearning.getId(), newLearning.getTitle(), "강의 변경 알림");
+                emailService.sendEmail(EmailMessageVO.getInstanceForLearning(account, learning, NotificationMailType.UPDATE));
         }
     }
 
-    private void sendEmail(Account account, String message, String url, String learningTitle, String subject) {
-        Context context = new Context();
-        context.setVariable("nickname", account.getNickname());
-        context.setVariable("message", message);
-        context.setVariable("host", serviceAppProperties.getHost());
-        context.setVariable("link", url);
-        context.setVariable("linkName", learningTitle);
+    @EventListener
+    public void learningClosedListener(LearningClosedEvent event) {
+        Learning learning = learningService.getLearningById(event.getLearning().getId());
+        Set<Tag> tags = learning.getTags().stream().map(LearningTagJoinTable::getTag).collect(Collectors.toSet());
+        Set<AccountTagJoinTable> accountListByTagIds = accountTagService.getAccountListByTagIds(tags);
 
-        String process = templateEngine.process("mail/notificationmail", context);
-
-        EmailMessageVO emailMessageVO = EmailMessageVO.builder()
-                .to(account.getEmail())
-                .subject(subject)
-                .message(process)
-                .build();
-
-        emailService.sendEmail(emailMessageVO);
-    }
-
-    private void createNotification(Learning learning, Notice notice, String message, NotificationType type) {
-        notificationRepository.save(Notification.builder()
-                .title(learning.getTitle() + " " + message)
+        notificationService.regNotification(RegNotificationVO.builder()
+                .title(learning.getTitle() + " 강의가 종료되었습니다.")
                 .description(learning.getSimpleSubscription())
-                .used(true)
-                .notificationType(type)
+                .notificationType(NotificationType.LEARNING_UPDATE)
                 .learning(learning)
-                .notice(notice)
+                .used(true)
                 .build());
+
+        for (AccountTagJoinTable accountTagJoinTable : accountListByTagIds) {
+            Account account = accountTagJoinTable.getAccount();
+            if (account.isSiteMailNotification())
+                emailService.sendEmail(EmailMessageVO.getInstanceForLearning(account, learning, NotificationMailType.CLOSE));
+        }
     }
 }

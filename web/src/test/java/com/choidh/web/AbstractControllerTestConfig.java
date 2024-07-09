@@ -1,19 +1,17 @@
 package com.choidh.web;
 
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.account.repository.AccountRepository;
 import com.choidh.service.account.service.AccountService;
 import com.choidh.service.account.vo.RegAccountVO;
 import com.choidh.service.cart.service.CartService;
 import com.choidh.service.learning.entity.Learning;
-import com.choidh.service.learning.repository.LearningRepository;
 import com.choidh.service.learning.service.LearningService;
 import com.choidh.service.learning.vo.RegLearningVO;
 import com.choidh.service.professional.entity.ProfessionalAccount;
-import com.choidh.service.professional.repository.ProfessionalAccountAccountRepository;
 import com.choidh.service.professional.service.ProfessionalService;
 import com.choidh.service.professional.vo.RegProfessionalAccountVO;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,15 +28,11 @@ import javax.persistence.EntityManager;
 @AutoConfigureMockMvc
 public class AbstractControllerTestConfig {
     @Autowired
-    protected AccountRepository accountRepository;
-    @Autowired
     protected EntityManager entityManager;
     @Autowired
     protected PasswordEncoder passwordEncoder;
     @Autowired
-    protected LearningRepository learningRepository;
-    @Autowired
-    protected ProfessionalAccountAccountRepository professionalAccountRepository;
+    protected ModelMapper modelMapper;
     @Autowired
     protected CartService cartService;
     @Autowired

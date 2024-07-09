@@ -7,12 +7,12 @@ import com.choidh.service.account.vo.*;
 import com.choidh.service.cart.entity.Cart;
 import com.choidh.service.cart.service.CartService;
 import com.choidh.service.joinTables.entity.AccountTagJoinTable;
-import com.choidh.service.joinTables.service.LearningCartService;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.mail.service.EmailService;
-import com.choidh.service.mail.vo.EmailForAuthenticationVO;
+import com.choidh.service.mail.vo.EmailMessageVO;
 import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
 import com.choidh.service.question.entity.Question;
+import com.choidh.service.security.service.SecurityService;
 import com.choidh.service.tag.entity.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -32,8 +32,8 @@ public class AccountServiceImpl implements AccountService {
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private AccountRepository accountRepository;
     @Autowired private EmailService emailService;
-    @Autowired private LearningCartService learningCartService;
     @Autowired private CartService cartService;
+    @Autowired private SecurityService securityService;
 
     /**
      * Account 단건 조회 By Id
@@ -41,6 +41,22 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account getAccountById(Long accountId) {
         return accountRepository.findByAccountId(accountId);
+    }
+
+    /**
+     * Account 단건 조회 By Email
+     */
+    @Override
+    public Account getAccountByEmail(String email) {
+        return accountRepository.findByEmail(email);
+    }
+
+    /**
+     * Account 단건 조회 By Email And Email Checked Token
+     */
+    @Override
+    public Account getAccountByEmailAndChecked(String email, boolean checked) {
+        return accountRepository.findByEmailAndChecked(email, checked);
     }
 
     /**
@@ -102,7 +118,7 @@ public class AccountServiceImpl implements AccountService {
 
         // 메일 전송
         account.createTokenForEmailForAuthentication();
-        emailService.sendEmailForAuthentication(EmailForAuthenticationVO.getInstance(account));
+        emailService.sendEmail(EmailMessageVO.getInstanceForAccount(account));
 
         return account;
     }
@@ -116,7 +132,7 @@ public class AccountServiceImpl implements AccountService {
 
         if (account != null && account.canCheckingEmailToken()) {
             // 인증용 이메일 전송
-            emailService.sendEmailForAuthentication(EmailForAuthenticationVO.getInstance(account));
+            emailService.sendEmail(EmailMessageVO.getInstanceForAccount(account));
             return true;
         } else {
             return false;
@@ -136,9 +152,9 @@ public class AccountServiceImpl implements AccountService {
         }
 
         account.setChecked(true);
-        this.login(account);
+        securityService.login(account);
 
-        return false;
+        return true;
     }
 
     /**

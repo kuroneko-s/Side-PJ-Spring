@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -105,8 +106,38 @@ class NotificationRepositoryTest extends AbstractRepositoryTestConfig {
             );
         }
 
+        for (int i = 0; i < 7; i++) {
+            Notification notification = createNotification(
+                    "sample notification " + i,
+                    "sample description " + i,
+                    NotificationType.LEARNING_CREATE,
+                    learning,
+                    null
+            );
+        }
+
+        for (int i = 0; i < 7; i++) {
+            Notification notification = createNotification(
+                    "sample notification " + i,
+                    "sample description " + i,
+                    NotificationType.LEARNING_UPDATE,
+                    learning,
+                    null
+            );
+        }
+
+        for (int i = 0; i < 7; i++) {
+            Notification notification = createNotification(
+                    "sample notification " + i,
+                    "sample description " + i,
+                    NotificationType.LEARNING_CLOSE,
+                    learning,
+                    null
+            );
+        }
+
         List<NotificationType> typeList = List.of(NotificationType.NOTICE, NotificationType.SITE, NotificationType.EVENT);
-        List<Notification> notificationList = notificationRepository.findListByTypeAndLearning(typeList, List.of(learning.getId()));
+        List<Notification> notificationList = notificationRepository.findListByTypeAndLearning(typeList, List.of(learning.getId()), Set.of());
         assertEquals(notificationList.size(), 19);
     }
 
@@ -148,7 +179,7 @@ class NotificationRepositoryTest extends AbstractRepositoryTestConfig {
         }
 
         List<NotificationType> typeList = List.of(NotificationType.NOTICE, NotificationType.SITE, NotificationType.EVENT);
-        List<Notification> notificationList = notificationRepository.findListByTypeAndLearning(typeList, List.of());
+        List<Notification> notificationList = notificationRepository.findListByTypeAndLearning(typeList, List.of(), Set.of());
         assertEquals(notificationList.size(), 12);
     }
 }

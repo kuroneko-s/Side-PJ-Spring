@@ -14,4 +14,6 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("app.service")
 public class ServiceAppProperties {
     private String host;
+
+    private String emailSender;
 }

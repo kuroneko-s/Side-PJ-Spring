@@ -13,14 +13,9 @@
     </div>
     <!-- toast message end -->
 
-    <form class="form login-form needs-validation" action="#" th:action="@{/findAccount}" method="post" novalidate>
-        <label for="email">이메일</label>
-        <input id="email" type="email" name="email" placeholder="sample@gmail.com" required
-               pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}">
-        <small class="invalid-feedback">이메일을 다시 입력해주세요.</small>
+    <p th:text="${account.email}"></p>
 
-        <button type="submit" class="button login-form-button">계정 찾기</button>
-    </form>
+    <a class="" href="/login">로그인</a>
 
     <div th:replace="fragment/fragment.html :: form-validation"></div>
 </main>

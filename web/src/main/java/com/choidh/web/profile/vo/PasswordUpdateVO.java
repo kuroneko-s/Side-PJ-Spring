@@ -23,7 +23,7 @@ public class PasswordUpdateVO {
     private String newPasswordCheck;
 
     @NotBlank
-    private String accountId;
+    private Long accountId;
 
     public boolean checkPassword() {
         return newPassword.equals(newPasswordCheck);

@@ -5,10 +5,11 @@ import com.choidh.service.attachment.entity.AttachmentGroup;
 import com.choidh.service.attachment.repository.AttachmentFileRepository;
 import com.choidh.service.attachment.repository.AttachmentGroupRepository;
 import com.choidh.service.attachment.vo.AttachmentFileType;
-import com.choidh.service.common.utiles.FileUtils;
-import com.choidh.service.common.utiles.StringUtils;
+import com.choidh.service.attachment.vo.ImageInfoVO;
 import com.choidh.service.common.exception.FileCantDeleteException;
 import com.choidh.service.common.exception.FileNotSavedException;
+import com.choidh.service.common.utiles.FileUtils;
+import com.choidh.service.common.utiles.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -20,7 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.nio.file.FileSystemNotFoundException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.choidh.service.common.vo.AppConstant.isNotImageFile;
 
@@ -155,5 +158,33 @@ public class AttachmentServiceImpl implements AttachmentService {
 
         // 파일 관련 DB 컬럼 비활성화.
         return attachmentFileRepository.deleteByFileId(attachmentFileId);
+    }
+
+    /**
+     * 배너 이미지 추출. By Learning
+     */
+    @Override
+    public Map<Long, ImageInfoVO> getImageInfo(List<Long> attachmentGroupIdList, AttachmentFileType attachmentFileType) {
+        if (!attachmentFileType.equals(AttachmentFileType.BANNER) && !attachmentFileType.equals(AttachmentFileType.EVENT_BANNER)) {
+            throw new IllegalArgumentException("이미지 파일만 경로를 가져올 수 있습니다.");
+        }
+
+        Map<Long, ImageInfoVO> learningImageMap = new HashMap<>();
+
+        for (Long attachmentGroupId : attachmentGroupIdList) {
+            List<AttachmentFile> attachmentFiles = this.getAttachmentFiles(attachmentGroupId, attachmentFileType);
+
+            if (attachmentFiles.size() != 1 || learningImageMap.containsKey(attachmentGroupId)) {
+                continue;
+            }
+
+            AttachmentFile attachmentFile = attachmentFiles.get(0);
+            learningImageMap.put(attachmentGroupId, ImageInfoVO.builder()
+                    .imageUrl(attachmentFile.getFullPath(""))
+                    .imageAlt(attachmentFile.getOriginalFileName())
+                    .build());
+        }
+
+        return learningImageMap;
     }
 }
