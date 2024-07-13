@@ -40,6 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers(accessibleUrl).permitAll()
                 .mvcMatchers("/learning/search/**").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/profile/**").permitAll()
+                .mvcMatchers(HttpMethod.GET, "/event/**").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/learning/{id}").access("@webSecurity.checkLearningId(#id)")
                 .mvcMatchers("/admin/**").hasAuthority(AccountRoleType.ROLE_ADMIN.name())
                 .mvcMatchers("/professional/**").hasAnyAuthority(AccountRoleType.ROLE_ADMIN.name(), AccountRoleType.ROLE_PROFESSIONAL.name())

@@ -19,6 +19,9 @@ public class EventController {
     @Autowired
     private EventService eventService;
 
+    /**
+     * Get 이벤트 상세 조회 View
+     */
     @GetMapping("/{eventId}")
     public String getEventDetailView(Model model, @PathVariable Long eventId) {
         // 이벤트 정보 조회.
