@@ -36,6 +36,9 @@ import static com.choidh.service.common.vo.AppConstant.getTitle;
 public class KakaoPayController {
     private final KakaoPayService kakaoPayService;
 
+    /**
+     * 카카오 페이 결제 요청
+     */
     @PostMapping("/kakaoPay")
     public String kakaoPay_Post(@CurrentAccount Account account, KakaoPayForm kakaoPayForm, HttpServletRequest request){
         // 카카오 페이 진행시 필요한 초기 정보 취득.
