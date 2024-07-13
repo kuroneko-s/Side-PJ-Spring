@@ -38,6 +38,11 @@ public interface EventService {
     EventDetailResult getEventDetail(Long eventId);
 
     /**
+     * 이벤트 단건 조회
+     */
+    Event getEventById(Long eventId);
+
+    /**
      * 이벤트 수정.
      */
     Event modEvent(EventVO eventVO, Map<String, MultipartFile> fileMap);

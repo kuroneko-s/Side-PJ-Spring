@@ -48,7 +48,8 @@ public class EventAppRunner implements ApplicationRunner {
             AttachmentGroup attachmentGroup = attachmentService.createAttachmentGroup();
 
             // 임의의 이미지 파일들 추가.
-            createFile(attachmentGroup);
+            createBannerFile(attachmentGroup);
+            createContextFile(attachmentGroup);
 
             Event event = eventRepository.save(Event.builder()
                     .attachmentGroup(attachmentGroup)
@@ -67,7 +68,7 @@ public class EventAppRunner implements ApplicationRunner {
         }
     }
 
-    private void createFile(AttachmentGroup attachmentGroup) throws IOException {
+    private void createBannerFile(AttachmentGroup attachmentGroup) throws IOException {
         Resource resource = new PathResource(Path.of("/Users/kuroneko/Documents/PJ-java/web/src/main/resources/static/sampleData/image/saekano.jpg"));
         File file = resource.getFile();
 
@@ -86,6 +87,42 @@ public class EventAppRunner implements ApplicationRunner {
         newAttachmentFile.setPath(filePath);
         newAttachmentFile.setExtension(fileExtension);
         newAttachmentFile.setAttachmentFileType(AttachmentFileType.EVENT_BANNER);
+
+        // 위치 폴더 생성
+        FileUtils.createDir(downloadPath + filePath);
+        try(
+                BufferedInputStream inputStream = new BufferedInputStream(resource.getInputStream());
+                BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(newAttachmentFile.getFullPath(downloadPath)), 1024 * 500)
+        ){
+            // 파일 저장
+            IOUtils.copy(inputStream, outputStream);
+            outputStream.flush();
+        } catch (IOException e) {
+            // 로컬에 파일 저장에 실패했을 경우 기존 DB 정보도 삭제.
+            attachmentFileRepository.delete(newAttachmentFile);
+            throw new FileNotSavedException(e);
+        }
+    }
+
+    private void createContextFile(AttachmentGroup attachmentGroup) throws IOException {
+        Resource resource = new PathResource(Path.of("/Users/kuroneko/Documents/PJ-java/web/src/main/resources/static/sampleData/image/saekano.jpg"));
+        File file = resource.getFile();
+
+        AttachmentFile beforeAttachmentFile = new AttachmentFile(attachmentGroup);
+        AttachmentFile newAttachmentFile = attachmentFileRepository.save(beforeAttachmentFile);
+        String groupSn = StringUtils.padLeftUsingFormat(attachmentGroup.getId().toString(), 7, '0');
+        String fileSn = StringUtils.padLeftUsingFormat(newAttachmentFile.getId().toString(), 7, '0');
+
+        String filePath = FileUtils.getFilePath();
+        String fileName = groupSn + fileSn;
+        String fileExtension = "jpg";
+
+        newAttachmentFile.setFileSize(file.length());
+        newAttachmentFile.setOriginalFileName(resource.getFilename());
+        newAttachmentFile.setFileName(fileName);
+        newAttachmentFile.setPath(filePath);
+        newAttachmentFile.setExtension(fileExtension);
+        newAttachmentFile.setAttachmentFileType(AttachmentFileType.EVENT_CONTEXT);
 
         // 위치 폴더 생성
         FileUtils.createDir(downloadPath + filePath);

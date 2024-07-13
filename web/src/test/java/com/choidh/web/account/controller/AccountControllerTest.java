@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -19,9 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Slf4j
 @RequiredArgsConstructor
 class AccountControllerTest extends AbstractControllerTestConfig {
-    @Autowired
-    private MockMvc mockMvc;
-
     @Test
     @DisplayName("(GET)/register - 회원가입 화면 요청 - 성공")
     public void postCreateAccountForm() throws Exception{

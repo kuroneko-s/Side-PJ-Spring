@@ -10,13 +10,16 @@ import com.choidh.service.learning.vo.RegLearningVO;
 import com.choidh.service.professional.entity.ProfessionalAccount;
 import com.choidh.service.professional.service.ProfessionalService;
 import com.choidh.service.professional.vo.RegProfessionalAccountVO;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -41,6 +44,10 @@ public class AbstractControllerTestConfig {
     protected ProfessionalService professionalService;
     @Autowired
     protected LearningService learningService;
+    @Autowired
+    protected MockMvc mockMvc;
+    @Autowired
+    protected ObjectMapper objectMapper;
 
     protected Account createAccount() {
         return this.createAccount("테스트냥이", "test@test.com");
@@ -104,5 +111,23 @@ public class AbstractControllerTestConfig {
         log.info("################## THE LINE ##################");
         log.info("################## THE LINE ##################");
         log.info("################## THE LINE ##################");
+    }
+
+    protected static MockMultipartFile getMockContextFile() {
+        return new MockMultipartFile(
+                "context",                   // 파라미터 이름
+                "context.txt",               // 파일 이름
+                "text/plain",                // 파일 타입
+                "Context content".getBytes() // 파일 내용
+        );
+    }
+
+    protected static MockMultipartFile getMockBannerFile() {
+        return new MockMultipartFile(
+                "banner",                   // 파라미터 이름
+                "banner.jpg",               // 파일 이름
+                "image/jpeg",               // 파일 타입
+                "Banner content".getBytes() // 파일 내용
+        );
     }
 }

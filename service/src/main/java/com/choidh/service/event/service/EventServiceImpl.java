@@ -126,8 +126,7 @@ public class EventServiceImpl implements EventService {
     public EventDetailResult getEventDetail(Long eventId) {
         EventDetailResult eventDetailResult = new EventDetailResult();
 
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new IllegalArgumentException(getEventNotFoundErrorMessage(eventId)));
+        Event event = this.getEventById(eventId);
         eventDetailResult.setId(event.getId());
         eventDetailResult.setTitle(event.getTitle());
         eventDetailResult.setDescription(event.getDescription());
@@ -156,6 +155,15 @@ public class EventServiceImpl implements EventService {
     }
 
     /**
+     * 이벤트 단건 조회
+     */
+    @Override
+    public Event getEventById(Long eventId) {
+        return eventRepository.findById(eventId)
+                .orElseThrow(() -> new IllegalArgumentException(getEventNotFoundErrorMessage(eventId)));
+    }
+
+    /**
      * 이벤트 수정.
      */
     @Override
@@ -163,8 +171,7 @@ public class EventServiceImpl implements EventService {
     public Event modEvent(EventVO eventVO, Map<String, MultipartFile> fileMap) {
         // 기존 파일들 조회해서 삭제한 후 다시 저장해줘야함...
         Long eventId = Long.valueOf(eventVO.getEventId());
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new IllegalArgumentException(getEventNotFoundErrorMessage(eventId)));
+        Event event = this.getEventById(eventId);
         AttachmentGroup attachmentGroup = event.getAttachmentGroup();
 
         if (fileMap.containsKey("banner")) {

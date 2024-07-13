@@ -1,6 +1,7 @@
 package com.choidh.web.config;
 
 import com.choidh.service.account.entity.Account;
+import com.choidh.service.account.vo.AccountType;
 import com.choidh.service.account.vo.RegAccountVO;
 import com.choidh.service.security.service.AccountDetailsService;
 import com.choidh.service.account.service.AccountServiceImpl;
@@ -35,6 +36,7 @@ public class WithAccountSecurityContextFactory implements WithSecurityContextFac
         accountVO.setPasswordcheck("1234567890");
         Account account = accountServiceImpl.regAccount(modelMapper.map(accountVO, RegAccountVO.class));
         account.setChecked(true);
+        account.setAccountType(withAccount.accountType());
 
         UserDetails principal = accountDetailsService.loadUserByUsername(email);
         Authentication authentication = new UsernamePasswordAuthenticationToken(principal, principal.getPassword(),

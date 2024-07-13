@@ -28,8 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Slf4j
 @RequiredArgsConstructor
 class EmailControllerTest extends AbstractControllerTestConfig {
-    @Autowired
-    private MockMvc mockMvc;
     @MockBean
     private EmailService emailService;
 
