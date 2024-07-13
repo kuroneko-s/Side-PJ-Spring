@@ -45,7 +45,7 @@ public class CartController {
      */
     @PostMapping("/append")
     @ResponseBody
-    public ResponseEntity cartLearning(@CurrentAccount Account account,@RequestBody Long learningId) {
+    public ResponseEntity cartLearning(@CurrentAccount Account account, @RequestBody Long learningId) {
         try {
             String resultCode = cartService.addCart(account.getId(), learningId);
 
