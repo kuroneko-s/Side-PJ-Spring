@@ -17,10 +17,12 @@ import com.choidh.service.tag.entity.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +30,6 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 public class AccountServiceImpl implements AccountService {
-    @Autowired private ModelMapper modelMapper;
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private AccountRepository accountRepository;
     @Autowired private EmailService emailService;
@@ -105,13 +106,15 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public Account regAccount(RegAccountVO regAccountVO) {
-        Account accountVO = modelMapper.map(regAccountVO, Account.class);
+        if (!regAccountVO.matchPassword()) throw new BadCredentialsException("패스워드가 일치하지 않습니다.");
 
-        accountVO.setPassword(passwordEncoder.encode(accountVO.getPassword()));
-        accountVO.setChecked(false);
-        accountVO.setAccountType(AccountType.USER);
-
-        Account account = accountRepository.save(accountVO);
+        Account account = accountRepository.save(Account.builder()
+                .email(regAccountVO.getEmail())
+                .nickname(regAccountVO.getNickname())
+                .password(passwordEncoder.encode(regAccountVO.getPassword()))
+                .checked(false)
+                .accountType(AccountType.USER)
+                .build());
 
         Cart cart = cartService.regCart(account.getId());
         account.setCart(cart);
@@ -132,6 +135,7 @@ public class AccountServiceImpl implements AccountService {
 
         if (account != null && account.canCheckingEmailToken()) {
             // 인증용 이메일 전송
+            account.createTokenForEmailForAuthentication();
             emailService.sendEmail(EmailMessageVO.getInstanceForAccount(account));
             return true;
         } else {

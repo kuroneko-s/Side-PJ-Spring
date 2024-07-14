@@ -1,6 +1,6 @@
 .register-success-container {
     width: 100%;
-    height: 78.5vh;
+    min-height: calc(100vh - 60px - 180px);
 
     display: flex;
     flex-direction: column;

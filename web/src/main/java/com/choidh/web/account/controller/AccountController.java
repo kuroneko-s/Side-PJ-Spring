@@ -84,7 +84,7 @@ public class AccountController {
 
         model.addAttribute("message", "인증용 메일이 전송 되었습니다. 확인해주세요");
         model.addAttribute("pageTitle", getTitle("메일 인증"));
-        model.addAttribute("pageContent", "security/register/registerSuccessContents");
+        model.addAttribute("pageContent", "security/register/registerAuthenticationMail");
 
         return "security/index";
     }

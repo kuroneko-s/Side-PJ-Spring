@@ -12,4 +12,8 @@ public class RegAccountVO {
     private String password;
 
     private String passwordcheck;
+
+    public boolean matchPassword() {
+        return password.equals(passwordcheck);
+    }
 }

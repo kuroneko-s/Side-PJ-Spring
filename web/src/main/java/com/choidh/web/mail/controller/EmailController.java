@@ -29,18 +29,18 @@ public class EmailController {
     }
 
     /**
-     * 이메일 재인증 화면
+     * Get 이메일 재인증 View.
      */
     @GetMapping("/registerSuccess")
-    public String registerSuccess(Model model) {
+    public String getEmailReAuthenticationView(Model model) {
         model.addAttribute("pageTitle", getTitle("이메일 재인증"));
-        model.addAttribute("pageContent", "security/login/register");
+        model.addAttribute("pageContent", "security/register/registerAuthenticationMail");
 
         return "security/index";
     }
 
     /**
-     * Get 이메일 인증 처리
+     * Get 이메일 인증 처리.
      */
     @GetMapping("/mailAuth")
     public String getEmailAuthentication(String token, String email, Model model, RedirectAttributes attributes) {
@@ -49,47 +49,41 @@ public class EmailController {
         if (isSuccess) {
             attributes.addFlashAttribute("success", "인증이 완료되었습니다.");
 
-            return "redirect:/";
-        } else {
-            model.addAttribute("message", "인증 주소가 잘못 되었습니다. 다시 신청해주시거나, 재전송 버튼을 눌러주세요");
-            model.addAttribute("email", email);
-            model.addAttribute(new EmailFormVO());
-
-            return "security/index";
+            return "redirect:/login";
         }
+
+        model.addAttribute("message", "인증 주소가 잘못 되었습니다. 다시 신청해주시거나, 재전송 버튼을 눌러주세요");
+        model.addAttribute("email", email);
+        model.addAttribute(new EmailFormVO());
+
+        model.addAttribute("pageTitle", getTitle("이메일 재인증"));
+        model.addAttribute("pageContent", "security/register/registerAuthenticationMail");
+
+        return "security/index";
     }
 
     /**
      * Post 이메일 인증 재전송 처리
      */
     @PostMapping("/mailAuthRetry")
-    public String submitReCheckEmailToken(EmailFormVO emailFormVO, Errors errors, Model model, RedirectAttributes attributes) {
+    public String submitReCheckEmailToken(EmailFormVO emailFormVO, Errors errors, Model model) {
         String email = emailFormVO.getEmail();
         if (email == null || email.isEmpty() || errors.hasErrors()) {
             model.addAttribute("message", "메일이 옳바르지 않습니다. 다시 입력해주세요.");
+            model.addAttribute("pageContent", "security/register/registerAuthenticationMail");
 
-            return "registerSuccess";
+            return "security/index";
         }
 
         boolean isSuccess = accountService.sendEmailForAuthentication(email);
 
         if (isSuccess) {
-            attributes.addFlashAttribute("message", "인증용 메일이 전송 되었습니다. 확인해주세요");
+            model.addAttribute("message", "인증용 메일이 전송 되었습니다. 확인해주세요");
         } else {
             model.addAttribute("message", "인증용 메일은 1시간에 한번만 전송이 가능합니다. 양해 부탁드립니다");
         }
 
-        return "registerSuccess";
-    }
-
-    /**
-     * Get 메일인증 화면 View (Test용)
-     */
-//    @GetMapping("/test/registerSuccess")
-    public String getRegisterSuccessView(Model model) {
-        model.addAttribute("message", "인증용 메일이 전송 되었습니다. 확인해주세요");
-        model.addAttribute("pageTitle", getTitle("메일 인증"));
-        model.addAttribute("pageContent", "security/register/registerSuccessContents");
+        model.addAttribute("pageContent", "security/register/registerAuthenticationMail");
 
         return "security/index";
     }
