@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -114,6 +115,7 @@ public class AccountServiceImpl implements AccountService {
                 .password(passwordEncoder.encode(regAccountVO.getPassword()))
                 .checked(false)
                 .accountType(AccountType.USER)
+                .purchaseHistories(new HashSet<>())
                 .build());
 
         Cart cart = cartService.regCart(account.getId());

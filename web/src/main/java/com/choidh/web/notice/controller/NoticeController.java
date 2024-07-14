@@ -38,7 +38,7 @@ public class NoticeController {
     }
 
     /**
-     * Get 공지사항 View
+     * Get 공지사항 상세 조회 View
      */
     @GetMapping("/{noticeId}")
     public String getNoticeDetailView(@PathVariable Long noticeId, Model model) {

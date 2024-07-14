@@ -27,9 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Slf4j
 @RequiredArgsConstructor
 class EmailControllerTest extends AbstractControllerTestConfig {
-    @MockBean
-    private EmailService emailService;
-
 
     @Test
     @DisplayName("Get 이메일 재인증 View.")

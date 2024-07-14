@@ -1,7 +1,6 @@
 package com.choidh.web.notification.interceptor;
 
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.notification.repository.NotificationRepository;
 import com.choidh.service.notification.service.NotificationService;
 import com.choidh.service.security.vo.AccountUser;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class NotificationInterceptor implements HandlerInterceptor {
     private final NotificationService notificationService;
-    private final NotificationRepository notificationRepository;
 
     /**
      * 알림 활성화 유무 확인
