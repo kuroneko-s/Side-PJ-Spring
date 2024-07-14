@@ -20,10 +20,6 @@ public class MenuAppRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         List<MenuTypeJoinTable> menuTypeList = menuTypeService.getMenuTypeAll();
 
-        // /all(모든강의) -> /learning/search/all
-        // /web/all(웹 개발) -> /learning/search/web
-        // /algorithm/all(알고리즘) -> /learning/search/algorithm
-
         if (menuTypeList.isEmpty()) {
             RegMenuVO regMenuVO = RegMenuVO.builder()
                     .url("/learning/search")

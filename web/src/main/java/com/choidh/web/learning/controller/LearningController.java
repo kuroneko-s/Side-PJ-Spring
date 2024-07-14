@@ -32,26 +32,28 @@ public class LearningController {
     private final AccountService accountService;
 
     /**
-     * Get Learning 목록 View. By keyword Learning
+     * Get 강의 목록 View
      */
     @GetMapping("/learning/search/{keyword}")
-    public String getLearningListByKeywordView(@CurrentAccount Account account, Model model, @PathVariable("keyword") String mainCategory,
+    public String getLearningListByKeywordView(Model model, @PathVariable("keyword") String mainCategory,
                                                @RequestParam(name = "keyword", defaultValue = "", required = false) String subCategory,
                                                @PageableDefault(size = 16, sort = "openingDate", direction = Sort.Direction.DESC) Pageable pageable){
         LearningListVO learningListVO = learningService.getLearningListByViewWithKeyword(mainCategory, subCategory, pageable);
 
         model.addAttribute("mainCategory", mainCategory);
         model.addAttribute("subCategory", subCategory);
+
         model.addAttribute("learningList", learningListVO.getLearningList());
         model.addAttribute("learningImageMap", learningListVO.getLearningImageMap());
-        model.addAttribute("pageTitle", getTitle("검색"));
         model.addAttribute(learningListVO.getPaging());
+
+        model.addAttribute("pageTitle", getTitle("검색"));
 
         return "learning/list/index";
     }
 
     /**
-     * Post Learning 페이징 API. By keyword Learning
+     * Post 강의 목록 페이징 API.
      */
     @PostMapping("/learning/search/{keyword}")
     @ResponseBody
@@ -64,7 +66,7 @@ public class LearningController {
     }
 
     /**
-     * Get Learning 상세 View.
+     * Get 강의 상세 View.
      */
     @GetMapping("/learning/{learningId}")
     public String getLearningDetailView(@CurrentAccount Account account, Model model, @PathVariable Long learningId) {
@@ -85,10 +87,12 @@ public class LearningController {
     }
 
     /**
-     * 강의 학습 페이지로 이동. (학습 버튼 클릭시 동작)
+     * Get 강의 학습 View.
      */
     @GetMapping("/learning/listen/{learningId}")
     public String getLearningListenView(@CurrentAccount Account account, Model model, @PathVariable Long learningId) {
+        if (account == null) return "redirect:/login";
+
         LearningListenVO learningListen = learningService.getLearningListen(account.getId(), learningId);
         Learning learning = learningListen.getLearning();
 
@@ -104,7 +108,7 @@ public class LearningController {
     }
 
     /**
-     * 강의 학습 페이지. 영상 경로 조회. API
+     * Post 강의 경로. API
      */
     @PostMapping("/learning/listen/{learningId}")
     @ResponseBody
