@@ -2,19 +2,19 @@ package com.choidh.web.notification.controller;
 
 import com.choidh.service.notification.entity.Notification;
 import com.choidh.service.notification.service.NotificationService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
-@RequestMapping("/notification")
 @Controller
+@RequestMapping("/notification")
+@RequiredArgsConstructor
 public class NotificationController {
-    @Autowired
-    private NotificationService notificationService;
+    private final NotificationService notificationService;
 
     /**
      * Get 알림 상세 조회

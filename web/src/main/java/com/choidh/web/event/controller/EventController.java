@@ -2,6 +2,7 @@ package com.choidh.web.event.controller;
 
 import com.choidh.service.event.service.EventService;
 import com.choidh.service.event.vo.EventDetailResult;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,9 +16,9 @@ import static com.choidh.service.common.vo.AppConstant.getTitle;
 @Slf4j
 @Controller
 @RequestMapping("/event")
+@RequiredArgsConstructor
 public class EventController {
-    @Autowired
-    private EventService eventService;
+    private final EventService eventService;
 
     /**
      * Get 이벤트 상세 조회 View

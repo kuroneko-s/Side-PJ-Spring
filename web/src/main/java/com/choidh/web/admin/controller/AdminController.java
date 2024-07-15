@@ -13,6 +13,7 @@ import com.choidh.service.professional.service.ProfessionalService;
 import com.choidh.service.professional.vo.ProfessionalListResult;
 import com.choidh.web.admin.vo.EventFormVO;
 import com.choidh.web.notice.vo.NoticeFormVO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,15 +34,12 @@ import static com.choidh.service.common.vo.AppConstant.getTitle;
 @Slf4j
 @Controller
 @RequestMapping(value = "/admin")
+@RequiredArgsConstructor
 public class AdminController {
-    @Autowired
-    private EventService eventService;
-    @Autowired
-    private ModelMapper modelMapper;
-    @Autowired
-    private NoticeService noticeService;
-    @Autowired
-    private ProfessionalService professionalService;
+    private final EventService eventService;
+    private final ModelMapper modelMapper;
+    private final NoticeService noticeService;
+    private final ProfessionalService professionalService;
 
     /**
      * Get 관리자 대시보드 View

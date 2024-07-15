@@ -3,6 +3,7 @@ package com.choidh.web.notice.controller;
 import com.choidh.service.notice.service.NoticeService;
 import com.choidh.service.notice.vo.NoticeDetailResult;
 import com.choidh.service.notice.vo.NoticeListResult;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -17,9 +18,9 @@ import static com.choidh.service.common.vo.AppConstant.getTitle;
 
 @Controller
 @RequestMapping("/notice")
+@RequiredArgsConstructor
 public class NoticeController {
-    @Autowired
-    private NoticeService noticeService;
+    private final NoticeService noticeService;
 
     /**
      * Get 공지사항 목록 View
