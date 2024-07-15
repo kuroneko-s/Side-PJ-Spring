@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import static com.choidh.service.common.vo.AppConstant.getTitle;
 
 @Controller
-@RequestMapping(value = "")
+@RequestMapping(value = "/learning")
 @RequiredArgsConstructor
 public class LearningController {
     private final LearningService learningService;
@@ -34,7 +34,7 @@ public class LearningController {
     /**
      * Get 강의 목록 View
      */
-    @GetMapping("/learning/search/{keyword}")
+    @GetMapping("/search/{keyword}")
     public String getLearningListByKeywordView(Model model, @PathVariable("keyword") String mainCategory,
                                                @RequestParam(name = "keyword", defaultValue = "", required = false) String subCategory,
                                                @PageableDefault(size = 16, sort = "openingDate", direction = Sort.Direction.DESC) Pageable pageable){
@@ -55,7 +55,7 @@ public class LearningController {
     /**
      * Post 강의 목록 페이징 API.
      */
-    @PostMapping("/learning/search/{keyword}")
+    @PostMapping("/search/{keyword}")
     @ResponseBody
     public ResponseEntity postLearningListByKeyword(@PathVariable("keyword") String mainCategory,
                                                     @RequestBody(required = false) String keyword,
@@ -68,7 +68,7 @@ public class LearningController {
     /**
      * Get 강의 상세 View.
      */
-    @GetMapping("/learning/{learningId}")
+    @GetMapping("/{learningId}")
     public String getLearningDetailView(@CurrentAccount Account account, Model model, @PathVariable Long learningId) {
         LearningDetailVO learningDetail = learningService.getLearningDetail(account != null ? account.getId() : -1, learningId);
         Learning learning = learningDetail.getLearning();
@@ -89,7 +89,7 @@ public class LearningController {
     /**
      * Get 강의 학습 View.
      */
-    @GetMapping("/learning/listen/{learningId}")
+    @GetMapping("/listen/{learningId}")
     public String getLearningListenView(@CurrentAccount Account account, Model model, @PathVariable Long learningId) {
         if (account == null) return "redirect:/login";
 
@@ -110,7 +110,7 @@ public class LearningController {
     /**
      * Post 강의 경로. API
      */
-    @PostMapping("/learning/listen/{learningId}")
+    @PostMapping("/listen/{learningId}")
     @ResponseBody
     public ResponseEntity getPlayLearningVideoView(@CurrentAccount Account account, @PathVariable("learningId") Long learningId,
                                                    @RequestBody String fileId) {
