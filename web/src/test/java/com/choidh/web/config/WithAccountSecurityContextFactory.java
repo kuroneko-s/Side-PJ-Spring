@@ -17,6 +17,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
+
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class WithAccountSecurityContextFactory implements WithSecurityContextFactory<WithAccount> {
@@ -37,6 +39,11 @@ public class WithAccountSecurityContextFactory implements WithSecurityContextFac
         Account account = accountServiceImpl.regAccount(modelMapper.map(accountVO, RegAccountVO.class));
         account.setChecked(true);
         account.setAccountType(withAccount.accountType());
+        account.setTags(new HashSet<>());
+        account.setLearningMailNotification(true);
+        account.setSiteMailNotification(true);
+        account.setLearningWebNotification(true);
+        account.setSiteWebNotification(true);
 
         UserDetails principal = accountDetailsService.loadUserByUsername(email);
         Authentication authentication = new UsernamePasswordAuthenticationToken(principal, principal.getPassword(),
