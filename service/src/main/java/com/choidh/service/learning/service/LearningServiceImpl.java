@@ -122,8 +122,7 @@ public class LearningServiceImpl implements LearningService {
         // 태그 입력값 분석
         List<TagBinder> tagBinderList;
         try {
-            tagBinderList = objectMapper.readValue(regLearningVO.getSkills(), new TypeReference<>() {
-            });
+            tagBinderList = objectMapper.readValue(regLearningVO.getSkills(), new TypeReference<>() {});
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException(regLearningVO.getSkills());
         }
@@ -136,6 +135,7 @@ public class LearningServiceImpl implements LearningService {
                 .mainCategory(regLearningVO.getMainCategory())
                 .simpleSubscription(regLearningVO.getSimpleSubscription())
                 .attachmentGroup(attachmentGroup)
+                .opening(false)
                 .tags(new HashSet<>())
                 .questions(new HashSet<>())
                 .reviews(new HashSet<>())
@@ -154,6 +154,8 @@ public class LearningServiceImpl implements LearningService {
             LearningTagJoinTable learningTagJoinTable = learningTagService.regLearningTagJointable(learning, tag);
             learning.setTags(learningTagJoinTable);
         }
+
+        professionalAccount.getLearningSet().add(learning);
 
         return learning;
     }
@@ -402,24 +404,23 @@ public class LearningServiceImpl implements LearningService {
         learning.setSimpleSubscription(modLearningVO.getSimpleSubscription());
         learning.setMainCategory(modLearningVO.getMainCategory());
 
-        List<String> inputTagTitleList;
+        List<String> inputTagTitleList = new ArrayList<>();
         try {
             // 태그 입력값 분석
             List<TagBinder> tagBinderList = objectMapper.readValue(modLearningVO.getSkills(), new TypeReference<>() {});
-            inputTagTitleList = tagBinderList.stream().map(TagBinder::getValue).collect(Collectors.toList());
+            inputTagTitleList.addAll(tagBinderList.stream().map(TagBinder::getValue).collect(Collectors.toList()));
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException(modLearningVO.getSkills());
         }
 
-        Set<LearningTagJoinTable> tags = learning.getTags();
+        Set<LearningTagJoinTable> tags = new HashSet<>(learning.getTags());
         for (LearningTagJoinTable learningTagJoinTable : tags) {
             String title = learningTagJoinTable.getTag().getTitle();
 
             // 필요없는 태그들은 삭제.
             if (!inputTagTitleList.contains(title)) {
                 inputTagTitleList.remove(title);
-                tags.remove(learningTagJoinTable);
-                learningTagService.delLearningTagJoinTable(learningTagJoinTable);
+                learning.getTags().remove(learningTagJoinTable);
             }
         }
 

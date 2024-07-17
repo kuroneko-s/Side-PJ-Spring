@@ -1,4 +1,4 @@
-package com.choidh.web.learning.vo;
+package com.choidh.web.professional.vo;
 
 import lombok.*;
 import org.hibernate.validator.constraints.Length;

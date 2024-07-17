@@ -73,7 +73,7 @@ public class Learning extends BaseEntity {
     @Name(name = "강의자")
     private ProfessionalAccount professionalAccount;
 
-    @OneToMany(mappedBy = "learning")
+    @OneToMany(mappedBy = "learning", orphanRemoval = true)
     @Name(name = "강의 관련 태그들")
     private Set<LearningTagJoinTable> tags = new HashSet<>();
 

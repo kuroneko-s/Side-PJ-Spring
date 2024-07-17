@@ -10,7 +10,7 @@ import com.choidh.service.learning.vo.RegLearningVO;
 import com.choidh.service.tag.entity.Tag;
 import com.choidh.service.tag.repository.TagRepository;
 import com.choidh.web.config.WithAccount;
-import com.choidh.web.learning.vo.LearningFormVO;
+import com.choidh.web.professional.vo.LearningFormVO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;

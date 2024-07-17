@@ -13,11 +13,11 @@ import com.choidh.service.learning.vo.RegLearningVO;
 import com.choidh.service.tag.entity.Tag;
 import com.choidh.service.tag.service.TagService;
 import com.choidh.web.common.annotation.CurrentAccount;
-import com.choidh.web.learning.validator.LearningValidator;
-import com.choidh.web.learning.vo.LearningFormVO;
+import com.choidh.web.professional.validator.LearningValidator;
+import com.choidh.web.professional.vo.LearningFormVO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -38,33 +38,23 @@ import static com.choidh.service.common.vo.AppConstant.getTitle;
 @Slf4j
 @Controller
 @RequestMapping("/professional")
+@RequiredArgsConstructor
 public class ProfessionalController {
-    @Autowired private LearningService learningService;
-    @Autowired private ModelMapper modelMapper;
-    @Autowired private LearningValidator learningValidator;
-    @Autowired private TagService tagService;
+    private final LearningService learningService;
+    private final ModelMapper modelMapper;
+    private final LearningValidator learningValidator;
+    private final TagService tagService;
 
     @InitBinder("learningFormVO")
     private void initVideoForm(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(learningValidator);
     }
 
+    /**
+     * Get 강의 제공자 대시보드 View
+     */
     @GetMapping("/dashboard")
-    public String getProfessional(@CurrentAccount Account account, Model model) {
-        // 강의의 수익 차표
-        // 강의의 수강생 추이 차표
-        // 강의 목록
-        // 강의 목록에서 상세로 들어가면 수정할 수 있는 화면
-        // 강의 등록
-        // 강의 상세에서 공지사항 등록
-
-        // 강의 목록또 프로필의 수강 목록 페이지랑 같은 디자인을 가져와서 사용하는게 나을 듯함.
-        // 상세에서는 같은 페이지를 공유해서 사용하는게 나을 것 같긴함.
-
-        // 차트 관련은 라이브러리 끌어다가 쓰고
-        // 수익은 판매이력에서 가져다가 그정도만 보여주면 될듯
-        // 수강인원은 구매한 인원들 가져다가 쓰면 됨.
-
+    public String getProfessionalDashboardView(@CurrentAccount Account account, Model model) {
         model.addAttribute("pageTitle", getTitle(account.getNickname() + "님의 대시보드"));
         model.addAttribute("pageContent", "professional/contents");
 
