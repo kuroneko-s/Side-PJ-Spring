@@ -24,8 +24,8 @@
 
     <modules>
         <module>service</module>
+        <module>rest_api</module>
         <module>web</module>
-<!--        <module>rest</module>-->
     </modules>
 
 </project>
