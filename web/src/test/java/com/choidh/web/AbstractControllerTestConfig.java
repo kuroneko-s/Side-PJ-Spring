@@ -3,14 +3,7 @@ package com.choidh.web;
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.service.AccountService;
 import com.choidh.service.account.vo.RegAccountVO;
-import com.choidh.service.attachment.entity.AttachmentFile;
-import com.choidh.service.attachment.entity.AttachmentGroup;
-import com.choidh.service.attachment.service.AttachmentServiceImpl;
-import com.choidh.service.attachment.vo.AttachmentFileType;
 import com.choidh.service.cart.service.CartService;
-import com.choidh.service.common.exception.FileNotSavedException;
-import com.choidh.service.common.utiles.FileUtils;
-import com.choidh.service.common.utiles.StringUtils;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.service.LearningService;
 import com.choidh.service.learning.vo.RegLearningVO;
@@ -19,13 +12,10 @@ import com.choidh.service.professional.service.ProfessionalService;
 import com.choidh.service.professional.vo.RegProfessionalAccountVO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.PathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
@@ -33,8 +23,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.io.*;
-import java.nio.file.Path;
 
 @Slf4j
 @ActiveProfiles("local")

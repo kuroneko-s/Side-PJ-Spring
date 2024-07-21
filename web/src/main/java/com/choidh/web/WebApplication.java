@@ -4,8 +4,6 @@ import com.choidh.service.ServiceApplication;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import javax.swing.*;
-
 /**
  * scanBase 를 추가해서 적용하는 방식을 채용하고 있는데 이렇게하면 모듈을 나눈 이유가 희미.....해지는듯??
  * 스프링부트 자동 설정처럼 없으면 등록시키고 이런 유동적으로 돌리던지

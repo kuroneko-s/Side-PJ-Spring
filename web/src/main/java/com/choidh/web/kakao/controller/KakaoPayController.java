@@ -10,7 +10,6 @@ import com.choidh.web.common.annotation.CurrentAccount;
 import com.choidh.web.kakao.vo.KakaoPayForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import java.util.List;
 
 import static com.choidh.service.common.vo.AppConstant.getTitle;
@@ -32,7 +30,7 @@ import static com.choidh.service.common.vo.AppConstant.getTitle;
 
 @Slf4j
 @Controller
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 public class KakaoPayController {
     private final KakaoPayService kakaoPayService;
 

@@ -1,7 +1,6 @@
 package com.choidh.web.professional.validator;
 
 import com.choidh.service.common.annotation.IsValidator;
-import com.choidh.service.common.utiles.StringUtils;
 import com.choidh.web.professional.vo.LearningFormVO;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
