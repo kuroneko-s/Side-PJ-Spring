@@ -14,17 +14,20 @@
 
     <groupId>com.choidh</groupId>
     <artifactId>PJ-java</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>PJ-java</name>
     <description>PJ-java</description>
 
     <properties>
         <java.version>11</java.version>
+<!--        <maven.compiler.target>11</maven.compiler.target>-->
+<!--        <maven.compiler.source>11</maven.compiler.source>-->
+<!--        <maven.compiler.release>11</maven.compiler.release>-->
     </properties>
 
     <modules>
         <module>service</module>
-        <module>rest_api</module>
+<!--        <module>rest_api</module>-->
         <module>web</module>
     </modules>
 
