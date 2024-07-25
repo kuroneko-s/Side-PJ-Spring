@@ -27,7 +27,7 @@
 
     <modules>
         <module>service</module>
-<!--        <module>rest_api</module>-->
+        <module>rest_api</module>
         <module>web</module>
     </modules>
 
