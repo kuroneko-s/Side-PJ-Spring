@@ -3,6 +3,7 @@ package com.choidh.service.joinTables.entity;
 import com.choidh.service.common.entity.BaseDateEntity;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.tag.entity.Tag;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,6 +23,7 @@ public class LearningTagJoinTable extends BaseDateEntity {
 
     @ManyToOne
     @JoinColumn(name = "learning_id")
+    @JsonBackReference
     private Learning learning;
 
     @Setter
@@ -32,9 +34,7 @@ public class LearningTagJoinTable extends BaseDateEntity {
     public void setLearning(Learning learning) {
         this.learning = learning;
 
-        if (!learning.getTags().contains(this)) {
-            learning.getTags().add(this);
-        }
+        learning.getTags().add(this);
     }
 
 }

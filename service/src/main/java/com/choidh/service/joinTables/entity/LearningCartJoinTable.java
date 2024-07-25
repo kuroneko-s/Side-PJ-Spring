@@ -3,6 +3,7 @@ package com.choidh.service.joinTables.entity;
 import com.choidh.service.cart.entity.Cart;
 import com.choidh.service.common.entity.BaseEntity;
 import com.choidh.service.learning.entity.Learning;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -23,10 +24,12 @@ public class LearningCartJoinTable extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "learning_id")
+    @JsonBackReference
     private Learning learning;
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
+    @JsonBackReference
     private Cart cart;
 
     public void setCart(Cart cart) {

@@ -4,6 +4,7 @@ import com.choidh.service.account.entity.Account;
 import com.choidh.service.common.entity.BaseEntity;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.purchaseHistory.vo.PurchaseStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 
@@ -29,10 +30,12 @@ public class PurchaseHistory extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "account_id")
+    @JsonBackReference
     private Account account;
 
     @ManyToOne
     @JoinColumn(name = "learning_id")
+    @JsonBackReference
     private Learning learning;
 
     @Enumerated(EnumType.STRING)

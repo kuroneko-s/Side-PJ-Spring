@@ -1,0 +1,23 @@
+= 사이트 관련 API DOCS
+
+== 강의 관련
+
+=== 강의 목록 조회
+
+==== 요청
+include::{snippets}/get-learningList/curl-request.adoc[]
+
+==== 요청 헤더
+include::{snippets}/get-learningList/request-headers.adoc[]
+
+==== 요청 파라미터
+include::{snippets}/get-learningList/request-parameters.adoc[]
+
+==== 응답
+include::{snippets}/get-learningList/http-response.adoc[]
+
+==== 응답 링크 정보
+include::{snippets}/get-learningList/links.adoc[]
+
+==== 응답 데이터 정보
+include::{snippets}/get-learningList/response-fields.adoc[]

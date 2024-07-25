@@ -5,6 +5,7 @@ import com.choidh.service.account.entity.Account;
 import com.choidh.service.common.annotation.Name;
 import com.choidh.service.common.entity.BaseEntity;
 import com.choidh.service.learning.entity.Learning;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 
@@ -43,10 +44,12 @@ public class Question extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "learning_id")
+    @JsonBackReference
     private Learning learning;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")
+    @JsonBackReference
     private Account account;
 
     public void setAccount(Account account) {

@@ -1,77 +1,57 @@
 # 프로젝트 설명
 
-1. service 모듈
-기본적으로 공통된 모듈이나 Entity 및 Repository 정도 나열.       
+사용된 프레임워크       
+1. [Spring Web MVC](https://docs.spring.io/spring-framework/docs/5.2.2.RELEASE/spring-framework-reference/)
+2. [Spring Boot](https://docs.spring.io/spring-boot/docs/2.2.6.RELEASE/reference/htmlsingle/)
+3. [Spring Data JPA](https://docs.spring.io/spring-data/jpa/docs/2.2.6.RELEASE/reference/html/#reference)
+4. [Spring Security](https://docs.spring.io/spring-security/site/docs/5.2.2.RELEASE/reference/html5/)
+5. [Spring RESTDOCS](https://docs.spring.io/spring-restdocs/docs/2.0.4.RELEASE/reference/html5/#documenting-your-api-customizing)
+6. [Spring HATEOAS](https://docs.spring.io/spring-hateoas/docs/current/reference/html/#preface)
+7. [PostgreSQL](https://www.postgresql.org/)
+8. [h2 Database](https://www.h2database.com/html/main.html)  
+
+--- 
+
+1. service 모듈       
+공통된 기능이나 Entity 및 Repository, Service 정의       
 > 외부 모듈에서 공통적으로 사용할 수 있는 기능이면 정의하는 용도.      
 > 대표적으로 Entity 구조는 공통적으로 적용. Mail 기능은 공통으로 사용 가능.
 
-2. web 모듈
+2. web 모듈       
 웹 서비스 기능 제공을 위한 모듈.     
-웹에 해당하는 설정이나 Controller, Service 등을 정의. 
+웹에 해당하는 설정이나 Controller, Service 등을 정의.
+port - 8080(기본) 사용.
 
-`의존 관계 (의도)`       
-- Controller - Service        
-- Service - Repository or Entity      
+3. REST API 모듈       
+web 모듈에서 사용되는 기본 컨트롤러의 일부 기능들을 REST API로써 지원하기 위한 모듈.
+port - 8081(기본) 사용.
 
-3. REST API 모듈
+4. 스케쥴러 모듈       
 정의 예정
 
-4. 스케쥴러 모듈
-정의 예정
+--- 
 
+### 프로젝트 내부 내용
+web 모듈에서 JS 라이브러리를 사용하기 위해서 npm 을 사용하고 있음.          
+DB는 JPA를 메인으로 사용하지만 SQLMapper도 사용가능하도록 설정.          
+기존 Bootstrap 사용했던 코드를 CSS3로 변경. (정적 디자인으로 변경).       
+기본 샘플 데이터 위치 - web/resources/sampleData             
+기본 업로드 위치 - web/resources/uploadFiles           
+기본 샘플 데이터를 만들기 위해서 AppRunner 를 사용했음.        
 
----
+### 실행
+1. PJ-Java (clean - compile)       
+2. service (install)       
+3. web (test 제거 후 install)     
+4. rest_api (test 별도 실행 후 install)
 
-### 기존 프로젝트에 작성되어있던 내용.
-
-자바스크립트 관련 라이브러리 추가를 위해 npm을 사용했습니다.<br>
-
-**JS library list** <br>
-npm version - 6.14.4 <br>
-1. @yaireo/tagify<br>
-2. summernote<br>
-3. @fontawesome-free<br>
-4. jdention<br>
-5. bootstrap<br>
-6. jquery & jquery-form<br>
-7. moment<br>
-8. tooltipster<br>
-
-_NPM 미포함 예정이었지만 배포를 위해 포함시킴_
-
-프론트 설계 및 코드는 bootstrap을 사용했습니다.<br>
-백엔드 설계 및 코드는 spring MVC를 기반으로 한 프레임 워크들을 사용했습니다.<br>
-
-사용된 프레임워크<br>
-1. Spring Web MVC Ver.5.2.2
-2. Spring Boot Ver.2.2.6
-3. Spring Data API(JPA)
-4. Spring Security
-
-DB
-postgreSQL (dev)<br>
-embeded (local)
-
-Video 영상 데이터들은 프로젝트 내 /static/video에 위치하게 작성하였습니다.
-
-**_참고한 사이트_**<br>
-https://www.inflearn.com/ 인프런
-
-
-#### 24-05-17
-local 에서 h2 db로 실행은 되는 상태로 업로드.
-
-#### 24-05-24
-URL 엔드포인트 관리좀 해야할듯..
+#### 기본 주소
+web (http://localhost:8080/)        
+rest_api (http://localhost:8081/docs/index.html)        
 
 ---
 
 # 코드 규칙
-
----
-
-## 웹 모듈
-### 컨트롤러
 
 | 접근자    | 규칙       | 설명                              |
 |:-------|:---------|:--------------------------------|
@@ -83,36 +63,14 @@ URL 엔드포인트 관리좀 해야할듯..
 | PUT    | modAll~  | 모든 자원의 수정 요청인 경우                |
 | DELETE | del~     | 삭제 요청인 경우                       |
 
-### 서비스
-
-컨트롤러와 서비서 모듈의 어댑터 역할.      
-웹 서비스에 종속된 비지니스 로직 및 기능만을 정의.       
-서비스 모듈의 Repository 나 서비스 패키지의 접근을 통한 비지니스 로직을 구현.       
-
-## 서비스 모듈
-
-### 서비스
-
-외부 API 호출과 같은 현 프로젝트 외의 모듈과 통신하는 용도로만을 사용.      
-필요에 의한 정의.       
-기본적인 서비스는 각 외부 모듈 내에서 정의하게끔.
-
-### Repository
-
-JPA 로 저장하는 용도.
-
-### SQLMapper (Mybatis)
-
-JPA 로 처리가 안되는 경우 사용할 예정.        
-기본 설정만 추가.
-
 ---
 
-반환하는 타입을 따로 VO를 정해서 그놈을 쓸까...
-그러면 서비스에서도 여러군데 안쓰고 그냥 한놈만 호출해서 통합해버리면 되는데...
-그게 나은거같기도 하고
+# 특이사항 및 작업 예정
 
-# maven install 관련 문제
+### maven install 관련 문제
 
-web 모듈에서 maven install 동작시 test 패키지 쪽 코드들이 lombok이나 다른 모듈의 참조를 가져오지 못하고있음.      
-해결방안은 찾지 못했고 임시방편으로 test 폴더 외부에 코드들을 옮겨두고 install 후 다시 원상복구하는 방식이면 동작함.
+1. web 모듈에서 maven install 동작시 test 패키지 쪽 코드들이 lombok이나 다른 모듈의 참조를 가져오지 못하고있음. 해결방안은 찾지 못했고 임시방편으로 test 폴더 외부에 코드들을 옮겨두고 install 후 다시 원상복구하는 방식이면 동작함.
+2. maven의 test 기능하지 않아서 rest-api 모듈 동작시킬 때 PJ-Java (clean-compile) 후 rest-api의 test 실행 후 install 동작 필요.        
+
+### 확인해야하는 것
+rest_api 에서 maven 으로 test 돌아가는 plugin 설정 알아봐야함.

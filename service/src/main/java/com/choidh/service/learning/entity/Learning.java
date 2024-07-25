@@ -1,16 +1,18 @@
 package com.choidh.service.learning.entity;
 
 
-import com.choidh.service.professional.entity.ProfessionalAccount;
-import com.choidh.service.common.annotation.Name;
 import com.choidh.service.attachment.entity.AttachmentGroup;
+import com.choidh.service.common.annotation.Name;
 import com.choidh.service.common.entity.BaseEntity;
 import com.choidh.service.joinTables.entity.LearningCartJoinTable;
 import com.choidh.service.joinTables.entity.LearningNoticeJoinTable;
 import com.choidh.service.joinTables.entity.LearningTagJoinTable;
+import com.choidh.service.professional.entity.ProfessionalAccount;
 import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
 import com.choidh.service.question.entity.Question;
 import com.choidh.service.review.entity.Review;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 
@@ -71,30 +73,37 @@ public class Learning extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "professional_account_id")
     @Name(name = "강의자")
+    @JsonBackReference
     private ProfessionalAccount professionalAccount;
 
     @OneToMany(mappedBy = "learning", orphanRemoval = true)
     @Name(name = "강의 관련 태그들")
+    @JsonManagedReference
     private Set<LearningTagJoinTable> tags = new HashSet<>();
 
     @OneToMany(mappedBy = "learning")
     @Name(name = "강의 관련 질문글들")
+    @JsonManagedReference
     private Set<Question> questions = new HashSet<>();
 
     @OneToMany(mappedBy = "learning")
     @Name(name = "강의 관련 리뷰들")
+    @JsonManagedReference
     private Set<Review> reviews = new HashSet<>();
 
     @OneToMany(mappedBy = "learning")
     @Name(name = "구매이력")
+    @JsonManagedReference
     private Set<PurchaseHistory> purchaseHistories = new HashSet<>();
 
     @OneToMany(mappedBy = "learning")
     @Name(name = "카트에 추가되어 있는 수.", description = "유저가 카트에 추가한 강의들을 나타냄.")
+    @JsonManagedReference
     private Set<LearningCartJoinTable> carts = new HashSet<>();
 
     @OneToMany(mappedBy = "learning")
     @Name(name = "공지사항")
+    @JsonManagedReference
     private Set<LearningNoticeJoinTable> notices = new HashSet<>();
 
     public void setTags(LearningTagJoinTable learningCartJoinTable) {

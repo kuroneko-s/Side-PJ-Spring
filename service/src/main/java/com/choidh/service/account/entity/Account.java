@@ -2,14 +2,15 @@ package com.choidh.service.account.entity;
 
 
 import com.choidh.service.account.vo.AccountType;
-import com.choidh.service.common.annotation.Name;
 import com.choidh.service.cart.entity.Cart;
+import com.choidh.service.common.annotation.Name;
 import com.choidh.service.common.entity.BaseEntity;
 import com.choidh.service.joinTables.entity.AccountTagJoinTable;
 import com.choidh.service.professional.entity.ProfessionalAccount;
 import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
 import com.choidh.service.question.entity.Question;
 import com.choidh.service.review.entity.Review;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 
@@ -75,10 +76,12 @@ public class Account extends BaseEntity {
 
     @OneToOne(mappedBy = "account")
     @Name(name = "업로더용 계정")
+    @JsonManagedReference
     private ProfessionalAccount professionalAccount = null;
 
     @OneToOne(mappedBy = "account")
     @Name(name = "장바구니 목록")
+    @JsonManagedReference
     private Cart cart;
 
     @OneToMany(mappedBy = "account")
@@ -87,14 +90,17 @@ public class Account extends BaseEntity {
 
     @OneToMany(mappedBy = "account")
     @Name(name = "질의 글 목록")
+    @JsonManagedReference
     private Set<Question> questions = new HashSet<>();
 
     @OneToMany(mappedBy = "account")
     @Name(name = "리뷰 글 목록")
+    @JsonManagedReference
     private Set<Review> reviews = new HashSet<>();
 
     @OneToMany(mappedBy = "account")
     @Name(name = "구매 이력 목록")
+    @JsonManagedReference
     private Set<PurchaseHistory> purchaseHistories = new HashSet<>();
 
     @Enumerated(EnumType.STRING)

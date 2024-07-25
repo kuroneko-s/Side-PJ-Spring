@@ -3,11 +3,12 @@ package com.choidh.service.cart.entity;
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.common.entity.BaseEntity;
 import com.choidh.service.joinTables.entity.LearningCartJoinTable;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,9 +26,11 @@ public class Cart extends BaseEntity {
     private Long id;
 
     @OneToOne
+    @JsonBackReference
     private Account account;
 
     @OneToMany(mappedBy = "cart")
+    @JsonManagedReference
     private Set<LearningCartJoinTable> learningCartJoinTables = new HashSet<>();
 
     public void setAccount(Account account) {

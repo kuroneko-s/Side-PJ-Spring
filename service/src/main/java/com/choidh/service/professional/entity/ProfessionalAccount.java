@@ -4,6 +4,8 @@ import com.choidh.service.account.entity.Account;
 import com.choidh.service.common.annotation.Name;
 import com.choidh.service.common.entity.BaseEntity;
 import com.choidh.service.learning.entity.Learning;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 
@@ -30,6 +32,7 @@ public class ProfessionalAccount extends BaseEntity {
     private Long id;
 
     @OneToOne
+    @JsonBackReference
     private Account account;
 
     @Name(name = "강사 이름")
@@ -45,6 +48,7 @@ public class ProfessionalAccount extends BaseEntity {
     private boolean used;
 
     @OneToMany(mappedBy = "professionalAccount")
+    @JsonManagedReference
     private Set<Learning> learningSet = new HashSet<>();
 
     public void setLearningSet(Learning learning) {
