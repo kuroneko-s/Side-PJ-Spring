@@ -1,6 +1,7 @@
 package com.choidh.service.learning.repository;
 
 import com.choidh.service.learning.entity.Learning;
+import com.choidh.service.learning.vo.LearningVO;
 import com.choidh.service.tag.entity.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,4 +54,16 @@ public interface LearningRepositoryExtension {
      * 강의 페이징. (강의 제작자 기준.)
      */
     Page<Learning> findByProfessionalAccountId(Long id, Pageable pageable);
+
+    // ======= web 모듈 ======
+
+    /**
+     * Learning 페이징. By 카테고리
+     */
+    Page<LearningVO> findPagingByCategory(Pageable pageable, String mainCategory);
+
+    /**
+     * Learning 페이징. By 카테고리 And 키워드
+     */
+    Page<LearningVO> findPagingByCategoryAndKeyword(Pageable pageable, String mainCategory,String keyword);
 }

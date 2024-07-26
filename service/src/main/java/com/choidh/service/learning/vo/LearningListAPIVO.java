@@ -1,7 +1,9 @@
 package com.choidh.service.learning.vo;
 
 import com.choidh.service.common.pagination.Paging;
+import com.choidh.service.learning.entity.Learning;
 import lombok.*;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -13,4 +15,5 @@ import java.util.List;
 public class LearningListAPIVO {
     private List<LearningAPIVO> learningList;
     private Paging paging;
+    private Page<Learning> learningPage;
 }

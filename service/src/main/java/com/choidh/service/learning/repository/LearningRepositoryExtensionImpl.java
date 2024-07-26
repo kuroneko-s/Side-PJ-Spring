@@ -2,6 +2,7 @@ package com.choidh.service.learning.repository;
 
 
 import com.choidh.service.learning.entity.Learning;
+import com.choidh.service.learning.vo.LearningVO;
 import com.choidh.service.tag.entity.Tag;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
@@ -15,6 +16,7 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.choidh.service.common.utiles.StringUtils.isNotNullAndEmpty;
 import static com.choidh.service.common.utiles.StringUtils.isNullOrEmpty;
@@ -209,5 +211,64 @@ public class LearningRepositoryExtensionImpl extends QuerydslRepositorySupport i
                 .fetch();
 
         return new PageImpl<>(learningList, pageable, eventJPQLQuery.fetchCount());
+    }
+
+    /**
+     * Learning 페이징. By Main Category
+     */
+    @Override
+    public Page<LearningVO> findPagingByCategory(Pageable pageable, String mainCategory) {
+        Predicate learningWhere = learning.opening.isTrue();
+
+        if (isNotNullAndEmpty(mainCategory)) {
+            learningWhere = learning.opening.isTrue().and(learning.mainCategory.containsIgnoreCase(mainCategory));
+        }
+
+        JPQLQuery<Learning> query = from(learning)
+                .where(learningWhere);
+
+        List<Learning> learningList = query
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        return new PageImpl<>(
+                learningList.stream().map(LearningVO::new).collect(Collectors.toList()),
+                pageable,
+                query.fetchCount());
+    }
+
+    /**
+     * Learning 페이징. By 카테고리 And 키워드
+     */
+    @Override
+    public Page<LearningVO> findPagingByCategoryAndKeyword(Pageable pageable, String mainCategory, String keyword) {
+        Predicate learningWhere = learning.opening.isTrue();
+
+        if (isNotNullAndEmpty(keyword) && isNullOrEmpty(mainCategory)) {
+            learningWhere = learning.opening.isTrue()
+                    .and(learning.title.containsIgnoreCase(keyword).or(learning.tags.any().tag.title.containsIgnoreCase(keyword)));
+        }
+        else if (isNotNullAndEmpty(mainCategory) && isNullOrEmpty(keyword)) {
+            learningWhere = learning.opening.isTrue().and(learning.mainCategory.containsIgnoreCase(mainCategory));
+        }
+        else if (isNotNullAndEmpty(mainCategory) && isNotNullAndEmpty(keyword)) {
+            learningWhere = learning.opening.isTrue()
+                    .and(learning.title.containsIgnoreCase(keyword).or(learning.tags.any().tag.title.containsIgnoreCase(keyword)))
+                    .and(learning.mainCategory.containsIgnoreCase(mainCategory));
+        }
+
+        JPQLQuery<Learning> query = from(learning)
+                .where(learningWhere);
+
+        List<Learning> learningList = query
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        return new PageImpl<>(
+                learningList.stream().map(LearningVO::new).collect(Collectors.toList()),
+                pageable,
+                query.fetchCount());
     }
 }

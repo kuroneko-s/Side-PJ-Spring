@@ -1,4 +1,4 @@
-package com.choidh.app.learnieng.vo;
+package com.choidh.service.learning.vo;
 
 import com.choidh.service.common.annotation.Name;
 import com.choidh.service.joinTables.entity.LearningTagJoinTable;

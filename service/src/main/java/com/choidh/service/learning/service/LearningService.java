@@ -131,4 +131,11 @@ public interface LearningService {
      * 강의 영상 비디오 수정
      */
     void modLearningVideo(Long learningId, String title, Integer order, MultipartFile videoFile);
+
+    // ====== web 모듈 서비스 ======
+
+    /**
+     * Get Learning Paging. With keyword Learning For API
+     */
+    Page<LearningVO> getLearningPagingWithKeywordForAPI(String mainCategory, String subCategory, Pageable pageable);
 }

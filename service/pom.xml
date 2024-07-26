@@ -121,10 +121,15 @@
             <scope>provided</scope>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>com.github.gavlyukovskiy</groupId>-->
+<!--            <artifactId>p6spy-spring-boot-starter</artifactId>-->
+<!--            <version>1.9.1</version>-->
+<!--        </dependency>-->
+
         <dependency>
-            <groupId>com.github.gavlyukovskiy</groupId>
-            <artifactId>p6spy-spring-boot-starter</artifactId>
-            <version>1.9.1</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-hateoas</artifactId>
         </dependency>
     </dependencies>
 

@@ -655,4 +655,19 @@ public class LearningServiceImpl implements LearningService {
 
         attachmentService.saveFile(attachmentGroup, videoFile, AttachmentFileType.VIDEO, order + "_" + videoFile.getOriginalFilename());
     }
+
+    // ====== web 모듈 서비스 ======
+
+    /**
+     * Get Learning Paging. With keyword Learning For API
+     */
+    @Override
+    public Page<LearningVO> getLearningPagingWithKeywordForAPI(String mainCategory, String subCategory, Pageable pageable) {
+        mainCategory = mainCategory.equals("all") ? "" : mainCategory;
+        if (StringUtils.isNullOrEmpty(subCategory)) {
+            return learningRepository.findPagingByCategory(pageable, mainCategory);
+        } else {
+            return learningRepository.findPagingByCategoryAndKeyword(pageable, mainCategory, subCategory);
+        }
+    }
 }
