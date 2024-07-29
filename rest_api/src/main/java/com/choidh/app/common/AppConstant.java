@@ -5,4 +5,6 @@ public class AppConstant {
     public final static String API_PATH = "/api";
     public final static String API_VERSION = "/v1";
     public final static String API_DEFAULT_PATH = API_PATH + API_VERSION;
+
+    public final static String JWT_HEADER_NAME = "X-AUTH-TOKEN";
 }

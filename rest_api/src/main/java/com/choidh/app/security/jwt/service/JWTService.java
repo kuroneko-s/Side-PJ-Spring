@@ -1,5 +1,6 @@
 package com.choidh.app.security.jwt.service;
 
+import com.choidh.app.common.AppConstant;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -120,6 +121,6 @@ public class JWTService {
      * JWT 획득
      */
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("X-AUTH-TOKEN");
+        return request.getHeader(AppConstant.JWT_HEADER_NAME);
     }
 }

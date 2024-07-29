@@ -1,7 +1,7 @@
 package com.choidh.service.learning.repository;
 
 import com.choidh.service.learning.entity.Learning;
-import com.choidh.service.learning.vo.api.LearningVO;
+import com.choidh.service.learning.vo.api.LearningResponse;
 import com.choidh.service.tag.entity.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -60,10 +60,10 @@ public interface LearningRepositoryExtension {
     /**
      * Learning 페이징. By 카테고리
      */
-    Page<LearningVO> findPagingByCategory(Pageable pageable, String mainCategory);
+    Page<LearningResponse> findPagingByCategory(Pageable pageable, String mainCategory);
 
     /**
      * Learning 페이징. By 카테고리 And 키워드
      */
-    Page<LearningVO> findPagingByCategoryAndKeyword(Pageable pageable, String mainCategory,String keyword);
+    Page<LearningResponse> findPagingByCategoryAndKeyword(Pageable pageable, String mainCategory, String keyword);
 }

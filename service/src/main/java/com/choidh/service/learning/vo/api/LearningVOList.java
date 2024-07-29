@@ -9,9 +9,9 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class LearningVOList {
-    private List<LearningVO> learningVOList;
+    private List<LearningResponse> learningResponseList;
 
-    public LearningVOList(List<LearningVO> learningVOList) {
-        this.learningVOList = new ArrayList<>(learningVOList);
+    public LearningVOList(List<LearningResponse> learningResponseList) {
+        this.learningResponseList = new ArrayList<>(learningResponseList);
     }
 }

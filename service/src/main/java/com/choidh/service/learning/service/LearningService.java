@@ -2,7 +2,7 @@ package com.choidh.service.learning.service;
 
 
 import com.choidh.service.learning.entity.Learning;
-import com.choidh.service.learning.vo.api.LearningVO;
+import com.choidh.service.learning.vo.api.LearningResponse;
 import com.choidh.service.learning.vo.web.*;
 import com.choidh.service.tag.entity.Tag;
 import org.springframework.data.domain.Page;
@@ -138,5 +138,5 @@ public interface LearningService {
     /**
      * Get Learning Paging. With keyword Learning For API
      */
-    Page<LearningVO> getLearningPagingWithKeywordForAPI(String mainCategory, String subCategory, Pageable pageable);
+    Page<LearningResponse> getLearningPagingWithKeywordForAPI(String mainCategory, String subCategory, Pageable pageable);
 }

@@ -7,8 +7,8 @@ import org.springframework.hateoas.Link;
 
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class LearningResource extends EntityModel<LearningVO> {
-    public LearningResource(LearningVO learningVO, Link... links) {
-        super(learningVO, links);
+public class LearningResource extends EntityModel<LearningResponse> {
+    public LearningResource(LearningResponse learningResponse, Link... links) {
+        super(learningResponse, links);
     }
 }

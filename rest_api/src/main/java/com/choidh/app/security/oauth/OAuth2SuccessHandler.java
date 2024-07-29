@@ -1,5 +1,6 @@
 package com.choidh.app.security.oauth;
 
+import com.choidh.app.common.AppConstant;
 import com.choidh.app.security.jwt.service.JWTService;
 import com.choidh.service.account.vo.api.ApiAccountType;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 .build()
                 .toUriString();
 
-        response.setHeader("X-AUTH-TOKEN", token);
+        response.setHeader(AppConstant.JWT_HEADER_NAME, token);
         response.sendRedirect(targetUrl);
     }
 

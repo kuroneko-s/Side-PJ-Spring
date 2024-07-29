@@ -1,6 +1,9 @@
 package com.choidh.app.learnieng;
 
 import com.choidh.app.RestDocsConfiguration;
+import com.choidh.app.common.AppConstant;
+import com.choidh.app.security.jwt.service.JWTService;
+import com.choidh.service.account.vo.api.ApiAccountType;
 import com.google.common.net.HttpHeaders;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -39,6 +42,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import({RestDocsConfiguration.class})
 class LearningControllerTest {
     @Autowired private MockMvc mockMvc;
+    @Autowired
+    private JWTService jwtService;
 
     private FieldDescriptor[] getPageInfo() {
         return new FieldDescriptor[]{
@@ -71,6 +76,10 @@ class LearningControllerTest {
     @Test
     @DisplayName("Get 강의 목록 조회")
     public void getLearningList() throws Exception {
+        String name = "donghyuk";
+        String email = "choidh.dev@test.com";
+        String token = jwtService.generateToken(name, email, ApiAccountType.USER.getKey());
+
         this.mockMvc.perform(RestDocumentationRequestBuilders.get(API_DEFAULT_PATH + "/learning/list")
                         .param("page", "3")
                         .param("size", "10")
@@ -79,6 +88,7 @@ class LearningControllerTest {
                         .param("mainCategory", "all")
                         .param("subCategory", "")
                         .accept(MediaTypes.HAL_JSON)
+                        .header(AppConstant.JWT_HEADER_NAME, "sample_jwt_token")
                 )
                 .andExpect(status().isOk())
                 .andDo(print())
@@ -91,7 +101,8 @@ class LearningControllerTest {
                                 linkWithRel("prev").description("이전 페이지").optional()
                         )
                         , requestHeaders(
-                                headerWithName(HttpHeaders.ACCEPT).description("응답 타입")
+                                headerWithName(HttpHeaders.ACCEPT).description("응답 타입"),
+                                headerWithName(AppConstant.JWT_HEADER_NAME).description("JWT 토큰")
                         )
                         , requestParameters(
                                 parameterWithName("page").description("요청 페이지. 시작 0"),
@@ -115,6 +126,7 @@ class LearningControllerTest {
     public void getLearningDetail() throws Exception {
         this.mockMvc.perform(RestDocumentationRequestBuilders.get(API_DEFAULT_PATH + "/learning/{learningId}", 1454)
                         .accept(MediaTypes.HAL_JSON)
+                        .header(AppConstant.JWT_HEADER_NAME, "sample_jwt_token")
                 )
                 .andExpect(status().isOk())
                 .andDo(print())
@@ -123,7 +135,8 @@ class LearningControllerTest {
                                 linkWithRel("self").description("상세조회")
                         )
                         , requestHeaders(
-                                headerWithName(HttpHeaders.ACCEPT).description("응답 타입")
+                                headerWithName(HttpHeaders.ACCEPT).description("응답 타입"),
+                                headerWithName(AppConstant.JWT_HEADER_NAME).description("JWT 토큰")
                         )
                         , pathParameters(
                                 parameterWithName("learningId").description("조회 강의 고유값")

@@ -15,7 +15,7 @@ import java.util.Set;
 
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
-public class LearningVO extends RepresentationModel<LearningVO> {
+public class LearningResponse extends RepresentationModel<LearningResponse> {
     @Override
     public String toString() {
         return "LearningVO{" +
@@ -77,7 +77,7 @@ public class LearningVO extends RepresentationModel<LearningVO> {
     @Name(name = "강의 관련 태그들")
     private Set<LearningTagJoinTable> tags = new HashSet<>();
 
-    public LearningVO(Learning learning) {
+    public LearningResponse(Learning learning) {
         this.id = Objects.requireNonNullElse(learning.getId(), -1L);
         this.title = Objects.requireNonNullElse(learning.getTitle(), "");
         this.subscription = Objects.requireNonNullElse(learning.getSubscription(), "");

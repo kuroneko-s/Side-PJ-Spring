@@ -2,7 +2,7 @@ package com.choidh.service.learning.repository;
 
 
 import com.choidh.service.learning.entity.Learning;
-import com.choidh.service.learning.vo.api.LearningVO;
+import com.choidh.service.learning.vo.api.LearningResponse;
 import com.choidh.service.tag.entity.Tag;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
@@ -217,7 +217,7 @@ public class LearningRepositoryExtensionImpl extends QuerydslRepositorySupport i
      * Learning 페이징. By Main Category
      */
     @Override
-    public Page<LearningVO> findPagingByCategory(Pageable pageable, String mainCategory) {
+    public Page<LearningResponse> findPagingByCategory(Pageable pageable, String mainCategory) {
         Predicate learningWhere = learning.opening.isTrue();
 
         if (isNotNullAndEmpty(mainCategory)) {
@@ -233,7 +233,7 @@ public class LearningRepositoryExtensionImpl extends QuerydslRepositorySupport i
                 .fetch();
 
         return new PageImpl<>(
-                learningList.stream().map(LearningVO::new).collect(Collectors.toList()),
+                learningList.stream().map(LearningResponse::new).collect(Collectors.toList()),
                 pageable,
                 query.fetchCount());
     }
@@ -242,7 +242,7 @@ public class LearningRepositoryExtensionImpl extends QuerydslRepositorySupport i
      * Learning 페이징. By 카테고리 And 키워드
      */
     @Override
-    public Page<LearningVO> findPagingByCategoryAndKeyword(Pageable pageable, String mainCategory, String keyword) {
+    public Page<LearningResponse> findPagingByCategoryAndKeyword(Pageable pageable, String mainCategory, String keyword) {
         Predicate learningWhere = learning.opening.isTrue();
 
         if (isNotNullAndEmpty(keyword) && isNullOrEmpty(mainCategory)) {
@@ -267,7 +267,7 @@ public class LearningRepositoryExtensionImpl extends QuerydslRepositorySupport i
                 .fetch();
 
         return new PageImpl<>(
-                learningList.stream().map(LearningVO::new).collect(Collectors.toList()),
+                learningList.stream().map(LearningResponse::new).collect(Collectors.toList()),
                 pageable,
                 query.fetchCount());
     }

@@ -16,7 +16,7 @@ import com.choidh.service.joinTables.service.AccountTagService;
 import com.choidh.service.joinTables.service.LearningTagService;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.repository.LearningRepository;
-import com.choidh.service.learning.vo.api.LearningVO;
+import com.choidh.service.learning.vo.api.LearningResponse;
 import com.choidh.service.learning.vo.web.*;
 import com.choidh.service.notification.eventListener.vo.LearningClosedEvent;
 import com.choidh.service.notification.eventListener.vo.LearningCreateEvent;
@@ -663,7 +663,7 @@ public class LearningServiceImpl implements LearningService {
      * Get Learning Paging. With keyword Learning For API
      */
     @Override
-    public Page<LearningVO> getLearningPagingWithKeywordForAPI(String mainCategory, String subCategory, Pageable pageable) {
+    public Page<LearningResponse> getLearningPagingWithKeywordForAPI(String mainCategory, String subCategory, Pageable pageable) {
         mainCategory = mainCategory.equals("all") ? "" : mainCategory;
         if (StringUtils.isNullOrEmpty(subCategory)) {
             return learningRepository.findPagingByCategory(pageable, mainCategory);

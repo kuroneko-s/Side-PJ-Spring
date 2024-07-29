@@ -3,7 +3,7 @@ package com.choidh.app.learnieng;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.service.LearningService;
 import com.choidh.service.learning.vo.api.LearningResource;
-import com.choidh.service.learning.vo.api.LearningVO;
+import com.choidh.service.learning.vo.api.LearningResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -30,8 +30,8 @@ public class LearningController {
     public ResponseEntity getLearningList(@RequestParam String mainCategory,
                                           @RequestParam(required = false) String subCategory,
                                           @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
-                                          PagedResourcesAssembler<LearningVO> assembler) {
-        PagedModel<EntityModel<LearningVO>> pagedModel = assembler.toModel(learningService.getLearningPagingWithKeywordForAPI(mainCategory, subCategory, pageable));
+                                          PagedResourcesAssembler<LearningResponse> assembler) {
+        PagedModel<EntityModel<LearningResponse>> pagedModel = assembler.toModel(learningService.getLearningPagingWithKeywordForAPI(mainCategory, subCategory, pageable));
 
         return ResponseEntity.ok(pagedModel);
     }
@@ -42,9 +42,9 @@ public class LearningController {
     @GetMapping("/{learningId}")
     public ResponseEntity getLearningDetail(@PathVariable Long learningId) {
         Learning learning = learningService.getLearningById(learningId);
-        LearningVO learningVO = new LearningVO(learning);
+        LearningResponse learningResponse = new LearningResponse(learning);
 
-        LearningResource learningResource = new LearningResource(learningVO);
+        LearningResource learningResource = new LearningResource(learningResponse);
         learningResource.add(linkTo(LearningController.class).slash(learningId).withSelfRel());
 
         return ResponseEntity.ok(learningResource);
