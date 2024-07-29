@@ -13,8 +13,8 @@
 
     <artifactId>rest-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>rest_api</name>
-    <description>rest_api</description>
+    <name>rest-api</name>
+    <description>rest-api</description>
 
     <dependencies>
         <dependency>
