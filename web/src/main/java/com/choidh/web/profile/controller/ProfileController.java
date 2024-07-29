@@ -2,10 +2,7 @@ package com.choidh.web.profile.controller;
 
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.service.AccountService;
-import com.choidh.service.account.vo.ModAccountVO;
-import com.choidh.service.account.vo.ModNotificationVO;
-import com.choidh.service.account.vo.ModPasswordVO;
-import com.choidh.service.account.vo.ProfileVO;
+import com.choidh.service.account.vo.web.*;
 import com.choidh.service.attachment.entity.AttachmentFile;
 import com.choidh.service.attachment.service.AttachmentService;
 import com.choidh.service.attachment.vo.AttachmentFileType;
@@ -16,7 +13,6 @@ import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.notification.entity.Notification;
 import com.choidh.service.notification.service.NotificationService;
 import com.choidh.service.purchaseHistory.entity.PurchaseHistory;
-import com.choidh.service.security.vo.AccountRoleType;
 import com.choidh.service.security.vo.AccountUser;
 import com.choidh.service.tag.service.TagService;
 import com.choidh.service.tag.vo.RegTagVO;
@@ -289,7 +285,7 @@ public class ProfileController {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                 new AccountUser(account),
                 account.getPassword(),
-                List.of(new SimpleGrantedAuthority(AccountRoleType.ROLE_USER.name()))
+                List.of(new SimpleGrantedAuthority(AccountType.USER.getKey()))
         );
         SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(token); // 토큰을 Thread Holder 에 저장.

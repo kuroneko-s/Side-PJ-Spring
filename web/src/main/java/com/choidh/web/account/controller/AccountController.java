@@ -2,7 +2,7 @@ package com.choidh.web.account.controller;
 
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.service.AccountService;
-import com.choidh.service.account.vo.RegAccountVO;
+import com.choidh.service.account.vo.web.RegAccountVO;
 import com.choidh.service.common.utiles.StringUtils;
 import com.choidh.service.common.vo.ServiceAppProperties;
 import com.choidh.service.mail.service.EmailService;

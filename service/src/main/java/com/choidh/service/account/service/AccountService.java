@@ -1,7 +1,7 @@
 package com.choidh.service.account.service;
 
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.account.vo.*;
+import com.choidh.service.account.vo.web.*;
 
 /**
  * Account 비지니스 서비스

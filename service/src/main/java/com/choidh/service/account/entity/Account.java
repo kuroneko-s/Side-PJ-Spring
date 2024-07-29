@@ -1,7 +1,7 @@
 package com.choidh.service.account.entity;
 
 
-import com.choidh.service.account.vo.AccountType;
+import com.choidh.service.account.vo.web.AccountType;
 import com.choidh.service.cart.entity.Cart;
 import com.choidh.service.common.annotation.Name;
 import com.choidh.service.common.entity.BaseEntity;

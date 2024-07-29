@@ -2,7 +2,8 @@ package com.choidh.service.learning.service;
 
 
 import com.choidh.service.learning.entity.Learning;
-import com.choidh.service.learning.vo.*;
+import com.choidh.service.learning.vo.api.LearningVO;
+import com.choidh.service.learning.vo.web.*;
 import com.choidh.service.tag.entity.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

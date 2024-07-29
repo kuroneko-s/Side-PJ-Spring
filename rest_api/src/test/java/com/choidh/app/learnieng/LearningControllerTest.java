@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
@@ -20,13 +21,12 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.choidh.app.common.AppConstant.API_DEFAULT_PATH;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.*;
+import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.linkWithRel;
+import static org.springframework.restdocs.hypermedia.HypermediaDocumentation.relaxedLinks;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.relaxedResponseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -38,8 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("local")
 @Import({RestDocsConfiguration.class})
 class LearningControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
 
     private FieldDescriptor[] getPageInfo() {
         return new FieldDescriptor[]{
@@ -72,7 +71,7 @@ class LearningControllerTest {
     @Test
     @DisplayName("Get 강의 목록 조회")
     public void getLearningList() throws Exception {
-        this.mockMvc.perform(get(API_DEFAULT_PATH + "/learning/list")
+        this.mockMvc.perform(RestDocumentationRequestBuilders.get(API_DEFAULT_PATH + "/learning/list")
                         .param("page", "3")
                         .param("size", "10")
                         .param("sort", "createdAt")
@@ -108,6 +107,30 @@ class LearningControllerTest {
                                 .and(
                                         getPageInfo()
                                 )
+                ));
+    }
+
+    @Test
+    @DisplayName("Get 강의 단건 조회")
+    public void getLearningDetail() throws Exception {
+        this.mockMvc.perform(RestDocumentationRequestBuilders.get(API_DEFAULT_PATH + "/learning/{learningId}", 1454)
+                        .accept(MediaTypes.HAL_JSON)
+                )
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andDo(document("get-learningDetail"
+                        , relaxedLinks(
+                                linkWithRel("self").description("상세조회")
+                        )
+                        , requestHeaders(
+                                headerWithName(HttpHeaders.ACCEPT).description("응답 타입")
+                        )
+                        , pathParameters(
+                                parameterWithName("learningId").description("조회 강의 고유값")
+                        )
+                        , relaxedResponseFields(
+                                getLearningResponseFields()
+                        )
                 ));
     }
 }

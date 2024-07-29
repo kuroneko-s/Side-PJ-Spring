@@ -1,23 +1,16 @@
 package com.choidh.web.mail.controller;
 
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.account.vo.RegAccountVO;
-import com.choidh.service.mail.service.EmailService;
-import com.choidh.service.mail.vo.EmailMessageVO;
+import com.choidh.service.account.vo.web.RegAccountVO;
 import com.choidh.web.AbstractControllerTestConfig;
-import com.choidh.web.account.vo.AccountVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

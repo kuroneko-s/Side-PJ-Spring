@@ -1,9 +1,9 @@
 package com.choidh.web.common.config;
 
+import com.choidh.service.account.vo.web.AccountType;
 import com.choidh.service.security.handler.CustomAuthenticationFailureHandler;
 import com.choidh.service.security.handler.CustomAuthenticationSuccessHandler;
 import com.choidh.service.security.service.AccountDetailsService;
-import com.choidh.service.security.vo.AccountRoleType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,8 +42,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers(HttpMethod.GET, "/profile/**").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/event/**").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/learning/{id}").access("@webSecurity.checkLearningId(#id)")
-                .mvcMatchers("/admin/**").hasAuthority(AccountRoleType.ROLE_ADMIN.name())
-                .mvcMatchers("/professional/**").hasAnyAuthority(AccountRoleType.ROLE_ADMIN.name(), AccountRoleType.ROLE_PROFESSIONAL.name())
+                .mvcMatchers("/admin/**").hasAuthority(AccountType.ADMIN.getKey())
+                .mvcMatchers("/professional/**").hasAnyAuthority(AccountType.ADMIN.getKey(), AccountType.PROFESSIONAL.getKey())
                 .anyRequest().authenticated();
 
         http.formLogin()

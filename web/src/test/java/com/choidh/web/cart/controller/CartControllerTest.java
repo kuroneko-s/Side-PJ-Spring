@@ -1,8 +1,6 @@
 package com.choidh.web.cart.controller;
 
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.account.vo.AccountType;
-import com.choidh.service.joinTables.entity.LearningCartJoinTable;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.web.AbstractControllerTestConfig;
 import com.choidh.web.config.WithAccount;
@@ -13,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;

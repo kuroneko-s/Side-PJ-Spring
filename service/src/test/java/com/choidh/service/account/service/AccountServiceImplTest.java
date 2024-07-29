@@ -2,8 +2,8 @@ package com.choidh.service.account.service;
 
 import com.choidh.service.AbstractServiceTestConfig;
 import com.choidh.service.account.entity.Account;
+import com.choidh.service.account.vo.web.*;
 import com.choidh.service.professional.entity.ProfessionalAccount;
-import com.choidh.service.account.vo.*;
 import com.choidh.service.cart.entity.Cart;
 import com.choidh.service.cart.repository.CartRepository;
 import com.choidh.service.joinTables.entity.LearningCartJoinTable;
@@ -21,7 +21,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 

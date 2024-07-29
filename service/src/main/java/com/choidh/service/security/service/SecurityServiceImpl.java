@@ -1,7 +1,7 @@
 package com.choidh.service.security.service;
 
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.security.vo.AccountRoleType;
+import com.choidh.service.account.vo.web.AccountType;
 import com.choidh.service.security.vo.AccountUser;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,7 +22,7 @@ public class SecurityServiceImpl implements SecurityService {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                 new AccountUser(account),
                 account.getPassword(),
-                List.of(new SimpleGrantedAuthority(AccountRoleType.ROLE_USER.name()))
+                List.of(new SimpleGrantedAuthority(AccountType.USER.getKey()))
         );
         SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(token); // 토큰을 Thread Holder 에 저장.

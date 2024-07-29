@@ -1,4 +1,4 @@
-package com.choidh.service.learning.vo;
+package com.choidh.service.learning.vo.web;
 
 import com.choidh.service.common.pagination.Paging;
 import com.choidh.service.learning.entity.Learning;

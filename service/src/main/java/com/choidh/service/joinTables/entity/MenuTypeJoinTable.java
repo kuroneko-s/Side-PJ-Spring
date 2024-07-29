@@ -1,6 +1,6 @@
 package com.choidh.service.joinTables.entity;
 
-import com.choidh.service.account.vo.AccountType;
+import com.choidh.service.account.vo.web.AccountType;
 import com.choidh.service.common.annotation.Name;
 import com.choidh.service.common.entity.BaseDateEntity;
 import com.choidh.service.menu.entity.Menu;

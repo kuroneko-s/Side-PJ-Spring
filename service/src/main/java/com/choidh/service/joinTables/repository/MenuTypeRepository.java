@@ -1,6 +1,6 @@
 package com.choidh.service.joinTables.repository;
 
-import com.choidh.service.account.vo.AccountType;
+import com.choidh.service.account.vo.web.AccountType;
 import com.choidh.service.joinTables.entity.MenuTypeJoinTable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

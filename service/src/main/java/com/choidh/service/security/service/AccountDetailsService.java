@@ -3,8 +3,7 @@ package com.choidh.service.security.service;
 
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.repository.AccountRepository;
-import com.choidh.service.account.vo.AccountType;
-import com.choidh.service.security.vo.AccountRoleType;
+import com.choidh.service.account.vo.web.AccountType;
 import com.choidh.service.security.vo.AccountUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,15 +41,15 @@ public class AccountDetailsService implements UserDetailsService {
         }
 
         List<SimpleGrantedAuthority> roleUser = new ArrayList<>();
-        roleUser.add(new SimpleGrantedAuthority(AccountRoleType.ROLE_USER.name()));
+        roleUser.add(new SimpleGrantedAuthority(AccountType.USER.getKey()));
 
         if (account.getAccountType().equals(AccountType.PROFESSIONAL)) {
-            roleUser.add(new SimpleGrantedAuthority(AccountRoleType.ROLE_PROFESSIONAL.name()));
+            roleUser.add(new SimpleGrantedAuthority(AccountType.PROFESSIONAL.getKey()));
         }
 
         if (account.getAccountType().equals(AccountType.ADMIN)) {
-            roleUser.add(new SimpleGrantedAuthority(AccountRoleType.ROLE_PROFESSIONAL.name()));
-            roleUser.add(new SimpleGrantedAuthority(AccountRoleType.ROLE_ADMIN.name()));
+            roleUser.add(new SimpleGrantedAuthority(AccountType.PROFESSIONAL.getKey()));
+            roleUser.add(new SimpleGrantedAuthority(AccountType.ADMIN.getKey()));
         }
 
         return new AccountUser(account, roleUser);

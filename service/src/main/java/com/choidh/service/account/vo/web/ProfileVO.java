@@ -1,4 +1,4 @@
-package com.choidh.service.account.vo;
+package com.choidh.service.account.vo.web;
 
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.learning.entity.Learning;

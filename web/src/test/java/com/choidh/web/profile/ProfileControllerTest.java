@@ -3,7 +3,7 @@ package com.choidh.web.profile;
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.repository.AccountRepository;
 import com.choidh.service.account.service.AccountServiceImpl;
-import com.choidh.service.account.vo.RegAccountVO;
+import com.choidh.service.account.vo.web.RegAccountVO;
 import com.choidh.service.joinTables.service.AccountTagService;
 import com.choidh.service.tag.entity.Tag;
 import com.choidh.service.tag.repository.TagRepository;

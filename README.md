@@ -8,7 +8,7 @@
 5. [Spring RESTDOCS](https://docs.spring.io/spring-restdocs/docs/2.0.4.RELEASE/reference/html5/#documenting-your-api-customizing)
 6. [Spring HATEOAS](https://docs.spring.io/spring-hateoas/docs/current/reference/html/#preface)
 7. [PostgreSQL](https://www.postgresql.org/)
-8. [h2 Database](https://www.h2database.com/html/main.html)  
+8. [h2 Database](https://www.h2database.com/html/main.html)
 
 --- 
 
@@ -24,7 +24,9 @@ port - 8080(기본) 사용.
 
 3. REST API 모듈       
 web 모듈에서 사용되는 기본 컨트롤러의 일부 기능들을 REST API로써 지원하기 위한 모듈.
-port - 8081(기본) 사용.
+port - 8081(기본) 사용.          
+Google OAUTH 사용하여 로그인.       
+인증은 JWT 사용
 
 4. 스케쥴러 모듈       
 정의 예정

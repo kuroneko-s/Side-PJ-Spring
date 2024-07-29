@@ -2,11 +2,11 @@ package com.choidh.web;
 
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.service.AccountService;
-import com.choidh.service.account.vo.RegAccountVO;
+import com.choidh.service.account.vo.web.RegAccountVO;
 import com.choidh.service.cart.service.CartService;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.service.LearningService;
-import com.choidh.service.learning.vo.RegLearningVO;
+import com.choidh.service.learning.vo.web.RegLearningVO;
 import com.choidh.service.professional.entity.ProfessionalAccount;
 import com.choidh.service.professional.service.ProfessionalService;
 import com.choidh.service.professional.vo.RegProfessionalAccountVO;

@@ -2,7 +2,7 @@ package com.choidh.service.learning.repository;
 
 
 import com.choidh.service.learning.entity.Learning;
-import com.choidh.service.learning.vo.LearningVO;
+import com.choidh.service.learning.vo.api.LearningVO;
 import com.choidh.service.tag.entity.Tag;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;

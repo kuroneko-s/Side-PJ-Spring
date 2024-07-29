@@ -1,4 +1,4 @@
-package com.choidh.service.account.vo;
+package com.choidh.service.account.vo.web;
 
 import com.choidh.service.common.annotation.Name;
 import lombok.*;

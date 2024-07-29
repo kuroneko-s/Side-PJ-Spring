@@ -3,7 +3,7 @@ package com.choidh.service.account.service;
 
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.repository.AccountRepository;
-import com.choidh.service.account.vo.*;
+import com.choidh.service.account.vo.web.*;
 import com.choidh.service.cart.entity.Cart;
 import com.choidh.service.cart.service.CartService;
 import com.choidh.service.joinTables.entity.AccountTagJoinTable;
@@ -15,14 +15,12 @@ import com.choidh.service.question.entity.Question;
 import com.choidh.service.security.service.SecurityService;
 import com.choidh.service.tag.entity.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;

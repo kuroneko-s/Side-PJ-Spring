@@ -2,7 +2,7 @@ package com.choidh.web.professional.controller;
 
 import com.choidh.service.account.entity.Account;
 import com.choidh.service.account.service.AccountService;
-import com.choidh.service.account.vo.AccountType;
+import com.choidh.service.account.vo.web.AccountType;
 import com.choidh.service.attachment.entity.AttachmentFile;
 import com.choidh.service.attachment.service.AttachmentService;
 import com.choidh.service.attachment.vo.AttachmentFileType;

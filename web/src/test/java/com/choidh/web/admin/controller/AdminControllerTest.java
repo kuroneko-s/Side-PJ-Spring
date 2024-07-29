@@ -1,7 +1,7 @@
 package com.choidh.web.admin.controller;
 
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.account.vo.AccountType;
+import com.choidh.service.account.vo.web.AccountType;
 import com.choidh.service.event.entity.Event;
 import com.choidh.service.event.service.EventService;
 import com.choidh.service.notice.entity.Notice;

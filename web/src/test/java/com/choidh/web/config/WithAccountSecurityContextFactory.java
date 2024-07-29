@@ -1,8 +1,7 @@
 package com.choidh.web.config;
 
 import com.choidh.service.account.entity.Account;
-import com.choidh.service.account.vo.AccountType;
-import com.choidh.service.account.vo.RegAccountVO;
+import com.choidh.service.account.vo.web.RegAccountVO;
 import com.choidh.service.security.service.AccountDetailsService;
 import com.choidh.service.account.service.AccountServiceImpl;
 import com.choidh.web.account.vo.AccountVO;

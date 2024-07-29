@@ -1,6 +1,5 @@
-package com.choidh.app.learnieng.vo;
+package com.choidh.service.learning.vo.api;
 
-import com.choidh.service.learning.vo.LearningVO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

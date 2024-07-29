@@ -6,7 +6,7 @@ import com.choidh.service.account.service.AccountServiceImpl;
 import com.choidh.service.learning.entity.Learning;
 import com.choidh.service.learning.repository.LearningRepository;
 import com.choidh.service.learning.service.LearningService;
-import com.choidh.service.learning.vo.RegLearningVO;
+import com.choidh.service.learning.vo.web.RegLearningVO;
 import com.choidh.service.tag.entity.Tag;
 import com.choidh.service.tag.repository.TagRepository;
 import com.choidh.web.config.WithAccount;

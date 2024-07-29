@@ -1,4 +1,4 @@
-package com.choidh.service.learning.vo;
+package com.choidh.service.learning.vo.web;
 
 import com.choidh.service.attachment.entity.AttachmentFile;
 import com.choidh.service.attachment.vo.VideoFileInfo;

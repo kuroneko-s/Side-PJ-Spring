@@ -1,4 +1,4 @@
-package com.choidh.service.learning.vo;
+package com.choidh.service.learning.vo.web;
 
 import lombok.*;
 
