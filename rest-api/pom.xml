@@ -11,7 +11,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>rest_api</artifactId>
+    <artifactId>rest-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>rest_api</name>
     <description>rest_api</description>
