@@ -29,6 +29,8 @@
         <module>service</module>
         <module>rest-api</module>
         <module>scheduler</module>
+        <module>socket-server</module>
+        <module>socket-client</module>
         <module>web</module>
     </modules>
 
