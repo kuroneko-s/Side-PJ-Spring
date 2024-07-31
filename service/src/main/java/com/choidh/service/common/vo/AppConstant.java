@@ -12,6 +12,8 @@ public class AppConstant {
     public static final String KAKAO_PAY_CANCEL_REDIRECT_URL = "/kakaopay/cancel"; // 카카오 페이 취소시 리다이렉트 주소
     public static final String KAKAO_PAY_FAIL_REDIRECT_URL = "/kakaopay/fail"; // 카카오 페이 실패시 리다이렉트 주소
 
+    public final static String JWT_HEADER_NAME = "X-AUTH-TOKEN";
+
     public static String getAccountNotFoundErrorMessage(Long id) {
         return id + "에 해당하는 유저를 찾지 못하였습니다.";
     }

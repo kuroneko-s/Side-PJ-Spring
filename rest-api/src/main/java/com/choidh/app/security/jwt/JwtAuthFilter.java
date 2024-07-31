@@ -1,6 +1,6 @@
 package com.choidh.app.security.jwt;
 
-import com.choidh.app.security.jwt.service.JWTService;
+import com.choidh.service.jwt.JWTService;
 import com.choidh.service.account.entity.ApiAccount;
 import com.choidh.service.account.repository.ApiAccountRepository;
 import com.choidh.service.account.vo.api.ApiAccountType;

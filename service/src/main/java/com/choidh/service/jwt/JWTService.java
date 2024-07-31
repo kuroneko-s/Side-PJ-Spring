@@ -1,6 +1,6 @@
-package com.choidh.app.security.jwt.service;
+package com.choidh.service.jwt;
 
-import com.choidh.app.common.AppConstant;
+import com.choidh.service.common.vo.AppConstant;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

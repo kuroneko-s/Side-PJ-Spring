@@ -2,7 +2,7 @@ package com.choidh.app.learnieng;
 
 import com.choidh.app.RestDocsConfiguration;
 import com.choidh.app.common.AppConstant;
-import com.choidh.app.security.jwt.service.JWTService;
+import com.choidh.service.jwt.JWTService;
 import com.choidh.service.account.vo.api.ApiAccountType;
 import com.google.common.net.HttpHeaders;
 import lombok.extern.slf4j.Slf4j;

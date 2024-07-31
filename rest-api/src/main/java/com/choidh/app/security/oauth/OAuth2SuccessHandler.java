@@ -1,7 +1,7 @@
 package com.choidh.app.security.oauth;
 
 import com.choidh.app.common.AppConstant;
-import com.choidh.app.security.jwt.service.JWTService;
+import com.choidh.service.jwt.JWTService;
 import com.choidh.service.account.vo.api.ApiAccountType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

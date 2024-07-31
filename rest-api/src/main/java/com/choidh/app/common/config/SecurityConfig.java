@@ -4,7 +4,7 @@ import com.choidh.app.security.oauth.CustomOAuth2UserService;
 import com.choidh.app.security.jwt.JwtAuthFilter;
 import com.choidh.app.security.jwt.JwtExceptionFilter;
 import com.choidh.app.security.oauth.OAuth2SuccessHandler;
-import com.choidh.app.security.jwt.service.JWTService;
+import com.choidh.service.jwt.JWTService;
 import com.choidh.service.account.repository.ApiAccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
