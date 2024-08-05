@@ -29,9 +29,7 @@ public class SocketServerSuccessHandler extends SavedRequestAwareAuthenticationS
 
         String jwt = jwtService.generateToken(principal.getUsername(), principal.getUsername(), authorities);
 
-        response.setHeader("Authorization", "Bearer " + jwt);
-
         // 기본 동작을 수행하여 이전 요청 페이지로 리다이렉트
-        super.onAuthenticationSuccess(request, response, authentication);
+        response.sendRedirect("/login/success?token=" + jwt);
     }
 }
